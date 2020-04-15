@@ -37,10 +37,10 @@ public class CustomArrayAdapter extends ArrayAdapter {
         }
         final Cosmetics cosmetics = (Cosmetics) getItem(position);
         TextView tvBrand = convertView.findViewById(R.id.tvBrand);
-        TextView tvItem = convertView.findViewById(R.id.tvItem);
+        TextView tvName = convertView.findViewById(R.id.tvName);
 
-        tvBrand.setText(cosmetics.getitemBrand());
-        tvItem.setText(cosmetics.getitemName());
+        tvBrand.setText(cosmetics.getproductBrand());
+        tvName.setText(cosmetics.getproductName());
         ImageView ivDel = convertView.findViewById(R.id.ivDel);
         ivDel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
                         .setNegativeButton("NO", null)
                         .setCancelable(false)
                         .setTitle("Do you want to Delete? ")
-                        .setMessage(cosmetics.getitemName())
+                        .setMessage(cosmetics.getproductName())
                         .show();
             }
         });
