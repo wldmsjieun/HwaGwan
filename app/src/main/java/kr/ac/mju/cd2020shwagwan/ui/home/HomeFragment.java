@@ -32,6 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
@@ -51,7 +52,7 @@ public class HomeFragment extends Fragment {
     private Button btOpen;
     int year=0, month=0, day=0;
 
-
+    private DatePickerDialog.OnDateSetListener callbackMethod;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,12 +78,14 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+
     /* 추가폼 호출 */
     private void showAddDialog() {
         // AlertDialog View layout
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
 
+        // 오늘 날짜로 설정
         edOpen = layout.findViewById(R.id.edOpen);
         btOpen = layout.findViewById(R.id.btOpen);
         long now = System.currentTimeMillis();
@@ -101,6 +104,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        /* 추가폼에 데이터 입력 */
         new AlertDialog.Builder(getContext())
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     @Override
@@ -132,19 +137,31 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /* 버튼 클릭하면 캘린더 보여줌 */
     void showDate() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        callbackMethod = new DatePickerDialog.OnDateSetListener()
+        {
             @Override
-            public void onDateSet(DatePicker view, int y, int m, int d) {
+            public void onDateSet(DatePicker view, int y, int m, int d)
+            {
                 year = y;
                 month = m+1;
                 day = d;
-
+                edOpen.setText(year + "/" + month + "/" + day );
             }
-        },2019, 1, 11);
+        };
 
-        datePickerDialog.setMessage("메시지");
-        datePickerDialog.show();
+
+        Calendar cal = Calendar.getInstance();
+
+        int presentYear = cal.get(Calendar.YEAR);
+        int presentMonth = cal.get(Calendar.MONTH);
+        int presentDay = cal.get(Calendar.DATE);
+
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), callbackMethod, presentYear, presentMonth, presentDay);
+
+        dialog.show();
+
     }
 
 
