@@ -1,5 +1,7 @@
 package kr.ac.mju.cd2020shwagwan.ui.home;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -10,9 +12,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -42,6 +48,10 @@ public class HomeFragment extends Fragment {
     private ArrayList<Cosmetics> items;
     private SimpleDateFormat sdfNow;
     private EditText edOpen;
+    private Button btOpen;
+    int year=0, month=0, day=0;
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +61,6 @@ public class HomeFragment extends Fragment {
 
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
         listView = root.findViewById(R.id.lvItem);
-
 
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -75,6 +84,7 @@ public class HomeFragment extends Fragment {
         final View layout = inflater.inflate(R.layout.content_add, null);
 
         edOpen = layout.findViewById(R.id.edOpen);
+        btOpen = layout.findViewById(R.id.btOpen);
         long now = System.currentTimeMillis();
         Date dt = new Date(now);
         Toast.makeText(getContext(), dt.toString(), Toast.LENGTH_SHORT).show();
@@ -82,6 +92,14 @@ public class HomeFragment extends Fragment {
         String formatDate = sdfNow.format(dt);
         edOpen.setText(formatDate);
 
+
+
+        btOpen.setOnClickListener(new CalendarView.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                showDate();
+            }
+        });
 
         new AlertDialog.Builder(getContext())
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
@@ -111,6 +129,22 @@ public class HomeFragment extends Fragment {
                 .setTitle("Add new TODO")
                 .setView(layout)
                 .show();
+    }
+
+
+    void showDate() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int y, int m, int d) {
+                year = y;
+                month = m+1;
+                day = d;
+
+            }
+        },2019, 1, 11);
+
+        datePickerDialog.setMessage("메시지");
+        datePickerDialog.show();
     }
 
 
@@ -165,4 +199,6 @@ public class HomeFragment extends Fragment {
 
         db.close();
     }
+
+
 }

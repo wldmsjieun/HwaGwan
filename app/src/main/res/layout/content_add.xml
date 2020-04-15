@@ -38,14 +38,14 @@
 
         <Button
             android:id="@+id/btOpen"
-            android:layout_width="66dp"
+            android:layout_width="22dp"
             android:layout_height="46dp"
-            android:layout_weight="1"
+            android:layout_weight="20"
             android:text="Button" />
 
         <EditText
             android:id="@+id/edOpen"
-            android:layout_width="match_parent"
+            android:layout_width="255dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="개봉일"
