@@ -1,20 +1,10 @@
 package kr.ac.mju.cd2020shwagwan;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -36,7 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 //        fabAdd = findViewById(R.id.fabAdd);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         EditText tvBrand = findViewById(R.id.etBrand);
-        EditText tvItem = findViewById(R.id.etItem);
+        EditText tvItem = findViewById(R.id.etName);
 //        TextView tvBrand = findViewById(R.id.tvBrand);
 
         // Passing each menu ID as a set of Ids because each

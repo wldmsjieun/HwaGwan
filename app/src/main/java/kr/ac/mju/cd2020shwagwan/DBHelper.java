@@ -31,13 +31,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 테이블 생성
 
-        db.execSQL("CREATE TABLE todos(tID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT,  priority TEXT);");
+        db.execSQL("CREATE TABLE cosmetics(cID INTEGER PRIMARY KEY AUTOINCREMENT, itemBrand TEXT,  itemName TEXT);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // 테이블 삭제
-        db.execSQL("DROP TABLE IF EXISTS todos");
+        db.execSQL("DROP TABLE IF EXISTS cosmetics");
 
         // 테이블 삭제후 다시 생성하기 위함
         onCreate(db);
