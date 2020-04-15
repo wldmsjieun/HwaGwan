@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,7 +24,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
@@ -37,21 +40,23 @@ public class HomeFragment extends Fragment {
     private CustomArrayAdapter adapter;
 
     private ArrayList<Cosmetics> items;
+    private SimpleDateFormat sdfNow;
+    private EditText edOpen;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
         listView = root.findViewById(R.id.lvItem);
 
+
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-//                textView.setText(s);
+
                 fabAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -69,6 +74,15 @@ public class HomeFragment extends Fragment {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
 
+        edOpen = layout.findViewById(R.id.edOpen);
+        long now = System.currentTimeMillis();
+        Date dt = new Date(now);
+        Toast.makeText(getContext(), dt.toString(), Toast.LENGTH_SHORT).show();
+        sdfNow = new SimpleDateFormat("yyyy/MM/dd");
+        String formatDate = sdfNow.format(dt);
+        edOpen.setText(formatDate);
+
+
         new AlertDialog.Builder(getContext())
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     @Override
@@ -85,6 +99,7 @@ public class HomeFragment extends Fragment {
                             Toast.makeText(getContext(), "Name empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
+
 
                         // 데이터 추가
                          addData(brand, name);
