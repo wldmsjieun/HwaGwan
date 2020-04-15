@@ -45,7 +45,6 @@ public class HomeFragment extends Fragment {
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
-//  /      final View layout = inflater.inflate(R.layout.content_add, null);
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
