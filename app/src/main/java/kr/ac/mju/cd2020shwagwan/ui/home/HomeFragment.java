@@ -44,7 +44,10 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
+        listView = root.findViewById(R.id.lvItem);
+
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -123,7 +126,7 @@ public class HomeFragment extends Fragment {
 
         // 리스트 구성
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        listView.setAdapter(this.adapter);
+        this.listView.setAdapter(this.adapter);
     }
 
 

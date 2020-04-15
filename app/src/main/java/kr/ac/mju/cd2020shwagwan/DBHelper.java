@@ -31,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 테이블 생성
 
-        db.execSQL("CREATE TABLE cosmetics(cID INTEGER PRIMARY KEY AUTOINCREMENT, itemBrand TEXT,  itemName TEXT);");
+        db.execSQL("CREATE TABLE cosmetics(cID INTEGER PRIMARY KEY AUTOINCREMENT, brand TEXT,  name TEXT);");
     }
 
     @Override
