@@ -64,13 +64,13 @@ public class HomeFragment extends Fragment {
                         // 추가
                         String name = ((EditText) layout.findViewById(R.id.etBrand)).getText().toString();
                         if (TextUtils.isEmpty(name)) {
-//                            Toast.makeText(HomeViewModel, "TODO Name empty", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "TODO Name empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         String priority = ((EditText) layout.findViewById(R.id.etItem)).getText().toString();
                         if (TextUtils.isEmpty(priority)) {
-//                            Toast.makeText(MainActivity.this, "Priority empty", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Priority empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
