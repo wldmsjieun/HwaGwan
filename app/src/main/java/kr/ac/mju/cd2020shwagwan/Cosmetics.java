@@ -6,22 +6,34 @@ public class Cosmetics {
 
     private String productBrand;
     private String productName;
+    private String productOpen;
+    private String productExp;
 
-    public Cosmetics(int id, String productBrand, String productName) {
+    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp) {
         this.id = id;
         this.productBrand = productBrand;
         this.productName = productName;
+        this.productOpen = productOpen;
+        this.productExp = productExp;
     }
+
     public int getId() {
-        return this.id;
+        return id;
     }
 
-    public String getproductBrand() {
-        return this.productBrand;
+    public String getProductBrand() {
+        return productBrand;
     }
 
-    public String getproductName() {
-        return this.productName;
+    public String getProductName() {
+        return productName;
     }
 
+    public String getProductOpen() {
+        return productOpen;
+    }
+
+    public String getProductExp() {
+        return productExp;
+    }
 }
