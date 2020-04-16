@@ -1,15 +1,12 @@
 package kr.ac.mju.cd2020shwagwan.ui.home;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,8 +19,6 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -35,13 +30,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
@@ -185,9 +178,21 @@ public class HomeFragment extends Fragment {
                             return;
                         }
 
+                        String open = ((EditText) layout.findViewById(R.id.edOpen)).getText().toString();
+                        if (TextUtils.isEmpty(name)) {
+                            Toast.makeText(getContext(), "open empty", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        String exp = ((EditText) layout.findViewById(R.id.etExp)).getText().toString();
+                        if (TextUtils.isEmpty(name)) {
+                            Toast.makeText(getContext(), "exp empty", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
 
                         // 데이터 추가
-                         addData(brand, name);
+                        addData(brand, name, open, exp);
                     }
                 })
                 //.setNegativeButton("CANCEL", null)
@@ -259,12 +264,12 @@ public class HomeFragment extends Fragment {
 
         try {
             // 쿼리문
-            String sql = "SELECT cID, brand, name FROM cosmetics";
+            String sql = "SELECT cID, brand, name, open, exp FROM cosmetics";
             Cursor cursor = db.rawQuery(sql, null);
             while (cursor.moveToNext()) {
                 // 데이터
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")));
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),cursor.getString(cursor.getColumnIndex("open")),cursor.getString(cursor.getColumnIndex("exp")));
 
                 this.items.add(cosmetic);
             }
@@ -281,15 +286,15 @@ public class HomeFragment extends Fragment {
 
 
     /* 추가 */
-    private void addData(String brand, String name) {
+    private void addData(String brand, String name,String open, String exp) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         try {
             // 등록
-            Object[] args = { brand, name };
-            String sql = "INSERT INTO cosmetics(brand, name) VALUES(?,?)";
+            Object[] args = { brand, name, open, exp };
+            String sql = "INSERT INTO cosmetics(brand, name, open, exp) VALUES(?,?,?,?)";
 
             db.execSQL(sql, args);
 
