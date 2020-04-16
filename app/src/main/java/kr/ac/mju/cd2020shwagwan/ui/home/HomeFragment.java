@@ -8,7 +8,12 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +61,7 @@ public class HomeFragment extends Fragment {
     int year=0;
     int month=0;
     int day=0;
-
+    String str;
     private DatePickerDialog.OnDateSetListener callbackMethod;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,6 +72,7 @@ public class HomeFragment extends Fragment {
 
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
         listView = root.findViewById(R.id.lvItem);
+
 
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -96,10 +102,9 @@ public class HomeFragment extends Fragment {
         long now = System.currentTimeMillis();
         Date dt = new Date(now);
 //        Toast.makeText(getContext(), dt.toString(), Toast.LENGTH_SHORT).show();
-        sdfNow = new SimpleDateFormat("yyyy/MM/dd");
+        sdfNow = new SimpleDateFormat("yyyy-MM-dd");
         String formatDate = sdfNow.format(dt);
         edOpen.setText(formatDate);
-
 
 
         btOpen.setOnClickListener(new CalendarView.OnClickListener(){
@@ -108,6 +113,101 @@ public class HomeFragment extends Fragment {
                 showDate();
             }
         });
+
+
+
+//        edOpen.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+//        edOpen.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
+
+//        edOpen.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                // 입력되는 텍스트에 변화가 있을 때
+//                if( edOpen.isFocusable()){
+//                    str = PhoneNumberUtils.formatNumber(s.toString());
+//
+////                    edOpen.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
+////                    edOpen.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+//                    Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
+////                    edOpen.setText(s.toString());
+//
+//
+//                }
+//            }
+//            @Override
+//            public void afterTextChanged(Editable arg0) {
+//                // 입력이 끝났을 때
+//                if(str.length() == 10){
+////                    Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
+////                    Toast.makeText(getContext(), edOpen.getText(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                // 입력하기 전에
+//            }
+//
+//        });
+
+
+
+        edOpen.addTextChangedListener(new TextWatcher() {
+
+            private int _beforeLenght = 0;
+            private int _afterLenght = 0;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                _beforeLenght = s.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() <= 0) {
+                    Log.d("addTextChangedListener", "onTextChanged: Intput text is wrong (Type : Length)");
+                    return;
+                }
+
+                char inputChar = s.charAt(s.length() - 1);
+                if (inputChar != '-' && (inputChar < '0' || inputChar > '9')) {
+                    edOpen.getText().delete(s.length() - 1, s.length());
+                    Log.d("addTextChangedListener", "onTextChanged: Intput text is wrong (Type : Number)");
+                    return;
+                }
+
+                _afterLenght = s.length();
+
+                // 삭제 중
+                if (_beforeLenght > _afterLenght) {
+                    // 삭제 중에 마지막에 -는 자동으로 지우기
+                    if (s.toString().endsWith("-")) {
+                        edOpen.setText(s.toString().substring(0, s.length() - 1));
+                    }
+                }
+                // 입력 중
+                else if (_beforeLenght < _afterLenght) {
+                    if (_afterLenght == 5 && s.toString().indexOf("-") < 0) {
+                        edOpen.setText(s.toString().subSequence(0, 4) + "-" + s.toString().substring(4, s.length()));
+                    } else if (_afterLenght == 8) {
+                        edOpen.setText(s.toString().subSequence(0, 7) + "-" + s.toString().substring(7, s.length()));
+//                    } else if (_afterLenght == 9) {
+//                        edOpen.setText(s.toString().subSequence(0, 8) + "-" + s.toString().substring(8, s.length()));
+//                    }
+                    }
+                }
+                edOpen.setSelection(edOpen.length());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 생략
+            }
+        });
+
+
+        출처: https://devvkkid.tistory.com/111 [개발자입니까?]
 
 
         /* 추가폼에 데이터 입력 */
@@ -127,6 +227,12 @@ public class HomeFragment extends Fragment {
                             Toast.makeText(getContext(), "Name empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
+
+//                        if(str.length() == 10){
+//                            Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
+//
+//                            edOpen.setText(str);
+//                        }
 
 
                         // 데이터 추가
@@ -166,7 +272,7 @@ public class HomeFragment extends Fragment {
                 try {
                     Date to = transFormat.parse(from.toString());
                     Toast.makeText(getContext(), to.toString(), Toast.LENGTH_SHORT).show();
-                    sdfNow = new SimpleDateFormat("yyyy/MM/dd");
+                    sdfNow = new SimpleDateFormat("yyyy-MM-dd");
                     String formatDate = sdfNow.format(to);
                     edOpen.setText(formatDate);
                 } catch (ParseException e) {

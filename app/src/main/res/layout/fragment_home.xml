@@ -25,7 +25,7 @@
             android:id="@+id/fabAdd"
             android:layout_width="116dp"
             android:layout_height="119dp"
-            android:layout_gravity="bottom|end"
+            android:layout_gravity="center"
             android:layout_margin="16dp"
             android:src="@drawable/ic_close" />
 

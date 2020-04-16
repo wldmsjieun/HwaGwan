@@ -41,7 +41,7 @@
             android:layout_width="22dp"
             android:layout_height="46dp"
             android:layout_weight="20"
-            android:text="Button" />
+            android:text="Calendar" />
 
         <EditText
             android:id="@+id/edOpen"
@@ -49,7 +49,10 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="개봉일"
-            android:inputType="date" />
+            android:selectAllOnFocus="true"
+            android:maxLines="1"
+            android:maxLength="10"
+            android:inputType="phone" />
 
     </LinearLayout>
 
