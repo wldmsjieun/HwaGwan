@@ -30,10 +30,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
@@ -50,7 +53,9 @@ public class HomeFragment extends Fragment {
     private SimpleDateFormat sdfNow;
     private EditText edOpen;
     private Button btOpen;
-    int year=0, month=0, day=0;
+    int year=0;
+    int month=0;
+    int day=0;
 
     private DatePickerDialog.OnDateSetListener callbackMethod;
 
@@ -90,7 +95,7 @@ public class HomeFragment extends Fragment {
         btOpen = layout.findViewById(R.id.btOpen);
         long now = System.currentTimeMillis();
         Date dt = new Date(now);
-        Toast.makeText(getContext(), dt.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), dt.toString(), Toast.LENGTH_SHORT).show();
         sdfNow = new SimpleDateFormat("yyyy/MM/dd");
         String formatDate = sdfNow.format(dt);
         edOpen.setText(formatDate);
@@ -147,7 +152,29 @@ public class HomeFragment extends Fragment {
                 year = y;
                 month = m+1;
                 day = d;
-                edOpen.setText(year + "/" + month + "/" + day );
+
+                StringBuilder from = new StringBuilder();
+                from.append(year);
+                from.append("-");
+                from.append(month);
+                from.append("-");
+                from.append(day);
+
+                Toast.makeText(getContext(), from, Toast.LENGTH_SHORT).show();
+                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-M-dd");
+
+                try {
+                    Date to = transFormat.parse(from.toString());
+                    Toast.makeText(getContext(), to.toString(), Toast.LENGTH_SHORT).show();
+                    sdfNow = new SimpleDateFormat("yyyy/MM/dd");
+                    String formatDate = sdfNow.format(to);
+                    edOpen.setText(formatDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         };
 
