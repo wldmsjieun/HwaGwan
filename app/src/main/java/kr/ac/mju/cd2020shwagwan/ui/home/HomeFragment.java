@@ -114,44 +114,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
-//        edOpen.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-//        edOpen.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
-
-//        edOpen.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // 입력되는 텍스트에 변화가 있을 때
-//                if( edOpen.isFocusable()){
-//                    str = PhoneNumberUtils.formatNumber(s.toString());
-//
-////                    edOpen.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
-////                    edOpen.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-//                    Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
-////                    edOpen.setText(s.toString());
-//
-//
-//                }
-//            }
-//            @Override
-//            public void afterTextChanged(Editable arg0) {
-//                // 입력이 끝났을 때
-//                if(str.length() == 10){
-////                    Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
-////                    Toast.makeText(getContext(), edOpen.getText(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                // 입력하기 전에
-//            }
-//
-//        });
-
-
-
+        /*직접 입력시 날짜에 자동 하이픈 형식 생기게 하는 부분*/
         edOpen.addTextChangedListener(new TextWatcher() {
 
             private int _beforeLenght = 0;
@@ -191,9 +154,6 @@ public class HomeFragment extends Fragment {
                         edOpen.setText(s.toString().subSequence(0, 4) + "-" + s.toString().substring(4, s.length()));
                     } else if (_afterLenght == 8) {
                         edOpen.setText(s.toString().subSequence(0, 7) + "-" + s.toString().substring(7, s.length()));
-//                    } else if (_afterLenght == 9) {
-//                        edOpen.setText(s.toString().subSequence(0, 8) + "-" + s.toString().substring(8, s.length()));
-//                    }
                     }
                 }
                 edOpen.setSelection(edOpen.length());
@@ -205,9 +165,6 @@ public class HomeFragment extends Fragment {
                 // 생략
             }
         });
-
-
-        출처: https://devvkkid.tistory.com/111 [개발자입니까?]
 
 
         /* 추가폼에 데이터 입력 */
@@ -227,12 +184,6 @@ public class HomeFragment extends Fragment {
                             Toast.makeText(getContext(), "Name empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-//                        if(str.length() == 10){
-//                            Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
-//
-//                            edOpen.setText(str);
-//                        }
 
 
                         // 데이터 추가
