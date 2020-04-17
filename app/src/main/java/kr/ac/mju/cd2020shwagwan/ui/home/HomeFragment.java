@@ -170,7 +170,7 @@ public class HomeFragment extends Fragment {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
+//
         try {
             // 쿼리문
             if (all) {
