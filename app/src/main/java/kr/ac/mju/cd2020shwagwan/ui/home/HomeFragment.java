@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -49,7 +51,7 @@ public class HomeFragment extends Fragment {
     private SimpleDateFormat sdfNow;
     private EditText edOpen, edExp;
     int openYear=0, openMonth=0, openDay=0;
-
+    TextView tvComment;
 
     Calendar openCalendar = Calendar.getInstance();
     Calendar expCalendar = Calendar.getInstance();
@@ -89,7 +91,7 @@ public class HomeFragment extends Fragment {
         final View layout = inflater.inflate(R.layout.content_add, null);
 
         //스피너 생성
-        Spinner spKinds = layout.findViewById(R.id.spKinds);
+        final Spinner spKinds = layout.findViewById(R.id.spKinds);
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.product_kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spKinds.setAdapter(kindsAdapter);
@@ -97,7 +99,7 @@ public class HomeFragment extends Fragment {
         // findViewById
         edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
-
+        tvComment = layout.findViewById(R.id.tvComment);
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
 
@@ -115,15 +117,47 @@ public class HomeFragment extends Fragment {
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
                         edOpen.setText(sdf.format(openCalendar.getTime()));
+
+                        //상품별 만료일 자동 계산
+                        if(spKinds.getSelectedItemPosition() == 1 || spKinds.getSelectedItemPosition() == 2
+                                || spKinds.getSelectedItemPosition() == 11 || spKinds.getSelectedItemPosition() == 12
+                                || spKinds.getSelectedItemPosition() == 13 || spKinds.getSelectedItemPosition() == 14){
+                            //6개월 이내
+                            openCalendar.add(Calendar.DATE, 180);
+                            edExp.setText(sdf.format(openCalendar.getTime()));
+                        }else if(spKinds.getSelectedItemPosition() == 3){
+                            //8개월 이내
+                            openCalendar.add(Calendar.DATE, 240);
+                            edExp.setText(sdf.format(openCalendar.getTime()));
+                        }else if(spKinds.getSelectedItemPosition() == 0 || spKinds.getSelectedItemPosition() == 4
+                                || spKinds.getSelectedItemPosition() == 5 || spKinds.getSelectedItemPosition() == 6
+                                || spKinds.getSelectedItemPosition() == 8 || spKinds.getSelectedItemPosition() == 9
+                                ||spKinds.getSelectedItemPosition() == 10 || spKinds.getSelectedItemPosition() == 15 ){
+                            //1년 이내
+                            openCalendar.add(Calendar.DATE, 365);
+                            edExp.setText(sdf.format(openCalendar.getTime()));
+                        }else if(spKinds.getSelectedItemPosition() == 7){
+                            //2년 이내
+                            openCalendar.add(Calendar.DATE, 730);
+                            edExp.setText(sdf.format(openCalendar.getTime()));
+                        }else if(spKinds.getSelectedItemPosition() == 16){
+                            Toast ts = Toast.makeText(getContext(), "만료일을 설정하세요", Toast.LENGTH_SHORT);
+                            ts.setGravity(Gravity.CENTER, 0,0);
+                            ts.show();
+                            edExp.setText("");
+                        }
                     }
                 };
+
 
                 openYear = openCalendar.get(Calendar.YEAR);
                 openMonth = openCalendar.get(Calendar.MONTH);
                 openDay = openCalendar.get(Calendar.DAY_OF_MONTH);
 
-                new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay)
-                        .show();
+                new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay).show();
+
+
+
             }
         });
 
@@ -154,7 +188,7 @@ public class HomeFragment extends Fragment {
         });
 
 
-                spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                etExp.setText("Exp :" + position + parent.getItemAtPosition(position));
@@ -166,23 +200,26 @@ public class HomeFragment extends Fragment {
                     //자외선 차단제,  립밤,           립스틱,         립글로스,          아이라이너,        마스카라
                     cCal.add(Calendar.DATE, 180);
                     edExp.setText(sdf.format(cCal.getTime()));
+                    tvComment.setText("사용 권장 기한 : 6개월 이내");
                 }else if(position == 3){
                     //8개월 이내
                     //에센스
-                    edExp.setText("Exp : 8개월 이내");
                     cCal.add(Calendar.DATE, 240);
                     edExp.setText(sdf.format(cCal.getTime()));
+                    tvComment.setText("사용 권장 기한 : 8개월 이내");
                 }
                 else if(position == 0 || position == 4 || position == 5 || position == 6 || position == 8 || position == 9 || position == 10 ||position == 15) {
                     //1년 이내
                     //스킨,              크림,             메이크업 베이스,   컨실러,           아이새도우,        아이브로우,      블러셔,           클렌저
                     cCal.add(Calendar.DATE, 365);
                     edExp.setText(sdf.format(cCal.getTime()));
+                    tvComment.setText("사용 권장 기한 : 1년 이내");
                 }else if(position == 7 ){
                     //2년 이내
                     //파우더
                     cCal.add(Calendar.DATE, 730);
                     edExp.setText(sdf.format(cCal.getTime()));
+                    tvComment.setText("사용 권장 기한 : 2년 이내");
                 }else if(position == 16){
                     edExp.setText("");
                 }

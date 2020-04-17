@@ -82,6 +82,13 @@
             android:inputType="date"
             android:maxLength="10"
             android:maxLines="1" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="사용 권장 기한 :" />
 
 </LinearLayout>
