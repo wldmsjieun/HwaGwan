@@ -1,11 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">HwaGwan</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-
-    <string-array name="kinds_array">
-        <item>전체</item>
+    <string-array name="product_kinds_array">
         <item>스킨·로션·토너 </item>
         <item>자외선 차단제</item>
         <item>립밤</item>

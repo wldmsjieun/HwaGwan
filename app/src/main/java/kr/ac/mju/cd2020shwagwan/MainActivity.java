@@ -1,6 +1,7 @@
 package kr.ac.mju.cd2020shwagwan;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
