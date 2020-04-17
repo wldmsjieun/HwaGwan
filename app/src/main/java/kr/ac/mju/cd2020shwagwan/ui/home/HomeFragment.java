@@ -55,15 +55,17 @@ public class HomeFragment extends Fragment {
     Calendar expCalendar = Calendar.getInstance();
 
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
         listView = root.findViewById(R.id.lvItem);
+        listData();
 
 
         homeViewModel.getText().observe(this, new Observer<String>() {
@@ -79,6 +81,7 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+
     }
 
 
@@ -97,6 +100,7 @@ public class HomeFragment extends Fragment {
         // findViewById
         edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
+
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -122,8 +126,7 @@ public class HomeFragment extends Fragment {
                 openMonth = openCalendar.get(Calendar.MONTH);
                 openDay = openCalendar.get(Calendar.DAY_OF_MONTH);
 
-                new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay)
-                        .show();
+                new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay).show();
             }
         });
 
@@ -154,7 +157,7 @@ public class HomeFragment extends Fragment {
         });
 
 
-                spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                etExp.setText("Exp :" + position + parent.getItemAtPosition(position));
@@ -214,11 +217,12 @@ public class HomeFragment extends Fragment {
                             return;
                         }
 
-
                         // 데이터 추가
-                         addData(brand, name);
+                         addData(brand, name, edOpen.getText().toString(), edExp.getText().toString());
                     }
                 })
+                //.setNegativeButton("CANCEL", null)
+                //.setCancelable(false)
                 .setCancelable(true)
                 .setTitle("Add new TODO")
                 .setView(layout)
@@ -247,12 +251,13 @@ public class HomeFragment extends Fragment {
 
         try {
             // 쿼리문
-            String sql = "SELECT cID, brand, name FROM cosmetics";
+            String sql = "SELECT cID, brand, name, open, exp FROM cosmetics";
             Cursor cursor = db.rawQuery(sql, null);
             while (cursor.moveToNext()) {
                 // 데이터
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")));
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")));
 
                 this.items.add(cosmetic);
             }
@@ -268,16 +273,17 @@ public class HomeFragment extends Fragment {
     }
 
 
+
     /* 추가 */
-    private void addData(String brand, String name) {
+    private void addData(String brand, String name, String open, String exp) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         try {
             // 등록
-            Object[] args = { brand, name };
-            String sql = "INSERT INTO cosmetics(brand, name) VALUES(?,?)";
+            Object[] args = { brand, name, open, exp };
+            String sql = "INSERT INTO cosmetics(brand, name, open, exp) VALUES(?,?,?,?)";
 
             db.execSQL(sql, args);
 
