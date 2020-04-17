@@ -1,30 +1,22 @@
 package kr.ac.mju.cd2020shwagwan.ui.home;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CalendarView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -36,8 +28,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,20 +82,23 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     /* 추가폼 호출 */
     private void showAddDialog() {
         // AlertDialog View layout
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
 
-        // findById
+        Spinner spKinds = layout.findViewById(R.id.spKinds);
+        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.product_kinds_array, android.R.layout.simple_spinner_item);
+        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spKinds.setAdapter(kindsAdapter);
+        // 오늘 날짜로 설정
+        edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
 
 
         // 개봉일 현재 날짜로 설정
-        setToday(layout);
-
+        setToday(edOpen);
 
         // 개봉일 캘린더로 선택
         edOpen.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +153,36 @@ public class HomeFragment extends Fragment {
         });
 
 
-        // 추가폼에 데이터 입력
+                spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                etExp.setText("Exp :" + position + parent.getItemAtPosition(position));
+                if(position == 1 || position == 2 ||position == 11 || position == 12 || position == 13 || position == 14) {
+                    //자외선 차단제,  립밤,           립스틱,         립글로스,          아이라이너,        마스카라
+                    edExp.setText("Exp : 6개월 이내");
+                }else if(position == 3){
+                    //에센스
+                    edExp.setText("Exp : 8개월 이내");
+                }
+                else if(position == 0 || position == 4 || position == 5 || position == 6 || position == 8 || position == 9 || position == 10 ||position == 15) {
+                    //스킨,              크림,             메이크업 베이스,   컨실러,           아이새도우,        아이브로우,      블러셔,           클렌저
+                    edExp.setText("Exp : 1년 이내");
+                }else if(position == 7 ){
+                    edExp.setText("Exp : 2년 이내");
+                }else if(position == 16){
+                    edExp.setText("기타");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+        /* 추가폼에 데이터 입력 */
         new AlertDialog.Builder(getContext())
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     @Override
@@ -178,26 +200,28 @@ public class HomeFragment extends Fragment {
                             return;
                         }
 
+
                         // 데이터 추가
                          addData(brand, name);
                     }
                 })
+                //.setNegativeButton("CANCEL", null)
+                //.setCancelable(false)
                 .setCancelable(true)
-                .setTitle("사용중인 내 화장품 추가")
+                .setTitle("Add new TODO")
                 .setView(layout)
                 .show();
     }
 
 
-
     /* 개봉일 현재 날짜로 설정 */
-    public void setToday (View layout) {
-        edOpen = layout.findViewById(R.id.edOpen);
+    public void setToday (EditText ed) {
+
         long now = System.currentTimeMillis();
         Date dt = new Date(now);
         sdfNow = new SimpleDateFormat("yyyy-MM-dd");
         String formatDate = sdfNow.format(dt);
-        edOpen.setText(formatDate);
+        ed.setText(formatDate);
     }
 
 
@@ -230,7 +254,6 @@ public class HomeFragment extends Fragment {
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
         this.listView.setAdapter(this.adapter);
     }
-
 
 
     /* 추가 */
