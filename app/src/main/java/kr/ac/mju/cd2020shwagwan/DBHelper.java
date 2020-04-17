@@ -12,7 +12,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "hwagwan.db";
 
-    /* 싱글톤 패턴 적용 */
+    /* 싱글톤 패턴 적용  */
     public static DBHelper getInstance(Context context) {
         if (_instance == null) {
             synchronized (DBHelper.class) {
