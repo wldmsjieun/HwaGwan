@@ -94,6 +94,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //바코드 스캔 실행 버튼
         fabBarcode= mRoot.findViewById(R.id.fabBarcode);
         fabBarcode.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
