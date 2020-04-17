@@ -20,17 +20,17 @@ public class Cosmetics {
         return this.id;
     }
 
-    public String getproductBrand() { return this.productBrand; }
+    public String getProductBrand() { return this.productBrand; }
 
-    public String getproductName() {
+    public String getProductName() {
         return this.productName;
     }
 
-    public String productOpen() {
+    public String getProductOpen() {
         return this.productOpen;
     }
 
-    public String productExp() {
+    public String getProductExp() {
         return this.productExp;
     }
 
