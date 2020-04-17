@@ -36,32 +36,32 @@
         android:layout_height="46dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btOpen"
-            android:layout_width="22dp"
-            android:layout_height="46dp"
-            android:layout_weight="20"
-            android:text="Calendar" />
-
         <EditText
             android:id="@+id/edOpen"
-            android:layout_width="255dp"
+            android:layout_width="183dp"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:editable="false"
             android:ems="10"
+            android:focusable="false"
             android:hint="개봉일"
-            android:selectAllOnFocus="true"
-            android:maxLines="1"
+            android:inputType="date"
             android:maxLength="10"
-            android:inputType="phone" />
+            android:maxLines="1"
+            android:selectAllOnFocus="true" />
 
+        <EditText
+            android:id="@+id/edExp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:editable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="만료일"
+            android:inputType="date"
+            android:maxLength="10"
+            android:maxLines="1" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/etExp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="만료일" />
 
 </LinearLayout>

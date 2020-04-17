@@ -22,6 +22,7 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -56,13 +57,14 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Cosmetics> items;
     private SimpleDateFormat sdfNow;
-    private EditText edOpen;
-    private Button btOpen;
-    int year=0;
-    int month=0;
-    int day=0;
-    String str;
-    private DatePickerDialog.OnDateSetListener callbackMethod;
+    private EditText edOpen, edExp;
+    int openYear=0, openMonth=0, openDay=0;
+
+
+    Calendar openCalendar = Calendar.getInstance();
+    Calendar expCalendar = Calendar.getInstance();
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -90,84 +92,75 @@ public class HomeFragment extends Fragment {
     }
 
 
+
     /* 추가폼 호출 */
     private void showAddDialog() {
         // AlertDialog View layout
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
 
-        // 오늘 날짜로 설정
-        edOpen = layout.findViewById(R.id.edOpen);
-        btOpen = layout.findViewById(R.id.btOpen);
-        long now = System.currentTimeMillis();
-        Date dt = new Date(now);
-//        Toast.makeText(getContext(), dt.toString(), Toast.LENGTH_SHORT).show();
-        sdfNow = new SimpleDateFormat("yyyy-MM-dd");
-        String formatDate = sdfNow.format(dt);
-        edOpen.setText(formatDate);
+        // findById
+        edExp = layout.findViewById(R.id.edExp);
 
 
-        btOpen.setOnClickListener(new CalendarView.OnClickListener(){
+        // 개봉일 현재 날짜로 설정
+        setToday(layout);
+
+
+        // 개봉일 캘린더로 선택
+        edOpen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                showDate();
-            }
-        });
+            public void onClick(View v) {
+                DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        openCalendar.set(Calendar.YEAR, year);
+                        openCalendar.set(Calendar.MONTH, month);
+                        openCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
+                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
-        /*직접 입력시 날짜에 자동 하이픈 형식 생기게 하는 부분*/
-        edOpen.addTextChangedListener(new TextWatcher() {
-
-            private int _beforeLenght = 0;
-            private int _afterLenght = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                _beforeLenght = s.length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() <= 0) {
-                    Log.d("addTextChangedListener", "onTextChanged: Intput text is wrong (Type : Length)");
-                    return;
-                }
-
-                char inputChar = s.charAt(s.length() - 1);
-                if (inputChar != '-' && (inputChar < '0' || inputChar > '9')) {
-                    edOpen.getText().delete(s.length() - 1, s.length());
-                    Log.d("addTextChangedListener", "onTextChanged: Intput text is wrong (Type : Number)");
-                    return;
-                }
-
-                _afterLenght = s.length();
-
-                // 삭제 중
-                if (_beforeLenght > _afterLenght) {
-                    // 삭제 중에 마지막에 -는 자동으로 지우기
-                    if (s.toString().endsWith("-")) {
-                        edOpen.setText(s.toString().substring(0, s.length() - 1));
+                        edOpen.setText(sdf.format(openCalendar.getTime()));
                     }
-                }
-                // 입력 중
-                else if (_beforeLenght < _afterLenght) {
-                    if (_afterLenght == 5 && s.toString().indexOf("-") < 0) {
-                        edOpen.setText(s.toString().subSequence(0, 4) + "-" + s.toString().substring(4, s.length()));
-                    } else if (_afterLenght == 8) {
-                        edOpen.setText(s.toString().subSequence(0, 7) + "-" + s.toString().substring(7, s.length()));
-                    }
-                }
-                edOpen.setSelection(edOpen.length());
+                };
 
-            }
+                openYear = openCalendar.get(Calendar.YEAR);
+                openMonth = openCalendar.get(Calendar.MONTH);
+                openDay = openCalendar.get(Calendar.DAY_OF_MONTH);
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                // 생략
+                new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay)
+                        .show();
             }
         });
 
 
-        /* 추가폼에 데이터 입력 */
+        // 만료일 캘린더로 선택 및 최소날짜 세팅
+        edExp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                        expCalendar.set(Calendar.YEAR, year);
+                        expCalendar.set(Calendar.MONTH, month);
+                        expCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
+                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
+
+                        edExp.setText(sdf.format(expCalendar.getTime()));
+                    }
+                };
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), myDatePicker, expCalendar.get(Calendar.YEAR), expCalendar.get(Calendar.MONTH), expCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(openCalendar.getTimeInMillis());
+                datePickerDialog.show();
+            }
+        });
+
+
+        // 추가폼에 데이터 입력
         new AlertDialog.Builder(getContext())
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     @Override
@@ -185,67 +178,26 @@ public class HomeFragment extends Fragment {
                             return;
                         }
 
-
                         // 데이터 추가
                          addData(brand, name);
                     }
                 })
-                //.setNegativeButton("CANCEL", null)
-                //.setCancelable(false)
                 .setCancelable(true)
-                .setTitle("Add new TODO")
+                .setTitle("사용중인 내 화장품 추가")
                 .setView(layout)
                 .show();
     }
 
 
-    /* 버튼 클릭하면 캘린더 보여줌 */
-    void showDate() {
-        callbackMethod = new DatePickerDialog.OnDateSetListener()
-        {
-            @Override
-            public void onDateSet(DatePicker view, int y, int m, int d)
-            {
-                year = y;
-                month = m+1;
-                day = d;
 
-                StringBuilder from = new StringBuilder();
-                from.append(year);
-                from.append("-");
-                from.append(month);
-                from.append("-");
-                from.append(day);
-
-                Toast.makeText(getContext(), from, Toast.LENGTH_SHORT).show();
-                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-M-dd");
-
-                try {
-                    Date to = transFormat.parse(from.toString());
-                    Toast.makeText(getContext(), to.toString(), Toast.LENGTH_SHORT).show();
-                    sdfNow = new SimpleDateFormat("yyyy-MM-dd");
-                    String formatDate = sdfNow.format(to);
-                    edOpen.setText(formatDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        };
-
-
-        Calendar cal = Calendar.getInstance();
-
-        int presentYear = cal.get(Calendar.YEAR);
-        int presentMonth = cal.get(Calendar.MONTH);
-        int presentDay = cal.get(Calendar.DATE);
-
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), callbackMethod, presentYear, presentMonth, presentDay);
-
-        dialog.show();
-
+    /* 개봉일 현재 날짜로 설정 */
+    public void setToday (View layout) {
+        edOpen = layout.findViewById(R.id.edOpen);
+        long now = System.currentTimeMillis();
+        Date dt = new Date(now);
+        sdfNow = new SimpleDateFormat("yyyy-MM-dd");
+        String formatDate = sdfNow.format(dt);
+        edOpen.setText(formatDate);
     }
 
 
@@ -278,6 +230,7 @@ public class HomeFragment extends Fragment {
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
         this.listView.setAdapter(this.adapter);
     }
+
 
 
     /* 추가 */
