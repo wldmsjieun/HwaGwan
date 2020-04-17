@@ -88,14 +88,15 @@ public class HomeFragment extends Fragment {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
 
+        //스피너 생성
         Spinner spKinds = layout.findViewById(R.id.spKinds);
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.product_kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spKinds.setAdapter(kindsAdapter);
-        // 오늘 날짜로 설정
+
+        // findViewById
         edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
-
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -157,20 +158,33 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                etExp.setText("Exp :" + position + parent.getItemAtPosition(position));
+                Calendar cCal = Calendar.getInstance();
+                String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
                 if(position == 1 || position == 2 ||position == 11 || position == 12 || position == 13 || position == 14) {
+                    //6개월 이내
                     //자외선 차단제,  립밤,           립스틱,         립글로스,          아이라이너,        마스카라
-                    edExp.setText("Exp : 6개월 이내");
+                    cCal.add(Calendar.DATE, 180);
+                    edExp.setText(sdf.format(cCal.getTime()));
                 }else if(position == 3){
+                    //8개월 이내
                     //에센스
                     edExp.setText("Exp : 8개월 이내");
+                    cCal.add(Calendar.DATE, 240);
+                    edExp.setText(sdf.format(cCal.getTime()));
                 }
                 else if(position == 0 || position == 4 || position == 5 || position == 6 || position == 8 || position == 9 || position == 10 ||position == 15) {
+                    //1년 이내
                     //스킨,              크림,             메이크업 베이스,   컨실러,           아이새도우,        아이브로우,      블러셔,           클렌저
-                    edExp.setText("Exp : 1년 이내");
+                    cCal.add(Calendar.DATE, 365);
+                    edExp.setText(sdf.format(cCal.getTime()));
                 }else if(position == 7 ){
-                    edExp.setText("Exp : 2년 이내");
+                    //2년 이내
+                    //파우더
+                    cCal.add(Calendar.DATE, 730);
+                    edExp.setText(sdf.format(cCal.getTime()));
                 }else if(position == 16){
-                    edExp.setText("기타");
+                    edExp.setText("");
                 }
             }
 
@@ -205,8 +219,6 @@ public class HomeFragment extends Fragment {
                          addData(brand, name);
                     }
                 })
-                //.setNegativeButton("CANCEL", null)
-                //.setCancelable(false)
                 .setCancelable(true)
                 .setTitle("Add new TODO")
                 .setView(layout)
