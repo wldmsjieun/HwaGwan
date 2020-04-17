@@ -8,7 +8,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -51,7 +49,7 @@ public class HomeFragment extends Fragment {
     private SimpleDateFormat sdfNow;
     private EditText edOpen, edExp;
     int openYear=0, openMonth=0, openDay=0;
-    TextView tvComment;
+
 
     Calendar openCalendar = Calendar.getInstance();
     Calendar expCalendar = Calendar.getInstance();
@@ -66,6 +64,7 @@ public class HomeFragment extends Fragment {
 
         final FloatingActionButton fabAdd = root.findViewById(R.id.fabAdd);
         listView = root.findViewById(R.id.lvItem);
+        listData();
 
 
         homeViewModel.getText().observe(this, new Observer<String>() {
@@ -204,6 +203,7 @@ public class HomeFragment extends Fragment {
                 }else if(position == 3){
                     //8개월 이내
                     //에센스
+                    edExp.setText("Exp : 8개월 이내");
                     cCal.add(Calendar.DATE, 240);
                     edExp.setText(sdf.format(cCal.getTime()));
                     tvComment.setText("사용 권장 기한 : 8개월 이내");
@@ -253,7 +253,7 @@ public class HomeFragment extends Fragment {
 
 
                         // 데이터 추가
-                         addData(brand, name);
+                         addData(brand, name, edOpen.getText().toString(), edExp.getText().toString());
                     }
                 })
                 .setCancelable(true)
@@ -284,12 +284,13 @@ public class HomeFragment extends Fragment {
 
         try {
             // 쿼리문
-            String sql = "SELECT cID, brand, name FROM cosmetics";
+            String sql = "SELECT cID, brand, name, open, exp FROM cosmetics";
             Cursor cursor = db.rawQuery(sql, null);
             while (cursor.moveToNext()) {
                 // 데이터
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")));
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")));
 
                 this.items.add(cosmetic);
             }
@@ -305,16 +306,17 @@ public class HomeFragment extends Fragment {
     }
 
 
+
     /* 추가 */
-    private void addData(String brand, String name) {
+    private void addData(String brand, String name, String open, String exp) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         try {
             // 등록
-            Object[] args = { brand, name };
-            String sql = "INSERT INTO cosmetics(brand, name) VALUES(?,?)";
+            Object[] args = { brand, name, open, exp };
+            String sql = "INSERT INTO cosmetics(brand, name, open, exp) VALUES(?,?,?,?)";
 
             db.execSQL(sql, args);
 

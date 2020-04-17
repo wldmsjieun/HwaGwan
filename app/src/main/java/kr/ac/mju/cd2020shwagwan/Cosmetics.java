@@ -9,12 +9,12 @@ public class Cosmetics {
     private String productOpen;
     private String productExp;
 
-    public Cosmetics(int id, String productBrand, String productName) {
+    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp) {
         this.id = id;
         this.productBrand = productBrand;
         this.productName = productName;
-//        this.productOpen = productOpen;
-//        this.productExp = productExp;
+        this.productOpen = productOpen;
+        this.productExp = productExp;
     }
     public int getId() {
         return this.id;
