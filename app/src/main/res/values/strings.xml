@@ -3,4 +3,25 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string-array name="kinds_array">
+        <item>전체</item>
+        <item>스킨·로션·토너 </item>
+        <item>자외선 차단제</item>
+        <item>립밤</item>
+        <item>에센스·세럼</item>
+        <item>크림</item>
+        <item>메이크업 베이스·파운데이션</item>
+        <item>컨실러</item>
+        <item>팩트·파우더</item>
+        <item>아이섀도우</item>
+        <item>아이브로우</item>
+        <item>블러셔</item>
+        <item>립스틱</item>
+        <item>립글로스·틴트</item>
+        <item>아이라이너</item>
+        <item>마스카라</item>
+        <item>클렌저</item>
+        <item>기타</item>
+    </string-array>
 </resources>

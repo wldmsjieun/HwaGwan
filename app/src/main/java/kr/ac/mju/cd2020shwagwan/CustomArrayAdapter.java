@@ -21,6 +21,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
     private Context context;
     private ArrayList items;
+    public static TextView mTvKind;
 
     public CustomArrayAdapter(Context context, ArrayList items) {
         super(context, 0, items);
@@ -36,16 +37,18 @@ public class CustomArrayAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
         }
         final Cosmetics cosmetics = (Cosmetics) getItem(position);
+
         TextView tvBrand = convertView.findViewById(R.id.tvBrand);
         TextView tvName = convertView.findViewById(R.id.tvName);
         TextView tvOpen = convertView.findViewById(R.id.tvOpen);
         TextView tvExp = convertView.findViewById(R.id.tvExp);
-
+        mTvKind = convertView.findViewById(R.id.tvKind);
 
         tvBrand.setText(cosmetics.getProductBrand());
         tvName.setText(cosmetics.getProductName());
         tvOpen.setText(cosmetics.getProductOpen());
         tvExp.setText(cosmetics.getProductExp());
+        mTvKind.setText(cosmetics.getProductKind());
 
         ImageView ivDel = convertView.findViewById(R.id.ivDel);
         ivDel.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +70,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
                         .show();
             }
         });
+
         return convertView;
     }
     /* 삭제 */
