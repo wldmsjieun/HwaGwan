@@ -3,6 +3,7 @@ package kr.ac.mju.cd2020shwagwan.ui.home;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,6 +45,7 @@ import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
+import kr.ac.mju.cd2020shwagwan.ScanQR;
 
 public class HomeFragment extends Fragment {
 
@@ -61,10 +64,9 @@ public class HomeFragment extends Fragment {
     private EditText edOpen, edExp;
     int openYear=0, openMonth=0, openDay=0;
     TextView tvComment;
-
+    FloatingActionButton fabBarcode;
     Calendar openCalendar = Calendar.getInstance();
     Calendar expCalendar = Calendar.getInstance();
-
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -89,6 +91,14 @@ public class HomeFragment extends Fragment {
                         showAddDialog();
                     }
                 });
+            }
+        });
+
+        fabBarcode= mRoot.findViewById(R.id.fabBarcode);
+        fabBarcode.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent = new Intent(getContext(), ScanQR.class);
+                startActivity(intent);
             }
         });
         return mRoot;
