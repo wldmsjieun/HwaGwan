@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanQR"> </activity>
+        <activity android:name=".ScanBarcode"> </activity>
     </application>
 
 </manifest>

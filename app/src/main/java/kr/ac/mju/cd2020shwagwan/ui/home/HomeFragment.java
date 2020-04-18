@@ -9,18 +9,14 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,7 +41,7 @@ import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
-import kr.ac.mju.cd2020shwagwan.ScanQR;
+import kr.ac.mju.cd2020shwagwan.ScanBarcode;
 
 public class HomeFragment extends Fragment {
 
@@ -98,7 +94,7 @@ public class HomeFragment extends Fragment {
         fabBarcode= mRoot.findViewById(R.id.fabBarcode);
         fabBarcode.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent(getContext(), ScanQR.class);
+                Intent intent = new Intent(getContext(), ScanBarcode.class);
                 startActivity(intent);
             }
         });
@@ -106,7 +102,7 @@ public class HomeFragment extends Fragment {
     }
 
     void setSpinner() {
-        mSpinner = (Spinner)mRoot.findViewById(R.id.spinner);
+        mSpinner = (Spinner)mRoot.findViewById(R.id.spShowKinds);
 
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

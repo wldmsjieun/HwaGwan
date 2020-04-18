@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class ScanQR extends AppCompatActivity {
+public class ScanBarcode extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

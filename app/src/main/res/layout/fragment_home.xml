@@ -6,14 +6,30 @@
     android:layout_height="match_parent"
     android:padding="12dp">
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="164dp"
-        android:layout_height="39dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spShowKinds"
+            android:layout_width="136dp"
+            android:layout_height="39dp" />
+
+        <Space
+            android:layout_width="98dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spSort"
+            android:layout_width="109dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="582dp">
+        android:layout_width="wrap_content"
+        android:layout_height="538dp">
 
         <ListView
             android:id="@+id/lvItem"
