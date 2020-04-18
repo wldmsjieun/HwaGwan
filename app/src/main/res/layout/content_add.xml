@@ -95,6 +95,28 @@
         android:id="@+id/tvBarcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="바코드 식별 코드" />
+    <TextView
+        android:id="@+id/tvChoose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="사용 기간 만료 원하는 시간" />
 
+    <CheckBox
+        android:id="@+id/cbNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="알림을 원하지 않음" />
+
+    <CheckBox
+        android:id="@+id/cbWeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="한 주전 알림" />
+
+    <CheckBox
+        android:id="@+id/cbMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="한 달전 알림" />
 </LinearLayout>

@@ -35,16 +35,22 @@ public class ScanBarcode extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Intent returnIntent = getIntent();
         if(result != null) {
-            if(result.getContents() == null) {
-                Toast.makeText(this, "ScanBar.java Cancelled", Toast.LENGTH_LONG).show();
-            } else {
+            if(result.getContents() != null) {//성공시
 //                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 
                 //바코드 정보를 HomeFragment에 넘겨주는 부분
-                Intent returnIntent = getIntent();
                 returnIntent.putExtra("barcode",result.getContents());
                 setResult(0,returnIntent);
+                finish();
+
+            } else {//실패시
+ //                Toast.makeText(this, "ScanBar.java Cancelled", Toast.LENGTH_SHORT).show();
+
+                //바코드 인식 실패 정보를 HomeFragment에 넘겨주는 부분
+                returnIntent.putExtra("barcode",1);
+                setResult(1,returnIntent);
                 finish();
             }
         } else {

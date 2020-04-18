@@ -108,17 +108,20 @@ public class HomeFragment extends Fragment {
     //바코드 얻어오는 부분
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-            if(REQUEST_SUCESS != 0) {//실패시
-                Toast.makeText(getContext(), "HomeFragment.java Cancelled", Toast.LENGTH_LONG).show();
-            }else {//성공시
-                barcode = data.getStringExtra("barcode");
-//                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            barcode = data.getStringExtra("barcode");
+            if (resultCode == REQUEST_SUCESS) {//성공시
+                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
                 showAddDialog();
                 tvBarcode.setText(barcode);
+            } else  {//실패시 if(REQUEST_SUCESS == 1)
+                Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
             }
-
+        }else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     void setSpinner() {
@@ -403,7 +406,7 @@ public class HomeFragment extends Fragment {
                     }
                 })
                 .setCancelable(true)
-                .setTitle("Add new TODO")
+                .setTitle("화장품 관리")
                 .setView(layout)
                 .show();
     }
