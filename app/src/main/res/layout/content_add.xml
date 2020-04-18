@@ -91,4 +91,10 @@
         android:layout_height="wrap_content"
         android:text="사용 권장 기한 :" />
 
+    <TextView
+        android:id="@+id/tvBarcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
 </LinearLayout>

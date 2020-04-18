@@ -30,6 +30,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ScanBarcode;
+
+import static android.app.Activity.RESULT_OK;
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 public class HomeFragment extends Fragment {
 
@@ -59,22 +64,21 @@ public class HomeFragment extends Fragment {
     private SimpleDateFormat sdfNow;
     private EditText edOpen, edExp;
     int openYear=0, openMonth=0, openDay=0;
-    TextView tvComment;
+    TextView tvComment, tvBarcode;
     FloatingActionButton fabBarcode;
     Calendar openCalendar = Calendar.getInstance();
     Calendar expCalendar = Calendar.getInstance();
-
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    int REQUEST_SUCESS = 0;
+    String barcode;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         mRoot = inflater.inflate(R.layout.fragment_home, container, false);
-
+        //findViewById
         final FloatingActionButton fabAdd = mRoot.findViewById(R.id.fabAdd);
         listView = mRoot.findViewById(R.id.lvItem);
+        //초기 설정
         listData();
-
         setSpinner();
 
         homeViewModel.getText().observe(this, new Observer<String>() {
@@ -95,15 +99,30 @@ public class HomeFragment extends Fragment {
         fabBarcode.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Intent intent = new Intent(getContext(), ScanBarcode.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         return mRoot;
     }
 
+    //바코드 얻어오는 부분
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+            if(REQUEST_SUCESS != 0) {//실패시
+                Toast.makeText(getContext(), "HomeFragment.java Cancelled", Toast.LENGTH_LONG).show();
+            }else {//성공시
+                barcode = data.getStringExtra("barcode");
+//                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
+                showAddDialog();
+                tvBarcode.setText(barcode);
+            }
+
+    }
+
     void setSpinner() {
         mSpinner = (Spinner)mRoot.findViewById(R.id.spShowKinds);
-
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(kindsAdapter);
@@ -171,13 +190,15 @@ public class HomeFragment extends Fragment {
         });
     }
 
+
+
     void setKind(String kind, boolean all) {
         this.items = new ArrayList<>();
 
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
+
         try {
             // 쿼리문
             if (all) {
@@ -207,7 +228,7 @@ public class HomeFragment extends Fragment {
     }
 
     /* 추가폼 호출 */
-    private void showAddDialog() {
+     public void showAddDialog() {
         // AlertDialog View layout
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
@@ -222,6 +243,7 @@ public class HomeFragment extends Fragment {
         edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
         tvComment = layout.findViewById(R.id.tvComment);
+        tvBarcode = layout.findViewById(R.id.tvBarcode);
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
 
@@ -232,6 +254,7 @@ public class HomeFragment extends Fragment {
                 DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
                         openCalendar.set(Calendar.YEAR, year);
                         openCalendar.set(Calendar.MONTH, month);
                         openCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
