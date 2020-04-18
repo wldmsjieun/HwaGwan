@@ -11,12 +11,17 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class ScanBarcode extends AppCompatActivity {
 
+    private IntentIntegrator scanBarcode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_qr);
 
-        new IntentIntegrator(this).initiateScan();
+//        new IntentIntegrator(this).initiateScan();
+        scanBarcode = new IntentIntegrator(this);
+        scanBarcode.setOrientationLocked(false);
+        scanBarcode.initiateScan();
     }
 
     @Override
