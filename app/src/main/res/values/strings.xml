@@ -24,4 +24,13 @@
         <item>클렌저</item>
         <item>기타</item>
     </string-array>
+
+    <string-array name="sort">
+        <item>개봉일 순</item>
+        <item>개봉일 역순</item>
+        <item>사용기한 임박 순</item>
+        <item>사용기한 넉넉 순</item>
+        <item>제품명 (ㄱ~ㅎ)</item>
+        <item>제품명 (ㅎ~ㄱ)</item>
+    </string-array>
 </resources>
