@@ -2,26 +2,39 @@ package kr.ac.mju.cd2020shwagwan;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class CustomArrayAdapter extends ArrayAdapter {
 
     private Context context;
     private ArrayList items;
     public static TextView mTvKind;
+    static ProgressBar pbUsage;
 
     public CustomArrayAdapter(Context context, ArrayList items) {
         super(context, 0, items);
@@ -43,12 +56,37 @@ public class CustomArrayAdapter extends ArrayAdapter {
         TextView tvOpen = convertView.findViewById(R.id.tvOpen);
         TextView tvExp = convertView.findViewById(R.id.tvExp);
         mTvKind = convertView.findViewById(R.id.tvKind);
+        pbUsage = convertView.findViewById(R.id.pbUsage);
+
 
         tvBrand.setText(cosmetics.getProductBrand());
         tvName.setText(cosmetics.getProductName());
         tvOpen.setText(cosmetics.getProductOpen());
         tvExp.setText(cosmetics.getProductExp());
         mTvKind.setText(cosmetics.getProductKind());
+
+
+        // 프로그레스바 설정
+        try{
+            pbUsage.setMax(cosmetics.getProductInitPeriod());
+
+            String openStr = cosmetics.getProductOpen();
+            SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd");
+            Date open = trans.parse(openStr);
+
+            long now = System.currentTimeMillis();
+            Date dt = new Date(now);
+
+            long usage = dt.getTime() - open.getTime();
+            long usageDay = usage / (24 * 60 * 60 * 1000);
+            usageDay = Math.abs(usageDay);
+            Log.d(TAG , "pb - usageDay : " + usageDay);
+
+            pbUsage.setProgress((int) usageDay);
+            Log.d(TAG , "pb - pbUsage : " + pbUsage.getProgress());
+        }catch(Exception e){
+            Log.d(TAG , " pb - error : " + e.getMessage());
+        }
 
         ImageView ivDel = convertView.findViewById(R.id.ivDel);
         ivDel.setOnClickListener(new View.OnClickListener() {

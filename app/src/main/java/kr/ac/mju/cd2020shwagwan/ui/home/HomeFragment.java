@@ -10,9 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +32,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,8 +45,7 @@ import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ScanBarcode;
 
-import static android.app.Activity.RESULT_OK;
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class HomeFragment extends Fragment {
 
@@ -63,32 +58,30 @@ public class HomeFragment extends Fragment {
     private String mSql;
 
     private Spinner mSpinner;
-    private Spinner mSortSpinner;
 
     private ArrayList<Cosmetics> items;
     private SimpleDateFormat sdfNow;
     private EditText edOpen, edExp;
     int openYear=0, openMonth=0, openDay=0;
-    TextView tvComment, tvBarcode;
+    TextView tvComment;
     FloatingActionButton fabBarcode;
     Calendar openCalendar = Calendar.getInstance();
     Calendar expCalendar = Calendar.getInstance();
-    int REQUEST_SUCESS = 0;
-    String barcode;
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+    static int initPeriod = 0;
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         mRoot = inflater.inflate(R.layout.fragment_home, container, false);
-        //findViewById
+
+
         final FloatingActionButton fabAdd = mRoot.findViewById(R.id.fabAdd);
         listView = mRoot.findViewById(R.id.lvItem);
-        //초기 설정
-//        listData();
+        listData();
+
         setSpinner();
-
-        setSortSpinner();
-
-        setKind(null,true);
 
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -108,278 +101,15 @@ public class HomeFragment extends Fragment {
         fabBarcode.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Intent intent = new Intent(getContext(), ScanBarcode.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         return mRoot;
     }
 
-    //바코드 얻어오는 부분
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            barcode = data.getStringExtra("barcode");
-            if (resultCode == REQUEST_SUCESS) {//성공시
-                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
-                showAddDialog();
-                tvBarcode.setText(barcode);
-            } else  {//실패시 if(REQUEST_SUCESS == 1)
-                Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
-            }
-        }else{
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    void setSpinner() {
-        mSpinner = (Spinner)mRoot.findViewById(R.id.spShowKinds);
-        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
-        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(kindsAdapter);
-
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    switch (position) {
-                        case 0:
-                            setKind(mSpinner.getSelectedItem().toString(), true);
-                            break;
-                        case 1:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 2:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 3:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 4:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 5:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 6:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 7:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 8:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 9:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 10:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 11:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 12:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 13:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 14:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        case 15:
-                            setKind(mSpinner.getSelectedItem().toString(), false);
-                            break;
-                        default:
-                    }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    void setSortSpinner() {
-        mSortSpinner = (Spinner)mRoot.findViewById(R.id.spSort);
-
-        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort, android.R.layout.simple_spinner_item);
-        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSortSpinner.setAdapter(kindsAdapter);
-
-        mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        // 최신 등록순
-                        setSort(position);
-                        break;
-
-                    case 1:
-                        // 나중 등록순
-                        setSort(position);
-                        break;
-
-                    case 2:
-                        // 사용기간 얼마 안남은 순
-                        setSort(position);
-                        break;
-
-                    case 3:
-                        // 사용기간이 넉넉한 순
-                        setSort(position);
-                        break;
-
-                    case 4:
-                        // 이름순 ㄱ - ㅎ
-                        setSort(position);
-                        break;
-
-                    case 5:
-                        // 이름순 ㅎ - ㄱ
-                        setSort(position);
-                        break;
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-    }
-
-    void setSort(int check) {
-        String kind = mSpinner.getSelectedItem().toString();
-        this.items = new ArrayList<>();
-
-        // SQLite 사용
-        DBHelper dbHelper = DBHelper.getInstance(getContext());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
-        try {
-            // 쿼리문
-
-            switch(check) {
-                case 0:
-                    //개봉일순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics ORDER BY open";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "' ORDER BY open";
-                    }
-                    break;
-
-                case 1:
-                    //개봉일 역순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics ORDER BY open desc";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "' ORDER BY open desc";
-                    }
-                    break;
-
-                case 2:
-                    //사용기한 임박한 순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics ORDER BY exp";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp";
-                    }
-                    break;
-
-                case 3:
-                    //사용기한 넉넉한 순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics ORDER BY exp desc";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp desc";
-                    }
-                    break;
-
-                case 4:
-                    //제품명 ㄱ ~ ㅎ
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics ORDER BY name";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "' ORDER BY name";
-                    }
-                    break;
-
-                case 5:
-                    //제품명 ㅎ ~ ㄱ
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics ORDER BY name desc";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "' ORDER BY name desc";
-                    }
-                    break;
-            }
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
-                // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")));
-
-                this.items.add(cosmetic);
-            }
-
-            cursor.close();
-        } catch (SQLException e) {}
-
-        db.close();
-
-        // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
-    }
-
-    void setKind(String kind, boolean all) {
-        this.items = new ArrayList<>();
-
-        // SQLite 사용
-        DBHelper dbHelper = DBHelper.getInstance(getContext());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        try {
-            // 쿼리문
-            if (all) {
-                mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics";
-            } else {
-                mSql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics WHERE kind='" + kind + "'";
-            }
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
-                // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")));
-
-                this.items.add(cosmetic);
-            }
-
-            cursor.close();
-        } catch (SQLException e) {}
-
-        db.close();
-
-        // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
-
-        setSort(mSortSpinner.getSelectedItemPosition());
-    }
 
     /* 추가폼 호출 */
-     public void showAddDialog() {
+    private void showAddDialog() {
         // AlertDialog View layout
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.content_add, null);
@@ -394,9 +124,10 @@ public class HomeFragment extends Fragment {
         edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
         tvComment = layout.findViewById(R.id.tvComment);
-        tvBarcode = layout.findViewById(R.id.tvBarcode);
+
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
+
 
         // 개봉일 캘린더로 선택
         edOpen.setOnClickListener(new View.OnClickListener() {
@@ -405,7 +136,6 @@ public class HomeFragment extends Fragment {
                 DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
                         openCalendar.set(Calendar.YEAR, year);
                         openCalendar.set(Calendar.MONTH, month);
                         openCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -445,14 +175,11 @@ public class HomeFragment extends Fragment {
                     }
                 };
 
-
                 openYear = openCalendar.get(Calendar.YEAR);
                 openMonth = openCalendar.get(Calendar.MONTH);
                 openDay = openCalendar.get(Calendar.DAY_OF_MONTH);
 
                 new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay).show();
-
-
 
             }
         });
@@ -530,7 +257,7 @@ public class HomeFragment extends Fragment {
 
 
 
-        /* 추가폼에 데이터 입력 */
+        // 추가폼에 데이터 입력
         new AlertDialog.Builder(getContext())
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     @Override
@@ -549,15 +276,38 @@ public class HomeFragment extends Fragment {
                         }
 
 
+                        if(spKinds.getSelectedItemPosition() == 1 || spKinds.getSelectedItemPosition() == 2
+                                || spKinds.getSelectedItemPosition() == 11 || spKinds.getSelectedItemPosition() == 12
+                                || spKinds.getSelectedItemPosition() == 13 || spKinds.getSelectedItemPosition() == 14){
+                            //6개월 이내
+                            initPeriod = 180;
+                        }else if(spKinds.getSelectedItemPosition() == 3){
+                            //8개월 이내
+                            initPeriod = 240;
+                        }else if(spKinds.getSelectedItemPosition() == 0 || spKinds.getSelectedItemPosition() == 4
+                                || spKinds.getSelectedItemPosition() == 5 || spKinds.getSelectedItemPosition() == 6
+                                || spKinds.getSelectedItemPosition() == 8 || spKinds.getSelectedItemPosition() == 9
+                                ||spKinds.getSelectedItemPosition() == 10 || spKinds.getSelectedItemPosition() == 15 ){
+                            //1년 이내
+                            initPeriod = 365;
+                        }else if(spKinds.getSelectedItemPosition() == 7){
+                            //2년 이내
+                            initPeriod = 730;
+                        }else if(spKinds.getSelectedItemPosition() == 16){
+                            initPeriod = 365;
+                        }
+
+
                         // 데이터 추가
-                         addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString());
+                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), initPeriod);
                     }
                 })
                 .setCancelable(true)
-                .setTitle("화장품 관리")
+                .setTitle("화장품 추가 관리")
                 .setView(layout)
                 .show();
     }
+
 
 
     /* 개봉일 현재 날짜로 설정 */
@@ -572,41 +322,44 @@ public class HomeFragment extends Fragment {
 
 
     /* 리스트 구성 */
-//    private void listData() {
-//        this.items = new ArrayList<>();
-//
-//        // SQLite 사용
-//        DBHelper dbHelper = DBHelper.getInstance(getContext());
-//        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
-//        try {
-//            // 쿼리문
-//            String sql = "SELECT cID, brand, name, open, exp, kind FROM cosmetics";
-//            Cursor cursor = db.rawQuery(sql, null);
-//            while (cursor.moveToNext()) {
-//                // 데이터
-//                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-//                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
-//                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-//                        cursor.getString(cursor.getColumnIndex("kind")));
-//
-//                this.items.add(cosmetic);
-//            }
-//
-//            cursor.close();
-//        } catch (SQLException e) {}
-//
-//        db.close();
-//
-//        // 리스트 구성
-//        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-//        this.listView.setAdapter(this.adapter);
-//    }
+    private void listData() {
+        this.items = new ArrayList<>();
+
+        // SQLite 사용
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            // 쿼리문
+            String sql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics";
+            Cursor cursor = db.rawQuery(sql, null);
+            while (cursor.moveToNext()) {
+                // 데이터
+                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod"))
+                        );
+
+                        this.items.add(cosmetic);
+
+            }
+
+            cursor.close();
+        } catch (SQLException e) {}
+
+        db.close();
+
+        // 리스트 구성
+        this.adapter = new CustomArrayAdapter(getContext(), this.items);
+        this.listView.setAdapter(this.adapter);
+
+    }
 
 
 
     /* 추가 */
-    private void addData(String brand, String name, String open, String exp, String kind) {
+    private void addData(String brand, String name, String open, String exp, String kind, int initPeriod) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -614,18 +367,126 @@ public class HomeFragment extends Fragment {
         mSpinner.setSelection(0);
         try {
             // 등록
-            Object[] args = { brand, name, open, exp, kind };
-            String sql = "INSERT INTO cosmetics(brand, name, open, exp, kind) VALUES(?,?,?,?,?)";
+            Object[] args = { brand, name, open, exp, kind, initPeriod};
+            String sql = "INSERT INTO cosmetics(brand, name, open, exp, kind, initPeriod) VALUES(?,?,?,?,?,?)";
 
             db.execSQL(sql, args);
 
+//            Toast.makeText(getContext(), "Scanned: " + initPeriod, Toast.LENGTH_LONG).show();
+
             // 리스트 새로고침
-//            listData();
-            setKind(null,true);
+            listData();
 
         } catch (SQLException e) {}
 
         db.close();
+    }
+
+
+    void setSpinner() {
+        mSpinner = (Spinner)mRoot.findViewById(R.id.spShowKinds);
+
+        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
+        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(kindsAdapter);
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        setKind(mSpinner.getSelectedItem().toString(), true);
+                        break;
+                    case 1:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 2:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 3:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 4:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 5:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 6:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 7:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 8:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 9:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 10:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 11:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 12:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 13:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 14:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    case 15:
+                        setKind(mSpinner.getSelectedItem().toString(), false);
+                        break;
+                    default:
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    void setKind(String kind, boolean all) {
+        this.items = new ArrayList<>();
+
+        // SQLite 사용
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            // 쿼리문
+            if (all) {
+                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics";
+            } else {
+                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "'";
+            }
+            Cursor cursor = db.rawQuery(mSql, null);
+            while (cursor.moveToNext()) {
+                // 데이터
+                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod"))
+                );
+
+                this.items.add(cosmetic);
+            }
+
+            cursor.close();
+        } catch (SQLException e) {}
+
+        db.close();
+
+        // 리스트 구성
+        this.adapter = new CustomArrayAdapter(getContext(), this.items);
+        this.listView.setAdapter(this.adapter);
     }
 
 

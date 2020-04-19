@@ -9,14 +9,16 @@ public class Cosmetics {
     private String productOpen;
     private String productExp;
     private String productKind;
+    private int productInitPeriod;
 
-    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp, String productKind) {
+    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp, String productKind, int productInitPeriod) {
         this.id = id;
         this.productBrand = productBrand;
         this.productName = productName;
         this.productOpen = productOpen;
         this.productExp = productExp;
         this.productKind = productKind;
+        this.productInitPeriod = productInitPeriod;
     }
 
     public int getId() {
@@ -42,4 +44,6 @@ public class Cosmetics {
     public String getProductKind() {
         return productKind;
     }
+
+    public int getProductInitPeriod() { return productInitPeriod; }
 }
