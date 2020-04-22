@@ -1,11 +1,15 @@
 package kr.ac.mju.cd2020shwagwan;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,11 +73,19 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         // 프로그레스바 설정
         try{
-            pbUsage.setMax(cosmetics.getProductInitPeriod());
 
             String openStr = cosmetics.getProductOpen();
             SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd");
             Date open = trans.parse(openStr);
+
+            String expStr = cosmetics.getProductExp();
+            Date exp = trans.parse(expStr);
+
+            long period = exp.getTime() - open.getTime();
+            long periodDay = period / (24 * 60 * 60 * 1000);
+            periodDay = Math.abs(periodDay);
+
+            pbUsage.setMax((int)periodDay);
 
             long now = System.currentTimeMillis();
             Date dt = new Date(now);
@@ -84,6 +97,8 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
             pbUsage.setProgress((int) usageDay);
             Log.d(TAG , "pb - pbUsage : " + pbUsage.getProgress());
+
+
         }catch(Exception e){
             Log.d(TAG , " pb - error : " + e.getMessage());
         }
@@ -133,5 +148,6 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         db.close();
     }
+
 
 }

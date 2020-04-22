@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
     TextView tvComment, tvBarcode;
     FloatingActionButton fabBarcode;
     Calendar openCalendar = Calendar.getInstance();
-    Calendar expCalendar = Calendar.getInstance();
+    static public Calendar expCalendar = Calendar.getInstance();
     int REQUEST_SUCESS = 0;
     String barcode;
     static int initPeriod = 0;
@@ -257,131 +257,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    void setSort(int check) {
-        String kind = mSpinner.getSelectedItem().toString();
-        this.items = new ArrayList<>();
-
-        // SQLite 사용
-        DBHelper dbHelper = DBHelper.getInstance(getContext());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
-        try {
-            // 쿼리문
-
-            switch (check) {
-                case 0:
-                    //개봉일순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY open";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY open";
-                    }
-                    break;
-
-                case 1:
-                    //개봉일 역순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY open desc";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY open desc";
-                    }
-                    break;
-
-                case 2:
-                    //사용기한 임박한 순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY exp";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp";
-                    }
-                    break;
-
-                case 3:
-                    //사용기한 넉넉한 순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY exp desc";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp desc";
-                    }
-                    break;
-
-                case 4:
-                    //제품명 ㄱ ~ ㅎ
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY name";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY name";
-                    }
-                    break;
-
-                case 5:
-                    //제품명 ㅎ ~ ㄱ
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY name desc";
-                    } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY name desc";
-                    }
-                    break;
-            }
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
-                // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")));
-
-                this.items.add(cosmetic);
-            }
-
-            cursor.close();
-        } catch (SQLException e) {
-        }
-
-        db.close();
-
-        // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
-    }
-
-    void setKind(String kind, boolean all) {
-        this.items = new ArrayList<>();
-
-        // SQLite 사용
-        DBHelper dbHelper = DBHelper.getInstance(getContext());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        try {
-            // 쿼리문
-            if (all) {
-                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics";
-            } else {
-                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "'";
-            }
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
-                // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")));
-
-                this.items.add(cosmetic);
-            }
-
-            cursor.close();
-        } catch (SQLException e) {
-        }
-
-        db.close();
-
-        // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
-
-        setSort(mSortSpinner.getSelectedItemPosition());
-    }
 
     /* 추가폼 호출 */
     public void showAddDialog() {
@@ -593,6 +468,133 @@ public class HomeFragment extends Fragment {
         sdfNow = new SimpleDateFormat("yyyy-MM-dd");
         String formatDate = sdfNow.format(dt);
         ed.setText(formatDate);
+    }
+
+
+    void setSort(int check) {
+        String kind = mSpinner.getSelectedItem().toString();
+        this.items = new ArrayList<>();
+
+        // SQLite 사용
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//
+        try {
+            // 쿼리문
+
+            switch (check) {
+                case 0:
+                    //개봉일순
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY open";
+                    } else {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY open";
+                    }
+                    break;
+
+                case 1:
+                    //개봉일 역순
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY open desc";
+                    } else {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY open desc";
+                    }
+                    break;
+
+                case 2:
+                    //사용기한 임박한 순
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY exp";
+                    } else {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp";
+                    }
+                    break;
+
+                case 3:
+                    //사용기한 넉넉한 순
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY exp desc";
+                    } else {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp desc";
+                    }
+                    break;
+
+                case 4:
+                    //제품명 ㄱ ~ ㅎ
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY name";
+                    } else {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY name";
+                    }
+                    break;
+
+                case 5:
+                    //제품명 ㅎ ~ ㄱ
+                    if (mSpinner.getSelectedItemPosition() == 0) {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY name desc";
+                    } else {
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY name desc";
+                    }
+                    break;
+            }
+            Cursor cursor = db.rawQuery(mSql, null);
+            while (cursor.moveToNext()) {
+                // 데이터
+                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")));
+
+                this.items.add(cosmetic);
+            }
+
+            cursor.close();
+        } catch (SQLException e) {
+        }
+
+        db.close();
+
+        // 리스트 구성
+        this.adapter = new CustomArrayAdapter(getContext(), this.items);
+        this.listView.setAdapter(this.adapter);
+    }
+
+    void setKind(String kind, boolean all) {
+        this.items = new ArrayList<>();
+
+        // SQLite 사용
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            // 쿼리문
+            if (all) {
+                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics";
+            } else {
+                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "'";
+            }
+            Cursor cursor = db.rawQuery(mSql, null);
+            while (cursor.moveToNext()) {
+                // 데이터
+                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
+                        cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")));
+
+                this.items.add(cosmetic);
+            }
+
+            cursor.close();
+        } catch (SQLException e) {
+        }
+
+        db.close();
+
+        // 리스트 구성
+        this.adapter = new CustomArrayAdapter(getContext(), this.items);
+        this.listView.setAdapter(this.adapter);
+
+        setSort(mSortSpinner.getSelectedItemPosition());
     }
 
 
