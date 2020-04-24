@@ -102,17 +102,13 @@
         android:layout_height="wrap_content"
         android:text="사용 기간 만료 원하는 시간" />
 
-    <CheckBox
-        android:id="@+id/cbNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="알림을 원하지 않음" />
 
     <CheckBox
         android:id="@+id/cbWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="한 주전 알림" />
+        android:text="한 주전 알림"
+        />
 
     <CheckBox
         android:id="@+id/cbMonth"

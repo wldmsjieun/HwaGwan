@@ -17,13 +17,13 @@
             android:layout_height="39dp" />
 
         <Space
-            android:layout_width="110dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/spSort"
-            android:layout_width="182dp"
+            android:layout_width="109dp"
             android:layout_height="match_parent" />
     </LinearLayout>
 
@@ -51,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@mipmap/ic_launcher_round"
             android:clickable="false"
             app:backgroundTint="#2196F3"
             app:srcCompat="@android:drawable/ic_menu_camera" />

@@ -2,17 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="kr.ac.mju.cd2020shwagwan">
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true"
-        >
+        android:theme="@style/AppTheme">
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -21,24 +24,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ScanBarcode"> </activity>
-        <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
+        </activity> <!-- 바코드 설정 -->
+        <activity android:name=".ScanBarcode" />
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation"/>
-
-        <receiver android:name=".DeviceBootReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".AlarmReceiver" />
-
+            tools:replace="screenOrientation" /> <!-- 노티피케이션 설정 -->
+        <activity
+            android:name=".ResultActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
-
-
-
 
 </manifest>
