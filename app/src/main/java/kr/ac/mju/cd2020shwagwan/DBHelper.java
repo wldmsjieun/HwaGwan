@@ -8,9 +8,14 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
     private volatile static DBHelper _instance = null;
+    DBHelper dbHelper;
+    SQLiteDatabase db;
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "hwagwan.db";
+
+    public static final String TABLE_COSMETIC = "cosmetics";
+    public static final String TABLE_BARCODE_INFO = "barcodeinfos";
 
     /* 싱글톤 패턴 적용  */
     public static DBHelper getInstance(Context context) {
@@ -33,8 +38,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 테이블 생성
         try {
-            db.execSQL("CREATE TABLE cosmetics(cID INTEGER PRIMARY KEY AUTOINCREMENT, brand TEXT, name TEXT, open TEXT, exp TEXT," +
+            db.execSQL("CREATE TABLE "+TABLE_COSMETIC+"(cID INTEGER PRIMARY KEY AUTOINCREMENT, brand TEXT, name TEXT, open TEXT, exp TEXT," +
                     " kind TEXT, initPeriod INTEGER);");
+
+            db.execSQL("CREATE TABLE "+TABLE_BARCODE_INFO+"(bID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "bcdId TEXT, bcdBrand TEXT, bcdName TEXT, bcdVolume TEXT);");
         } catch (SQLException e) {
         }
     }
@@ -42,9 +50,16 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // 테이블 삭제
-        db.execSQL("DROP TABLE IF EXISTS cosmetics");
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COSMETIC);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BARCODE_INFO);
         // 테이블 삭제후 다시 생성하기 위함
         onCreate(db);
     }
+
+   /* public BarcodeInfo open() throws SQLException {
+        DBHelper =  DBHelper.this;
+        db = DBHelper.getReadableDatabase();
+        return this;
+    }
+*/
 }

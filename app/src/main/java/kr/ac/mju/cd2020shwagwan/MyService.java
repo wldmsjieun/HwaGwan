@@ -48,10 +48,10 @@ public class MyService extends Service {
         try{
             Thread.sleep(220);
             if(checkedWeek == true){
-                Notification(" 만료 일주일전", productName);
+                Notification(weekCid, " 만료 일주일전", productName);
             }
             if(checkedMonth == true){
-                Notification(" 만료 한달전", productName);
+                Notification(monthCid, " 만료 한달전", productName);
             }
         }catch(Exception e){
             Log.d(TAG, "CosId  e - "+ e.getMessage());
@@ -71,13 +71,13 @@ public class MyService extends Service {
         super.onCreate();
     }
 
-    public void Notification(String when,  String productName) {
+    public void Notification(int cosID, String when,  String productName) {
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(getApplicationContext(), HomeFragment.class);
         notificationIntent.putExtra("notificationId", count); //전달할 값
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), weekCid, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), cosID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID)
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_launcher_foreground)) //BitMap 이미지 요구
@@ -108,7 +108,7 @@ public class MyService extends Service {
             builder.setSmallIcon(R.mipmap.ic_launcher); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
         assert notificationManager != null;
-        notificationManager.notify(weekCid, builder.build()); // 고유숫자로 노티피케이션 동작시킴
+        notificationManager.notify(cosID, builder.build()); // 고유숫자로 노티피케이션 동작시킴
     }
 
 

@@ -53,6 +53,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import kr.ac.mju.cd2020shwagwan.BarcodeInfo;
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
@@ -82,6 +83,7 @@ public class HomeFragment extends Fragment {
     private EditText edOpen, edExp;
     int openYear = 0, openMonth = 0, openDay = 0;
     TextView tvComment, tvBarcode;
+    EditText etBrand, etName;
     FloatingActionButton fabBarcode;
     Calendar openCalendar = Calendar.getInstance();
     static public Calendar expCalendar = Calendar.getInstance();
@@ -91,6 +93,7 @@ public class HomeFragment extends Fragment {
     static public CheckBox  cbWeek, cbMonth;
 
 
+    public String bcdBrand, bcdName;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,11 +143,14 @@ public class HomeFragment extends Fragment {
         if (result != null) {
             barcode = data.getStringExtra("barcode");
             if (resultCode == REQUEST_SUCESS) {//성공시
-                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
+                compareBarcode(barcode);
                 showAddDialog();
                 tvBarcode.setText(barcode);
+                etBrand.setText(bcdBrand);
+                etName.setText(bcdName);
             } else {//실패시
-                Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -413,8 +419,11 @@ public class HomeFragment extends Fragment {
         // findViewById
         edOpen = layout.findViewById(R.id.edOpen);
         edExp = layout.findViewById(R.id.edExp);
+        etBrand = layout.findViewById(R.id.etBrand);
+        etName = layout.findViewById(R.id.etName);
         tvComment = layout.findViewById(R.id.tvComment);
         tvBarcode = layout.findViewById(R.id.tvBarcode);
+
 
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
@@ -585,13 +594,13 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
                         // 추가
-                        String brand = ((EditText) layout.findViewById(R.id.etBrand)).getText().toString();
+                        String brand = etBrand.getText().toString();
                         if (TextUtils.isEmpty(brand)) {
                             Toast.makeText(getContext(), "Brand empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        String name = ((EditText) layout.findViewById(R.id.etName)).getText().toString();
+                        String name = etName.getText().toString();
                         if (TextUtils.isEmpty(name)) {
                             Toast.makeText(getContext(), "Name empty", Toast.LENGTH_SHORT).show();
                             return;
@@ -640,6 +649,48 @@ public class HomeFragment extends Fragment {
         String formatDate = sdfNow.format(dt);
         ed.setText(formatDate);
     }
+
+
+
+    /* 화장품 정보 가져오기 */
+    public void compareBarcode(String barcode){
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        int isSame = 0;
+
+        try {
+            // 쿼리문
+            Log.d(TAG , "compareBarcode try 입성");
+
+            String sql = "SELECT bID, bcdId, bcdBrand, bcdName, bcdVolume FROM barcodeInfos";
+            Cursor cursor = db.rawQuery(sql, null);
+            while (cursor.moveToNext()) {
+                // 데이터
+                Log.d(TAG , "compareBarcode while 입성");
+                BarcodeInfo barcodeInfo = new BarcodeInfo(cursor.getInt(cursor.getColumnIndex("bID")),
+                        cursor.getString(cursor.getColumnIndex("bcdId")), cursor.getString(cursor.getColumnIndex("bcdBrand")),
+                        cursor.getString(cursor.getColumnIndex("bcdName")), cursor.getString(cursor.getColumnIndex("bcdVolume"))
+                );
+
+                if(barcode.equals(barcodeInfo.getBcdId()) == true){
+                    Toast.makeText(getContext(), "바코드 정보 가져오기 성공", Toast.LENGTH_LONG).show();
+                    bcdBrand = barcodeInfo.getBcdBrand();
+                    bcdName = barcodeInfo.getBcdName();
+                    isSame = 1;
+                    break;
+                }
+            }
+            if (isSame == 0){
+                Toast.makeText(getContext(), "바코드 정보 가져오기 실패", Toast.LENGTH_LONG).show();
+            }
+            cursor.close();
+        } catch (SQLException e) {
+            Log.d(TAG , "compareBarcode error : " + e.getMessage());
+        }
+
+        db.close();
+    }
+
 
 
     /* 리스트 구성 */
