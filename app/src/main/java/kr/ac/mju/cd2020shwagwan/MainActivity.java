@@ -108,24 +108,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(getApplicationContext(), "뒤로버튼 눌림!!", Toast.LENGTH_SHORT).show();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("앱을 완전히 종료하시겠습니까?");
-        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // process 전체 종료!
-                onPause();
-                dialogInterface.dismiss();
-                finish();
-                //android.os.Process.killProcess(android.os.Process.myPid());
-            }
-        });
-
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                // process 전체 종료!
+//                onPause();
+//                dialogInterface.dismiss();
+//                finish();
+//                //android.os.Process.killProcess(android.os.Process.myPid());
+//            }
+//        });
+//
+//
+//    }
 
 }

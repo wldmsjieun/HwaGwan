@@ -40,12 +40,13 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        boolean checkedWeek = intent.getBooleanExtra("cbWeekOn",false);
-        boolean checkedMonth = intent.getBooleanExtra("cbMonthOn",false);
-        productName = intent.getStringExtra("productName");
-        weekCid =  intent.getIntExtra("weekCid",-1);
-        monthCid = intent.getIntExtra("monthCid",-1);
         try{
+            boolean checkedWeek = intent.getBooleanExtra("cbWeekOn",false);
+            boolean checkedMonth = intent.getBooleanExtra("cbMonthOn",false);
+            productName = intent.getStringExtra("productName");
+            weekCid =  intent.getIntExtra("weekCid",-1);
+            monthCid = intent.getIntExtra("monthCid",-1);
+
             Thread.sleep(220);
             if(checkedWeek == true){
                 Notification(weekCid, " 만료 일주일전", productName);
@@ -74,7 +75,7 @@ public class MyService extends Service {
     public void Notification(int cosID, String when,  String productName) {
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(getApplicationContext(), HomeFragment.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
         notificationIntent.putExtra("notificationId", count); //전달할 값
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), cosID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
