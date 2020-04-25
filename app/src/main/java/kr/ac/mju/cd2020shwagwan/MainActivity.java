@@ -1,14 +1,17 @@
 package kr.ac.mju.cd2020shwagwan;
 
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -41,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        EditText tvBrand = findViewById(R.id.etBrand);
-        EditText tvItem = findViewById(R.id.etName);
+
 
         dbHelper = DBHelper.getInstance(this);
         db = dbHelper.getReadableDatabase();
@@ -63,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             InputStream is = getBaseContext().getResources().getAssets().open("barcode_info.xls");
+            if(is != null){
+                Log.d(TAG, "xls open");
+            }
+
             workbook = Workbook.getWorkbook(is);
 
             if (workbook != null) {
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     int nRowEndIndex = sheet.getColumn(nMaxColumn - 1).length - 1;
                     int nColumnStartIndex = 0;
                     int nColumnEndIndex = sheet.getRow(4).length - 1;
-
+                    Log.d(TAG, "nRowEndIndex : "+String.valueOf(nRowEndIndex));
 
                     for (int nRow = nRowStartIndex; nRow <= nRowEndIndex; nRow++) {
                         String bInfo =sheet.getCell(nColumnStartIndex, nRow).getContents();
@@ -102,9 +108,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(getApplicationContext(), "뒤로버튼 눌림!!", Toast.LENGTH_SHORT).show();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("앱을 완전히 종료하시겠습니까?");
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // process 전체 종료!
+                onPause();
+                dialogInterface.dismiss();
+                finish();
+                //android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
 
 
-
-
+    }
 
 }

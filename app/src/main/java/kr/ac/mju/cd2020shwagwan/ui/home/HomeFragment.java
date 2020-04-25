@@ -135,6 +135,7 @@ public class HomeFragment extends Fragment {
         return mRoot;
     }
 
+
     //바코드 얻어오는 부분
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -671,14 +672,18 @@ public class HomeFragment extends Fragment {
                         cursor.getString(cursor.getColumnIndex("bcdId")), cursor.getString(cursor.getColumnIndex("bcdBrand")),
                         cursor.getString(cursor.getColumnIndex("bcdName")), cursor.getString(cursor.getColumnIndex("bcdVolume"))
                 );
+                String cmp =barcodeInfo.getBcdId().substring(0,13);
+                Log.d(TAG , "barcode : "+barcode);
+                Log.d(TAG , "cmp : "+cmp);
 
-                if(barcode.equals(barcodeInfo.getBcdId()) == true){
+                if(cmp.equals(barcode)) {
                     Toast.makeText(getContext(), "바코드 정보 가져오기 성공", Toast.LENGTH_LONG).show();
                     bcdBrand = barcodeInfo.getBcdBrand();
                     bcdName = barcodeInfo.getBcdName();
                     isSame = 1;
                     break;
                 }
+
             }
             if (isSame == 0){
                 Toast.makeText(getContext(), "바코드 정보 가져오기 실패", Toast.LENGTH_LONG).show();
