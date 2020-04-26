@@ -10,8 +10,9 @@ public class Cosmetics {
     private String productExp;
     private String productKind;
     private int productInitPeriod;
+    private int productAlarm;
 
-    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp, String productKind, int productInitPeriod) {
+    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp, String productKind, int productInitPeriod, int productAlarm) {
         this.id = id;
         this.productBrand = productBrand;
         this.productName = productName;
@@ -19,6 +20,7 @@ public class Cosmetics {
         this.productExp = productExp;
         this.productKind = productKind;
         this.productInitPeriod = productInitPeriod;
+        this.productAlarm = productAlarm;
     }
 
     public int getId() {
@@ -45,5 +47,11 @@ public class Cosmetics {
         return productKind;
     }
 
-    public int getProductInitPeriod() { return productInitPeriod; }
+    public int getProductInitPeriod() {
+        return productInitPeriod;
+    }
+
+    public int getProductAlarm() {
+        return productAlarm;
+    }
 }

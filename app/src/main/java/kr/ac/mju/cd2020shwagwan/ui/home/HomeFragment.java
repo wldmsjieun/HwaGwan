@@ -19,6 +19,7 @@ import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -73,7 +74,13 @@ public class HomeFragment extends Fragment {
 
     private View mRoot;
 
+    //1: no, 2: week, 3: month
+    private int mAlarmCheck;
+
     private String mSql;
+
+    private boolean mCbWeekCheck;
+    private boolean mCbMonthCheck;
 
     private Spinner mSpinner;
     private Spinner mSortSpinner;
@@ -294,54 +301,54 @@ public class HomeFragment extends Fragment {
                 case 0:
                     //개봉일순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY open";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics ORDER BY open";
                     } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY open";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY open";
                     }
                     break;
 
                 case 1:
                     //개봉일 역순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY open desc";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics ORDER BY open desc";
                     } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY open desc";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY open desc";
                     }
                     break;
 
                 case 2:
                     //사용기한 임박한 순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY exp";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics ORDER BY exp";
                     } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp";
                     }
                     break;
 
                 case 3:
                     //사용기한 넉넉한 순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY exp desc";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics ORDER BY exp desc";
                     } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp desc";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY exp desc";
                     }
                     break;
 
                 case 4:
                     //제품명 ㄱ ~ ㅎ
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY name";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics ORDER BY name";
                     } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY name";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY name";
                     }
                     break;
 
                 case 5:
                     //제품명 ㅎ ~ ㄱ
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics ORDER BY name desc";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics ORDER BY name desc";
                     } else {
-                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "' ORDER BY name desc";
+                        mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY name desc";
                     }
                     break;
             }
@@ -351,7 +358,9 @@ public class HomeFragment extends Fragment {
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")));
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")),
+                        cursor.getInt(cursor.getColumnIndex("alarm"))
+                );
 
                 this.items.add(cosmetic);
             }
@@ -377,9 +386,9 @@ public class HomeFragment extends Fragment {
         try {
             // 쿼리문
             if (all) {
-                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics";
+                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics";
             } else {
-                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics WHERE kind='" + kind + "'";
+                mSql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics WHERE kind='" + kind + "'";
             }
             Cursor cursor = db.rawQuery(mSql, null);
             while (cursor.moveToNext()) {
@@ -387,7 +396,8 @@ public class HomeFragment extends Fragment {
                  Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")));
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")),
+                        cursor.getInt(cursor.getColumnIndex("alarm")));
 
                 this.items.add(cosmetic);
             }
@@ -428,6 +438,9 @@ public class HomeFragment extends Fragment {
 
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
+
+//        체크박스 설정
+        setCheckBox();
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -631,7 +644,7 @@ public class HomeFragment extends Fragment {
 
 
                         // 데이터 추가
-                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), initPeriod);
+                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), initPeriod, mAlarmCheck);
                     }
                 })
                 .setCancelable(true)
@@ -708,14 +721,15 @@ public class HomeFragment extends Fragment {
 
         try {
             // 쿼리문
-            String sql = "SELECT cID, brand, name, open, exp, kind, initPeriod FROM cosmetics";
+            String sql = "SELECT cID, brand, name, open, exp, kind, initPeriod, alarm FROM cosmetics";
             Cursor cursor = db.rawQuery(sql, null);
             while (cursor.moveToNext()) {
                 // 데이터
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brand")), cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("open")), cursor.getString(cursor.getColumnIndex("exp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod"))
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("initPeriod")),
+                        cursor.getInt(cursor.getColumnIndex("alarm"))
                 );
 
                 this.items.add(cosmetic);
@@ -736,7 +750,7 @@ public class HomeFragment extends Fragment {
 
 
     /* 추가 */
-    private void addData(String brand, String name, String open, String exp, String kind, int initPeriod) {
+    private void addData(String brand, String name, String open, String exp, String kind, int initPeriod, int alarm) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -744,8 +758,8 @@ public class HomeFragment extends Fragment {
         mSpinner.setSelection(0);
         try {
             // 등록
-            Object[] args = {brand, name, open, exp, kind, initPeriod};
-            String sql = "INSERT INTO cosmetics(brand, name, open, exp, kind, initPeriod) VALUES(?,?,?,?,?,?)";
+            Object[] args = {brand, name, open, exp, kind, initPeriod, alarm};
+            String sql = "INSERT INTO cosmetics(brand, name, open, exp, kind, initPeriod, alarm) VALUES(?,?,?,?,?,?,?)";
 
             db.execSQL(sql, args);
 
@@ -759,5 +773,51 @@ public class HomeFragment extends Fragment {
         db.close();
     }
 
+    void setCheckBox() {
+        //0: week, 1: month
+        mAlarmCheck = 0;
+
+        mCbWeekCheck = true;
+        mCbMonthCheck = true;
+
+        // mAlarmCheck
+        // 0 : 일주일 1 : 한달
+        CompoundButton.OnCheckedChangeListener cHandler = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                switch (buttonView.getId()) {
+                    case R.id.cbWeek:
+                        if (isChecked) {
+                            mCbWeekCheck = true;
+                            mCbMonthCheck = false;
+
+                            cbMonth.setChecked(false);
+                            mAlarmCheck = 0;
+                        } else {
+                            if (mCbWeekCheck) {
+                                cbWeek.setChecked(true);
+                            }
+                        }
+                        break;
+                    case R.id.cbMonth:
+                        if (isChecked) {
+                            mCbMonthCheck = true;
+                            mCbWeekCheck = false;
+
+                            cbWeek.setChecked(false);
+                            mAlarmCheck = 1;
+                        } else {
+                            if (mCbMonthCheck) {
+                                cbMonth.setChecked(true);
+                            }
+                        }
+                        break;
+                }
+            }
+        };
+
+        cbWeek.setOnCheckedChangeListener(cHandler);
+        cbMonth.setOnCheckedChangeListener(cHandler);
+    }
 }
 

@@ -125,13 +125,17 @@ public class CustomArrayAdapter extends ArrayAdapter {
         aDay = Math.abs(alarmDay);
         aDay = Math.ceil(alarmDay);
 
+        int alarmCheck = cosmetics.getProductAlarm();
+
+        Log.d("확인", " alarmcHECK = " + alarmCheck + " brand = " + cosmetics.getProductBrand());
+
         Intent intent = new Intent(getContext(), MyService.class);
         SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetics.getId()), MODE_PRIVATE);
         int notiWeek = sp.getInt("notiWeek", 0);
         int notiMonth= sp.getInt("notiMonth", 0);
         SharedPreferences.Editor editor = sp.edit();
         intent.putExtra("productName", cosmetics.getProductName());
-                if (aDay == 7 && notiWeek == 0){
+                if (aDay == 7  && notiWeek == 0 && alarmCheck == 0){
                     Log.d(TAG, "알람7 " + aDay);
                     intent.putExtra("cbWeekOn", true);
                     intent.putExtra("weekCid", cosmetics.getId());
@@ -143,7 +147,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
                 }
 
 
-                if (aDay == 30 && notiMonth == 0){
+                if (aDay == 30 && notiMonth == 0 && alarmCheck == 1){
                     intent.putExtra("cbMonthOn", true);
                     editor.putInt("notiMonth", 1);
                     intent.putExtra("monthCid", cosmetics.getId());

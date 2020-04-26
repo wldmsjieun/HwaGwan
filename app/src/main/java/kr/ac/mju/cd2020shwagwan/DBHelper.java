@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // 테이블 생성
         try {
             db.execSQL("CREATE TABLE "+TABLE_COSMETIC+"(cID INTEGER PRIMARY KEY AUTOINCREMENT, brand TEXT, name TEXT, open TEXT, exp TEXT," +
-                    " kind TEXT, initPeriod INTEGER);");
+                    " kind TEXT, initPeriod INTEGER, alarm INTEGER);");
 
             db.execSQL("CREATE TABLE "+TABLE_BARCODE_INFO+"(bID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "bcdId TEXT, bcdBrand TEXT, bcdName TEXT, bcdVolume TEXT);");
