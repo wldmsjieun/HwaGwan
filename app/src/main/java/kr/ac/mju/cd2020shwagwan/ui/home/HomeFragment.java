@@ -639,16 +639,28 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG , "cmp : "+cmp);
 
                 if(cmp.equals(barcode)) {
-                    Toast.makeText(getContext(), "바코드 정보 가져오기 성공", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "바코드 정보 가져오기 성공", Toast.LENGTH_SHORT).show();
                     bcdBrand = barcodeInfo.getBcdBrand();
                     bcdName = barcodeInfo.getBcdName();
                     isSame = 1;
                     break;
+                } else{
+                    String barcodeBrand = barcode.substring(3, 7);
+                    String barcodeInfoBrand = cmp.substring(3, 7);
+
+                    Log.d(TAG , "cmp - barcodeBrand : "+barcodeBrand);
+                    Log.d(TAG , "cmp - barcodeInfoBrand : "+barcodeInfoBrand);
+
+                    if (barcodeInfoBrand.equals(barcodeBrand)) {
+                        bcdBrand = barcodeInfo.getBcdBrand();
+                        bcdName = "";
+                        Toast.makeText(getContext(), "바코드 브랜드 정보 가져오기 성공", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
             if (isSame == 0){
-                Toast.makeText(getContext(), "바코드 정보 가져오기 실패", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "바코드 정보 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
             cursor.close();
         } catch (SQLException e) {
@@ -733,7 +745,7 @@ public class HomeFragment extends Fragment {
 
     //체크박스 상태 함수
     private int setCheckBox() {
-        // 0 : no, week : 1, month : 2
+        // no : 0, week : 1, month : 2, all : 3
 
         if (cbWeek.isChecked() == false){
             if (cbMonth.isChecked() == false)  return 0;
