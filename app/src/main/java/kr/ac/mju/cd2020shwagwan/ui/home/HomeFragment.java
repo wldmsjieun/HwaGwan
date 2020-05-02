@@ -1,9 +1,6 @@
 package kr.ac.mju.cd2020shwagwan.ui.home;
 
 import android.app.DatePickerDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,16 +8,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +28,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -47,7 +36,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,68 +46,64 @@ import kr.ac.mju.cd2020shwagwan.BarcodeInfo;
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
-import kr.ac.mju.cd2020shwagwan.MyService;
 import kr.ac.mju.cd2020shwagwan.R;
-import kr.ac.mju.cd2020shwagwan.ResultActivity;
 import kr.ac.mju.cd2020shwagwan.ScanBarcode;
 
 import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
-import static android.app.Activity.RESULT_OK;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 public class HomeFragment extends Fragment {
 
+    //private
     private HomeViewModel homeViewModel;
     private ListView listView;
     private CustomArrayAdapter adapter;
-
     private View mRoot;
-
-    //0: no, 1: week, 2: month, 3: all
-//    private int mAlarmCheck;
-
-    private String mSql;
-
-    private Spinner mSpinner;
-    private Spinner mSortSpinner;
-
-    private ArrayList<Cosmetics> items;
+    private String mSql; //SQL문을 위한 변수
+    private Spinner mSpinner; //화장품 종류 스피너
+    private Spinner mSortSpinner; //정렬 스피너
+    private ArrayList<Cosmetics> items; //리스트를 위한 변수
     private SimpleDateFormat sdfNow;
-    private EditText edOpen, edExp;
-    int openYear = 0, openMonth = 0, openDay = 0;
-    TextView tvComment, tvBarcode;
-    EditText etBrand, etName;
-    FloatingActionButton fabBarcode;
-    Calendar openCalendar = Calendar.getInstance();
-    static public Calendar expCalendar = Calendar.getInstance();
-    int REQUEST_SUCESS = 0;
-    String barcode;
-    static int initPeriod = 0;
-    static public CheckBox  cbWeek, cbMonth;
+    private EditText edOpen, edExp; //개봉일, 만료일
 
+    //
+    int REQUEST_SUCESS = 0; //바코드 얻어오는 부분에서 사용
+    int openYear = 0, openMonth = 0, openDay = 0; //개봉일 연도, 월, 일
+    String barcode; //바코드 번호를 위한 변수
+    TextView tvComment, tvBarcode; //사용 권장 기한, 바코드 번호 텍스트뷰
+    EditText etBrand, etName; //브랜드명, 상품명
+    FloatingActionButton fabBarcode; //fab버튼
+    Calendar openCalendar = Calendar.getInstance(); //개봉일을 위한 달력
 
-    public String bcdBrand, bcdName;
+    //public
+    public String bcdBrand, bcdName; //바코드 상품명, 브랜드명 변수
+
+    //static
+    static int initPeriod = 0; //사용 권장 기한
+    static public Calendar expCalendar = Calendar.getInstance(); //만료일을 위한 달력
+    static public CheckBox  cbWeek, cbMonth; //체크박스
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         mRoot = inflater.inflate(R.layout.fragment_home, container, false);
+
         //findViewById
         final FloatingActionButton fabAdd = mRoot.findViewById(R.id.fabAdd);
         listView = mRoot.findViewById(R.id.lvItem);
+
         //초기 설정
 //        listData();
         setSpinner();
-
         setSortSpinner();
-
         setKind(null, true);
 
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-
+                //fabAdd 누르면 입력폼 보여줌
                 fabAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -149,20 +133,20 @@ public class HomeFragment extends Fragment {
         if (result != null) {
             barcode = data.getStringExtra("barcode");
             if (resultCode == REQUEST_SUCESS) {//성공시
-//                Toast.makeText(getContext(), "HomeFragment.java Scanned: " + barcode, Toast.LENGTH_LONG).show();
                 compareBarcode(barcode);
                 showAddDialog();
                 tvBarcode.setText(barcode);
                 etBrand.setText(bcdBrand);
                 etName.setText(bcdName);
             } else {//실패시
-//                Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    // 화장품 종류 스피너 설정
     void setSpinner() {
         mSpinner = (Spinner) mRoot.findViewById(R.id.spShowKinds);
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
@@ -232,6 +216,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    //정렬 스피너 설정
     void setSortSpinner() {
         mSortSpinner = (Spinner) mRoot.findViewById(R.id.spSort);
 
@@ -284,6 +269,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    //정렬 함수
     void setSort(int check) {
         String kind = mSpinner.getSelectedItem().toString();
         this.items = new ArrayList<>();
@@ -291,7 +277,7 @@ public class HomeFragment extends Fragment {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
+
         try {
             // 쿼리문
 
@@ -432,12 +418,8 @@ public class HomeFragment extends Fragment {
         etName = layout.findViewById(R.id.etName);
         tvComment = layout.findViewById(R.id.tvComment);
         tvBarcode = layout.findViewById(R.id.tvBarcode);
-
-
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
-
-
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -496,7 +478,6 @@ public class HomeFragment extends Fragment {
 
                 new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay).show();
 
-
             }
         });
 
@@ -530,7 +511,6 @@ public class HomeFragment extends Fragment {
         spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                etExp.setText("Exp :" + position + parent.getItemAtPosition(position));
                 Calendar cCal = Calendar.getInstance();
                 String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
@@ -611,7 +591,6 @@ public class HomeFragment extends Fragment {
                         } else if (spKinds.getSelectedItemPosition() == 16) {
                             initPeriod = 365;
                         }
-
 
                         // 데이터 추가
                         addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), initPeriod, setCheckBox());
@@ -752,20 +731,9 @@ public class HomeFragment extends Fragment {
         db.close();
     }
 
+    //체크박스 상태 함수
     private int setCheckBox() {
-        //0: week, 1: month
-
-
-//        if (cbWeek.isChecked() == false && cbMonth.isChecked() == false){
-//            mAlarmCheck = 0;
-//        }else if (cbWeek.isChecked() == true && cbMonth.isChecked() == false){
-//            mAlarmCheck = 1;
-//        }else if (cbWeek.isChecked() == false && cbMonth.isChecked() == true){
-//            mAlarmCheck = 2;
-//        }else{
-//            mAlarmCheck =3;
-//        }
-
+        // 0 : no, week : 1, month : 2
 
         if (cbWeek.isChecked() == false){
             if (cbMonth.isChecked() == false)  return 0;

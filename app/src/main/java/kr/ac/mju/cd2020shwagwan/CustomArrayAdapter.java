@@ -1,22 +1,12 @@
 package kr.ac.mju.cd2020shwagwan;
 
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,20 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -49,7 +34,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
     private ArrayList items;
     public static TextView mTvKind;
     static ProgressBar pbUsage;
-    //
+
     private int count = 0;
     public double aDay;
 
@@ -126,46 +111,31 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         int alarmCheck = cosmetics.getProductAlarm();
 
-        Log.d("확인", " alarmcHECK = " + alarmCheck + " brand = " + cosmetics.getProductBrand());
-
         Intent intent = new Intent(getContext(), MyService.class);
         SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetics.getId()), MODE_PRIVATE);
         int notiWeek = sp.getInt("notiWeek", 0);
         int notiMonth= sp.getInt("notiMonth", 0);
         SharedPreferences.Editor editor = sp.edit();
         intent.putExtra("productName", cosmetics.getProductName());
-//        if (aDay == 7  && notiWeek == 0 && alarmCheck == 0){
-//            Log.d(TAG, "알람7 " + aDay);
-//            intent.putExtra("cbWeekOn", true);
-//            intent.putExtra("weekCid", cosmetics.getId());
-//            editor.putInt("notiWeek", 1);
-//            editor.commit();
-//            getContext().startService(intent);
-//        }else if(notiWeek != 0){
-//            NotificationManagerCompat.from(getContext()).cancel(1);
-//        }
 
+        //검토
         Log.d(TAG , "notiWeek : " + notiWeek);
         Log.d(TAG , "notiMonth : " + notiMonth);
-        if((alarmCheck == 1 || alarmCheck == 3) /*&&  notiWeek == 0*/){
+
+        //알림 설정 - 한주전 또는 모든 알림 설정 시
+        if((alarmCheck == 1 || alarmCheck == 3) ){
             if(aDay == 7){
                 Log.d(TAG, "알람7 " + aDay);
                 intent.putExtra("cbWeekOn", true);
                 intent.putExtra("weekCid", cosmetics.getId());
                 getContext().startService(intent);
-//                try{
-//                    Thread.sleep(250);
-//                }catch(Exception e){
-//                    Log.d(TAG, "sleep error : " + e.getMessage());
-//                }
                 editor.putInt("notiWeek", 1);
                 editor.commit();
-//                cosmetics.setProductAlarm(0);
-                if(alarmCheck==1) {
+                if(alarmCheck == 1) {//알림 아무것도 없이 업데이트
                     updateAlarm(0, cosmetics);
                     Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
                 }
-                else if (alarmCheck == 3) {
+                else if (alarmCheck == 3) {//알림 한달전만 남도록 업데이트
                     updateAlarm(2, cosmetics);
                     Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
                 }
@@ -176,24 +146,21 @@ public class CustomArrayAdapter extends ArrayAdapter {
 //            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
         }
 
-        if((alarmCheck == 2 || alarmCheck == 3)/* &&  notiMonth == 0*/){
+        //알림 설정 - 한달전 또는 모든 알림 설정 시
+        if((alarmCheck == 2 || alarmCheck == 3)){
             if(aDay == 30){
                 Log.d(TAG, "알람7 " + aDay);
                 intent.putExtra("cbMonthOn", true);
                 intent.putExtra("monthCid", cosmetics.getId());
                 getContext().startService(intent);
-//                try{
-//                    Thread.sleep(250);
-//                }catch(Exception e){
-//                    Log.d(TAG, "sleep error : " + e.getMessage());
-//                }
                 editor.putInt("notiMonth", 1);
                 editor.commit();
-                if(alarmCheck==2){
+
+                if(alarmCheck == 2){//알림 아무것도 없이 업데이트
                     updateAlarm(0, cosmetics);
                     Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
                 }
-                else if (alarmCheck == 3) {
+                else if (alarmCheck == 3) {//알림 한주전만 남도록 업데이트
                     updateAlarm(1, cosmetics);
                     Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
                 }
@@ -203,18 +170,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 //            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
         }
 
-//        if (aDay == 30 && notiMonth == 0 && alarmCheck == 1){
-//            intent.putExtra("cbMonthOn", true);
-//            editor.putInt("notiMonth", 1);
-//            intent.putExtra("monthCid", cosmetics.getId());
-//            editor.commit();
-//            getContext().startService(intent);
-//        }else {
-////                    getContext().stopService(intent);
-//            NotificationManagerCompat.from(getContext()).cancel(1);
-//        }
-
-
+        //사용 기간 만료시 리스트에서 삭제
         if(aDay == 0){
             deleteData(cosmetics);
         }
@@ -243,6 +199,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         return convertView;
     }
+
     /* 삭제 */
     private void deleteData(Cosmetics cosmetics) {
         // SQLite 사용
@@ -267,7 +224,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
     }
 
 
-    /* 삭제 */
+    /* 알림 설정 수정 */
     private void updateAlarm(int newAlarm, Cosmetics cosmetic) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(this.context);
@@ -277,7 +234,6 @@ public class CustomArrayAdapter extends ArrayAdapter {
             // 삭제 (id(tID) 값으로 삭제)
             Object[] args = { newAlarm, cosmetic.getId() };
             String sql = "UPDATE cosmetics SET alarm = ? WHERE cID = ?";
-//            cosmetic.setProductAlarm(newAlarm);
 
             db.execSQL(sql, args);
 

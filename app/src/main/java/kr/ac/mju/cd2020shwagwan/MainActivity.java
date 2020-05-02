@@ -27,10 +27,6 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-//     static public MainActivity ma = new MainActivity();
-    // AlertDialog View layout
-
-    //     static public FloatingActionButton fabAdd;
     DBHelper dbHelper;
     SQLiteDatabase db;
     Object[] args;
@@ -107,23 +103,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-//    @Override
-//    public void onBackPressed() {
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                // process 전체 종료!
-//                onPause();
-//                dialogInterface.dismiss();
-//                finish();
-//                //android.os.Process.killProcess(android.os.Process.myPid());
-//            }
-//        });
-//
-//
-//    }
 
 }
