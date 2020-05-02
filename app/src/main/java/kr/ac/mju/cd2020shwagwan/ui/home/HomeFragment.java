@@ -63,6 +63,7 @@ import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ResultActivity;
 import kr.ac.mju.cd2020shwagwan.ScanBarcode;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 import static android.app.Activity.RESULT_OK;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
@@ -74,13 +75,10 @@ public class HomeFragment extends Fragment {
 
     private View mRoot;
 
-    //1: no, 2: week, 3: month
-    private int mAlarmCheck;
+    //0: no, 1: week, 2: month, 3: all
+//    private int mAlarmCheck;
 
     private String mSql;
-
-    private boolean mCbWeekCheck;
-    private boolean mCbMonthCheck;
 
     private Spinner mSpinner;
     private Spinner mSortSpinner;
@@ -439,8 +437,7 @@ public class HomeFragment extends Fragment {
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
 
-//        체크박스 설정
-        setCheckBox();
+
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -529,33 +526,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        cbWeek.setOnClickListener(new CheckBox.OnClickListener() {
-            Intent intent = new Intent(getContext(), MyService.class);
-            @Override
-            public void onClick(View v) {
-                // TODO : process the click event.
-                if(cbWeek.isChecked() == true){
-                    Toast.makeText(getContext(), "cbWeek checked", Toast.LENGTH_SHORT).show();
-
-                }else{
-                    Toast.makeText(getContext(), "cbWeek unchecked", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-//
-        cbMonth.setOnClickListener(new CheckBox.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO : process the click event.
-
-                if(cbMonth.isChecked() == true){
-                    Toast.makeText(getContext(), "cbMonth checked", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(), "cbMonth unchecked", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -644,7 +614,7 @@ public class HomeFragment extends Fragment {
 
 
                         // 데이터 추가
-                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), initPeriod, mAlarmCheck);
+                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), initPeriod, setCheckBox());
                     }
                 })
                 .setCancelable(true)
@@ -732,6 +702,15 @@ public class HomeFragment extends Fragment {
                         cursor.getInt(cursor.getColumnIndex("alarm"))
                 );
 
+                SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetic.getId()), MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                int notiWeek = sp.getInt("notiWeek", 0);
+                int notiMonth= sp.getInt("notiMonth", 0);
+                Log.d(TAG , "notiWeek(home) : " + notiWeek);
+                Log.d(TAG , "notiMonth(home) : " + notiMonth);
+                editor.putInt("notiWeek", notiWeek);
+                editor.putInt("notiMonth", notiMonth);
+
                 this.items.add(cosmetic);
 
             }
@@ -773,51 +752,30 @@ public class HomeFragment extends Fragment {
         db.close();
     }
 
-    void setCheckBox() {
+    private int setCheckBox() {
         //0: week, 1: month
-        mAlarmCheck = 0;
 
-        mCbWeekCheck = true;
-        mCbMonthCheck = true;
 
-        // mAlarmCheck
-        // 0 : 일주일 1 : 한달
-        CompoundButton.OnCheckedChangeListener cHandler = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                switch (buttonView.getId()) {
-                    case R.id.cbWeek:
-                        if (isChecked) {
-                            mCbWeekCheck = true;
-                            mCbMonthCheck = false;
+//        if (cbWeek.isChecked() == false && cbMonth.isChecked() == false){
+//            mAlarmCheck = 0;
+//        }else if (cbWeek.isChecked() == true && cbMonth.isChecked() == false){
+//            mAlarmCheck = 1;
+//        }else if (cbWeek.isChecked() == false && cbMonth.isChecked() == true){
+//            mAlarmCheck = 2;
+//        }else{
+//            mAlarmCheck =3;
+//        }
 
-                            cbMonth.setChecked(false);
-                            mAlarmCheck = 0;
-                        } else {
-                            if (mCbWeekCheck) {
-                                cbWeek.setChecked(true);
-                            }
-                        }
-                        break;
-                    case R.id.cbMonth:
-                        if (isChecked) {
-                            mCbMonthCheck = true;
-                            mCbWeekCheck = false;
 
-                            cbWeek.setChecked(false);
-                            mAlarmCheck = 1;
-                        } else {
-                            if (mCbMonthCheck) {
-                                cbMonth.setChecked(true);
-                            }
-                        }
-                        break;
-                }
-            }
-        };
-
-        cbWeek.setOnCheckedChangeListener(cHandler);
-        cbMonth.setOnCheckedChangeListener(cHandler);
+        if (cbWeek.isChecked() == false){
+            if (cbMonth.isChecked() == false)  return 0;
+            else    return 2;
+        }
+        else{
+            if (cbMonth.isChecked() == false)  return 1;
+            else    return 3;
+        }
     }
+
 }
 

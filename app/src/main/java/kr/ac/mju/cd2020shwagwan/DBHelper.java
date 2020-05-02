@@ -49,11 +49,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // 테이블 삭제
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COSMETIC);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BARCODE_INFO);
-        // 테이블 삭제후 다시 생성하기 위함
-        onCreate(db);
+//        // 테이블 삭제
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COSMETIC);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BARCODE_INFO);
+//        // 테이블 삭제후 다시 생성하기 위함
+//        onCreate(db);
+
+
     }
 
    /* public BarcodeInfo open() throws SQLException {
@@ -62,4 +64,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return this;
     }
 */
+
+
 }

@@ -107,7 +107,6 @@
         android:id="@+id/cbWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checked="true"
         android:text="한 주전 알림"
         />
 

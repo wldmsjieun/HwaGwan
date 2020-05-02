@@ -54,4 +54,8 @@ public class Cosmetics {
     public int getProductAlarm() {
         return productAlarm;
     }
+
+    public void setProductAlarm(int i){
+        this.productAlarm = i;
+    }
 }

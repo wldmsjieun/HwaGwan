@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import kr.ac.mju.cd2020shwagwan.ui.dashboard.DashboardFragment;
 import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -122,7 +121,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
         double alarm = exp.getTime()-dt.getTime();
         double alarmDay = alarm / (24 * 60 * 60 * 1000);
 
-        aDay = Math.abs(alarmDay);
+//        aDay = Math.abs(alarmDay);
         aDay = Math.ceil(alarmDay);
 
         int alarmCheck = cosmetics.getProductAlarm();
@@ -135,28 +134,90 @@ public class CustomArrayAdapter extends ArrayAdapter {
         int notiMonth= sp.getInt("notiMonth", 0);
         SharedPreferences.Editor editor = sp.edit();
         intent.putExtra("productName", cosmetics.getProductName());
-                if (aDay == 7  && notiWeek == 0 && alarmCheck == 0){
-                    Log.d(TAG, "알람7 " + aDay);
-                    intent.putExtra("cbWeekOn", true);
-                    intent.putExtra("weekCid", cosmetics.getId());
-                    editor.putInt("notiWeek", 1);
-                    editor.commit();
-                    getContext().startService(intent);
-                }else if(notiWeek != 0){
-                    NotificationManagerCompat.from(getContext()).cancel(1);
+//        if (aDay == 7  && notiWeek == 0 && alarmCheck == 0){
+//            Log.d(TAG, "알람7 " + aDay);
+//            intent.putExtra("cbWeekOn", true);
+//            intent.putExtra("weekCid", cosmetics.getId());
+//            editor.putInt("notiWeek", 1);
+//            editor.commit();
+//            getContext().startService(intent);
+//        }else if(notiWeek != 0){
+//            NotificationManagerCompat.from(getContext()).cancel(1);
+//        }
+
+        Log.d(TAG , "notiWeek : " + notiWeek);
+        Log.d(TAG , "notiMonth : " + notiMonth);
+        if((alarmCheck == 1 || alarmCheck == 3) /*&&  notiWeek == 0*/){
+            if(aDay == 7){
+                Log.d(TAG, "알람7 " + aDay);
+                intent.putExtra("cbWeekOn", true);
+                intent.putExtra("weekCid", cosmetics.getId());
+                getContext().startService(intent);
+//                try{
+//                    Thread.sleep(250);
+//                }catch(Exception e){
+//                    Log.d(TAG, "sleep error : " + e.getMessage());
+//                }
+                editor.putInt("notiWeek", 1);
+                editor.commit();
+//                cosmetics.setProductAlarm(0);
+                if(alarmCheck==1) {
+                    updateAlarm(0, cosmetics);
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
                 }
+                else if (alarmCheck == 3) {
+                    updateAlarm(2, cosmetics);
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                }
+            }
+
+        }else {
+            Log.d(TAG , "notiWeek can't" );
+//            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
+        }
+
+        if((alarmCheck == 2 || alarmCheck == 3)/* &&  notiMonth == 0*/){
+            if(aDay == 30){
+                Log.d(TAG, "알람7 " + aDay);
+                intent.putExtra("cbMonthOn", true);
+                intent.putExtra("monthCid", cosmetics.getId());
+                getContext().startService(intent);
+//                try{
+//                    Thread.sleep(250);
+//                }catch(Exception e){
+//                    Log.d(TAG, "sleep error : " + e.getMessage());
+//                }
+                editor.putInt("notiMonth", 1);
+                editor.commit();
+                if(alarmCheck==2){
+                    updateAlarm(0, cosmetics);
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                }
+                else if (alarmCheck == 3) {
+                    updateAlarm(1, cosmetics);
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                }
+            }
+        }else {
+            Log.d(TAG , "notiMonth can't" );
+//            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
+        }
+
+//        if (aDay == 30 && notiMonth == 0 && alarmCheck == 1){
+//            intent.putExtra("cbMonthOn", true);
+//            editor.putInt("notiMonth", 1);
+//            intent.putExtra("monthCid", cosmetics.getId());
+//            editor.commit();
+//            getContext().startService(intent);
+//        }else {
+////                    getContext().stopService(intent);
+//            NotificationManagerCompat.from(getContext()).cancel(1);
+//        }
 
 
-                if (aDay == 30 && notiMonth == 0 && alarmCheck == 1){
-                    intent.putExtra("cbMonthOn", true);
-                    editor.putInt("notiMonth", 1);
-                    intent.putExtra("monthCid", cosmetics.getId());
-                    editor.commit();
-                    getContext().startService(intent);
-                }else {
-//                    getContext().stopService(intent);
-                    NotificationManagerCompat.from(getContext()).cancel(1);
-                }
+        if(aDay == 0){
+            deleteData(cosmetics);
+        }
 
 
         ImageView ivDel = convertView.findViewById(R.id.ivDel);
@@ -205,5 +266,28 @@ public class CustomArrayAdapter extends ArrayAdapter {
         db.close();
     }
 
+
+    /* 삭제 */
+    private void updateAlarm(int newAlarm, Cosmetics cosmetic) {
+        // SQLite 사용
+        DBHelper dbHelper = DBHelper.getInstance(this.context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        try {
+            // 삭제 (id(tID) 값으로 삭제)
+            Object[] args = { newAlarm, cosmetic.getId() };
+            String sql = "UPDATE cosmetics SET alarm = ? WHERE cID = ?";
+//            cosmetic.setProductAlarm(newAlarm);
+
+            db.execSQL(sql, args);
+
+            Log.d(TAG , "notiUpdateAlarm : " + cosmetic.getProductAlarm());
+
+        } catch (SQLException e) {
+            Log.d(TAG , "notiUpdateAlarm error : " + e.getMessage());
+        }
+
+        db.close();
+    }
 
 }
