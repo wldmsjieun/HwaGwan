@@ -1,6 +1,8 @@
 package kr.ac.mju.cd2020shwagwan;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -27,11 +29,12 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean checkDB;
     DBHelper dbHelper;
     SQLiteDatabase db;
     Object[] args;
-    String sql = "INSERT INTO "+DBHelper.TABLE_BARCODE_INFO+"(bcdId, bcdBrand, bcdName, bcdVolume) VALUES(?,?,?,?)";
-
+    String mSql = "INSERT INTO "+DBHelper.TABLE_BARCODE_INFO+"(bcdId, bcdBrand, bcdProduct, bcdVolume) VALUES(?,?,?,?)";
+    String TABLE_BARCODE_INFO = "barcodeinfos";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
         Sheet sheet = null;
 
         try {
+            String sql = "SELECT bID, bcdId, bcdBrand, bcdProduct, bcdVolume FROM barcodeinfos";
+            Cursor cursor = db.rawQuery(sql, null);
+
+            checkDB = true;
+
+            while (cursor.moveToNext()) {
+                if ((cursor.getString(0)) != null) {
+                    checkDB = false;
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
             InputStream is = getBaseContext().getResources().getAssets().open("barcode_info.xls");
             if(is != null){
                 Log.d(TAG, "xls open");
@@ -72,23 +91,25 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sheet != null) {
 
-                    int nMaxColumn = 4;
-                    int nRowStartIndex = 0;
-                    int nRowEndIndex = sheet.getColumn(nMaxColumn - 1).length - 1;
-                    int nColumnStartIndex = 0;
-                    int nColumnEndIndex = sheet.getRow(4).length - 1;
-                    Log.d(TAG, "nRowEndIndex : "+String.valueOf(nRowEndIndex));
+                    if (checkDB) {
+                        int nMaxColumn = 4;
+                        int nRowStartIndex = 0;
+                        int nRowEndIndex = sheet.getColumn(nMaxColumn - 1).length - 1;
+                        int nColumnStartIndex = 0;
+                        int nColumnEndIndex = sheet.getRow(4).length - 1;
+                        Log.d(TAG, "nRowEndIndex : " + String.valueOf(nRowEndIndex));
 
-                    for (int nRow = nRowStartIndex; nRow <= nRowEndIndex; nRow++) {
-                        String bInfo =sheet.getCell(nColumnStartIndex, nRow).getContents();
-                        String bBrand = sheet.getCell(nColumnStartIndex + 1, nRow).getContents();
-                        String bName = sheet.getCell(nColumnStartIndex + 2, nRow).getContents();
-                        String bVolume = sheet.getCell(nColumnStartIndex + 3, nRow).getContents();
-                        Log.d(TAG, "바코드 정보 "+bInfo+" : "+bName);
-                        args = new Object[]{bInfo, bBrand, bName, bVolume};
-                        db.execSQL(sql, args);
+                        for (int nRow = nRowStartIndex; nRow <= nRowEndIndex; nRow++) {
+                            String bInfo = sheet.getCell(nColumnStartIndex, nRow).getContents();
+                            String bBrand = sheet.getCell(nColumnStartIndex + 1, nRow).getContents();
+                            String bName = sheet.getCell(nColumnStartIndex + 2, nRow).getContents();
+                            String bVolume = sheet.getCell(nColumnStartIndex + 3, nRow).getContents();
+                            Log.d(TAG, "바코드 정보 " + bInfo + " : " + bName);
+                            args = new Object[]{bInfo, bBrand, bName, bVolume};
+                            db.execSQL(mSql, args);
+                        }
+                        db.close();
                     }
-                    db.close();
                 } else {
                     Log.d(TAG, "바코드 정보 - sheet is null");
                 }
