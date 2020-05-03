@@ -14,6 +14,6 @@
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="kr.ac.mju.cd2020shwagwan.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_my_page"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

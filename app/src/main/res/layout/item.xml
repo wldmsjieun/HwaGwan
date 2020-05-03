@@ -66,6 +66,7 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
+            android:progressTint="#878585"
             android:layout_weight="1" />
 
         <ImageView
@@ -73,7 +74,7 @@
             android:layout_width="39dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_close" />
+            app:srcCompat="@drawable/delete_icon" />
 
     </LinearLayout>
 

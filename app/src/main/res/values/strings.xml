@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">HwaGwan</string>
+    <string name="app_name">화관</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_my_page">My Page</string>
 
     <string-array name="kinds_array">
         <item>전체</item>
