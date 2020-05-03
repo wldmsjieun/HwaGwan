@@ -62,22 +62,22 @@ public class CustomArrayAdapter extends ArrayAdapter {
         pbUsage = convertView.findViewById(R.id.pbUsage);
 
 
-        tvBrand.setText(cosmetics.getProductBrand());
+        tvBrand.setText(cosmetics.getBrandName());
         tvName.setText(cosmetics.getProductName());
-        tvOpen.setText(cosmetics.getProductOpen());
-        tvExp.setText(cosmetics.getProductExp());
-        mTvKind.setText(cosmetics.getProductKind());
+        tvOpen.setText(cosmetics.getDtOpen());
+        tvExp.setText(cosmetics.getDtExp());
+        mTvKind.setText(cosmetics.getKind());
 
         Date exp = new Date(), dt = new Date();
 
         // 프로그레스바 설정
         try{
 
-            String openStr = cosmetics.getProductOpen();
+            String openStr = cosmetics.getDtOpen();
             SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd");
             Date open = trans.parse(openStr);
 
-            String expStr = cosmetics.getProductExp();
+            String expStr = cosmetics.getDtExp();
             exp = trans.parse(expStr);
 
             long period = exp.getTime() - open.getTime();
@@ -109,7 +109,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 //        aDay = Math.abs(alarmDay);
         aDay = Math.ceil(alarmDay);
 
-        int alarmCheck = cosmetics.getProductAlarm();
+        int alarmCheck = cosmetics.getAlarm();
 
         Intent intent = new Intent(getContext(), MyService.class);
         SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetics.getId()), MODE_PRIVATE);
@@ -133,11 +133,11 @@ public class CustomArrayAdapter extends ArrayAdapter {
                 editor.commit();
                 if(alarmCheck == 1) {//알림 아무것도 없이 업데이트
                     updateAlarm(0, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
                 }
                 else if (alarmCheck == 3) {//알림 한달전만 남도록 업데이트
                     updateAlarm(2, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
                 }
             }
 
@@ -158,11 +158,11 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
                 if(alarmCheck == 2){//알림 아무것도 없이 업데이트
                     updateAlarm(0, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
                 }
                 else if (alarmCheck == 3) {//알림 한주전만 남도록 업데이트
                     updateAlarm(1, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getProductAlarm());
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
                 }
             }
         }else {
@@ -237,7 +237,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
             db.execSQL(sql, args);
 
-            Log.d(TAG , "notiUpdateAlarm : " + cosmetic.getProductAlarm());
+            Log.d(TAG , "notiUpdateAlarm : " + cosmetic.getAlarm());
 
         } catch (SQLException e) {
             Log.d(TAG , "notiUpdateAlarm error : " + e.getMessage());

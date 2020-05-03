@@ -4,58 +4,48 @@ public class Cosmetics {
     // id
     private int id;
 
-    private String productBrand;
+    private String brandName;
     private String productName;
-    private String productOpen;
-    private String productExp;
-    private String productKind;
-    private int productInitPeriod;
-    private int productAlarm;
+    private String dtOpen;
+    private String dtExp;
+    private String kind;
+    private int alarm;
 
-    public Cosmetics(int id, String productBrand, String productName, String productOpen, String productExp, String productKind, int productInitPeriod, int productAlarm) {
+    public Cosmetics(int id, String brandName, String productName, String dtOpen, String dtExp, String kind, int alarm) {
         this.id = id;
-        this.productBrand = productBrand;
+        this.brandName = brandName;
         this.productName = productName;
-        this.productOpen = productOpen;
-        this.productExp = productExp;
-        this.productKind = productKind;
-        this.productInitPeriod = productInitPeriod;
-        this.productAlarm = productAlarm;
+        this.dtOpen = dtOpen;
+        this.dtExp = dtExp;
+        this.kind = kind;
+        this.alarm = alarm;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getProductBrand() {
-        return productBrand;
+    public String getBrandName() {
+        return brandName;
     }
 
     public String getProductName() {
         return productName;
     }
 
-    public String getProductOpen() {
-        return productOpen;
+    public String getDtOpen() {
+        return dtOpen;
     }
 
-    public String getProductExp() {
-        return productExp;
+    public String getDtExp() {
+        return dtExp;
     }
 
-    public String getProductKind() {
-        return productKind;
+    public String getKind() {
+        return kind;
     }
 
-    public int getProductInitPeriod() {
-        return productInitPeriod;
-    }
-
-    public int getProductAlarm() {
-        return productAlarm;
-    }
-
-    public void setProductAlarm(int i){
-        this.productAlarm = i;
+    public int getAlarm() {
+        return alarm;
     }
 }

@@ -8,15 +8,15 @@ public class BarcodeInfo {
 
     private String bcdId;
     private String bcdBrand;
-    private String bcdName;
+    private String bcdProduct;
     private String bcdVolume;
 
-    public BarcodeInfo(int id, String bID, String bBrand, String bName, String bVolume){
+    public BarcodeInfo(int id, String bcdID, String bcdBrand, String bcdProduct, String bcdVolume){
         this.id =id;
-        this.bcdId = bID;
-        this.bcdBrand = bBrand;
-        this.bcdName = bName;
-        this.bcdVolume = bVolume;
+        this.bcdId = bcdID;
+        this.bcdBrand = bcdBrand;
+        this.bcdProduct = bcdProduct;
+        this.bcdVolume = bcdVolume;
     }
 
     public int getId() {
@@ -31,8 +31,8 @@ public class BarcodeInfo {
         return bcdBrand;
     }
 
-    public String getBcdName() {
-        return bcdName;
+    public String getBcdProduct() {
+        return bcdProduct;
     }
 
     public String getBcdVolume() {
