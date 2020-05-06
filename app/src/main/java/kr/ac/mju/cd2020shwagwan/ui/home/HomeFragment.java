@@ -645,8 +645,8 @@ public class HomeFragment extends Fragment {
                     isSame = 1;
                     break;
                 } else{
-                    String barcodeBrand = barcode.substring(3, 7);
-                    String barcodeInfoBrand = cmp.substring(3, 7);
+                    String barcodeBrand = barcode.substring(0, 7);
+                    String barcodeInfoBrand = cmp.substring(0, 7);
 
                     Log.d(TAG , "cmp - barcodeBrand : "+barcodeBrand);
                     Log.d(TAG , "cmp - barcodeInfoBrand : "+barcodeInfoBrand);
