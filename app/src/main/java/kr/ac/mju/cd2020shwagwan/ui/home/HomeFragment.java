@@ -541,6 +541,7 @@ public class HomeFragment extends Fragment {
                 } else if (position == 16) {
                     edExp.setText("");
                 }
+                expCalendar = cCal;
             }
 
             @Override

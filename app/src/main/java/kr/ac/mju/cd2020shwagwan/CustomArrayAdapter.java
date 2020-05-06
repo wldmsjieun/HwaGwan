@@ -82,7 +82,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
             long period = exp.getTime() - open.getTime();
             long periodDay = period / (24 * 60 * 60 * 1000);
-            periodDay = Math.abs(periodDay);
+//            periodDay = Math.abs(periodDay);
 
             pbUsage.setMax((int)periodDay);
 
@@ -91,7 +91,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
             long usage = dt.getTime() - open.getTime();
             long usageDay = usage / (24 * 60 * 60 * 1000);
-            usageDay = Math.abs(usageDay);
+//            usageDay = Math.abs(usageDay);
             Log.d(TAG , "pb - usageDay : " + usageDay);
 
             pbUsage.setProgress((int) usageDay);
@@ -171,7 +171,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
         }
 
         //사용 기간 만료시 리스트에서 삭제
-        if(aDay == 0){
+        if(aDay <= 0){
             deleteData(cosmetics);
         }
 
