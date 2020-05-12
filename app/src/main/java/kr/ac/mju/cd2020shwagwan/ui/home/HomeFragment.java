@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
     int openYear = 0, openMonth = 0, openDay = 0; //개봉일 연도, 월, 일
     String barcode; //바코드 번호를 위한 변수
     TextView tvComment, tvBarcode; //사용 권장 기한, 바코드 번호 텍스트뷰
-    EditText etBrand, etName; //브랜드명, 상품명
+    EditText etBrand, etName, etAdditionalContent, etVolume; //브랜드명, 상품명, 추가사항, 용량
     FloatingActionButton fabBarcode; //fab버튼
     Calendar openCalendar = Calendar.getInstance(); //개봉일을 위한 달력
 
@@ -286,54 +286,54 @@ public class HomeFragment extends Fragment {
                 case 0:
                     //개봉일순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics ORDER BY dtOpen";
+                        mSql = "SELECT * FROM cosmetics ORDER BY dtOpen";
                     } else {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtOpen";
+                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtOpen";
                     }
                     break;
 
                 case 1:
                     //개봉일 역순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics ORDER BY dtOpen desc";
+                        mSql = "SELECT * FROM cosmetics ORDER BY dtOpen desc";
                     } else {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtOpen desc";
+                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtOpen desc";
                     }
                     break;
 
                 case 2:
                     //사용기한 임박한 순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics ORDER BY dtExp";
+                        mSql = "SELECT * FROM cosmetics ORDER BY dtExp";
                     } else {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtExp";
+                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtExp";
                     }
                     break;
 
                 case 3:
                     //사용기한 넉넉한 순
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics ORDER BY dtExp desc";
+                        mSql = "SELECT * FROM cosmetics ORDER BY dtExp desc";
                     } else {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtExp desc";
+                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtExp desc";
                     }
                     break;
 
                 case 4:
                     //제품명 ㄱ ~ ㅎ
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics ORDER BY productName";
+                        mSql = "SELECT * FROM cosmetics ORDER BY productName";
                     } else {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY productName";
+                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY productName";
                     }
                     break;
 
                 case 5:
                     //제품명 ㅎ ~ ㄱ
                     if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics ORDER BY productName desc";
+                        mSql = "SELECT * FROM cosmetics ORDER BY productName desc";
                     } else {
-                        mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "' ORDER BY productName desc";
+                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY productName desc";
                     }
                     break;
             }
@@ -344,6 +344,7 @@ public class HomeFragment extends Fragment {
                         cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
                         cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
                         cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm"))
+                        , cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
                 );
 
                 this.items.add(cosmetic);
@@ -370,9 +371,9 @@ public class HomeFragment extends Fragment {
         try {
             // 쿼리문
             if (all) {
-                mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics";
+                mSql = "SELECT * FROM cosmetics";
             } else {
-                mSql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics WHERE kind='" + kind + "'";
+                mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "'";
             }
             Cursor cursor = db.rawQuery(mSql, null);
             while (cursor.moveToNext()) {
@@ -380,7 +381,8 @@ public class HomeFragment extends Fragment {
                  Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
                         cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")));
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
+                         cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent")));
 
                 this.items.add(cosmetic);
             }
@@ -419,6 +421,8 @@ public class HomeFragment extends Fragment {
         tvBarcode = layout.findViewById(R.id.tvBarcode);
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
+        etVolume = (EditText) layout.findViewById(R.id.etVolume);
+        etAdditionalContent = (EditText) layout.findViewById(R.id.etcontent);
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -469,7 +473,6 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 };
-
 
                 openYear = openCalendar.get(Calendar.YEAR);
                 openMonth = openCalendar.get(Calendar.MONTH);
@@ -593,7 +596,8 @@ public class HomeFragment extends Fragment {
                         }
 
                         // 데이터 추가
-                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(), setCheckBox());
+                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(),
+                                setCheckBox(), etVolume.getText().toString(), etAdditionalContent.getText().toString());
                     }
                 })
                 .setCancelable(true)
@@ -682,14 +686,15 @@ public class HomeFragment extends Fragment {
 
         try {
             // 쿼리문
-            String sql = "SELECT cID, brandName, productName, dtOpen, dtExp, kind, alarm FROM cosmetics";
+            String sql = "SELECT * FROM cosmetics";
             Cursor cursor = db.rawQuery(sql, null);
             while (cursor.moveToNext()) {
                 // 데이터
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
                         cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm"))
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
+                        cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
                 );
 
                 SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetic.getId()), MODE_PRIVATE);
@@ -719,7 +724,7 @@ public class HomeFragment extends Fragment {
 
 
     /* 추가 */
-    private void addData(String brand, String name, String open, String exp, String kind, int alarm) {
+    private void addData(String brand, String name, String open, String exp, String kind, int alarm, String volume, String additionalContent) {
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -727,8 +732,8 @@ public class HomeFragment extends Fragment {
         mSpinner.setSelection(0);
         try {
             // 등록
-            Object[] args = {brand, name, open, exp, kind, alarm};
-            String sql = "INSERT INTO cosmetics(brandName, productName, dtOpen, dtExp, kind, alarm) VALUES(?,?,?,?,?,?)";
+            Object[] args = {brand, name, open, exp, kind, alarm, volume, additionalContent};
+            String sql = "INSERT INTO cosmetics(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
 
             db.execSQL(sql, args);
 

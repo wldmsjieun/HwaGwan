@@ -70,6 +70,8 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         Date exp = new Date(), dt = new Date();
 
+        Log.d("확인", "용량 = " + cosmetics.getVolume());
+
         // 프로그레스바 설정
         try{
 

@@ -10,8 +10,10 @@ public class Cosmetics {
     private String dtExp;
     private String kind;
     private int alarm;
+    private String volume;
+    private String additionalContent;
 
-    public Cosmetics(int id, String brandName, String productName, String dtOpen, String dtExp, String kind, int alarm) {
+    public Cosmetics(int id, String brandName, String productName, String dtOpen, String dtExp, String kind, int alarm, String volume, String additionalContent) {
         this.id = id;
         this.brandName = brandName;
         this.productName = productName;
@@ -19,6 +21,8 @@ public class Cosmetics {
         this.dtExp = dtExp;
         this.kind = kind;
         this.alarm = alarm;
+        this.volume=volume;
+        this.additionalContent = additionalContent;
     }
 
     public int getId() {
@@ -47,5 +51,13 @@ public class Cosmetics {
 
     public int getAlarm() {
         return alarm;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public String getAdditionalContent() {
+        return additionalContent;
     }
 }
