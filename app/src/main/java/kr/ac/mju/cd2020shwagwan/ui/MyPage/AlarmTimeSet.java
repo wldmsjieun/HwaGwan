@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,18 +18,16 @@ import androidx.annotation.NonNull;
 import kr.ac.mju.cd2020shwagwan.R;
 
 import static android.content.Context.MODE_PRIVATE;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AlarmTimeSet extends Dialog {
     static public TextView tvHour;
     static public TextView tvMinute;
-
-    private SharedPreferences sp;
+    int setHour=22, setMin=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        tvHour.setText(sp.getInt("hour", 22));
-//        tvMinute.setText(sp.getInt("minute", 00));
 
         //다이얼로그 밖의 화면은 흐리게 만들어줌
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
@@ -39,6 +38,8 @@ public class AlarmTimeSet extends Dialog {
         setContentView(R.layout.alarm_time_set);
 
         setTime();
+
+        
     }
 
     void setTime() {
@@ -47,7 +48,7 @@ public class AlarmTimeSet extends Dialog {
         tvHour = (TextView) findViewById(R.id.dialog_hour);
         tvMinute = (TextView) findViewById(R.id.dialog_minute);
 
-        sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
+        final SharedPreferences sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
 
         timeSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,8 +56,10 @@ public class AlarmTimeSet extends Dialog {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        tvHour.setText(Integer.toString(hourOfDay));
-                        tvMinute.setText(Integer.toString(minute));
+                     tvHour.setText(Integer.toString(hourOfDay));
+                     tvMinute.setText(Integer.toString(minute));
+                     setHour = hourOfDay;
+                     setMin = minute;
 
                     }
                 },  Integer.parseInt(tvHour.getText().toString()), Integer.parseInt(tvMinute.getText().toString()),true);
@@ -68,10 +71,10 @@ public class AlarmTimeSet extends Dialog {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putInt("hour", Integer.valueOf(tvHour.getText().toString()));
-                editor.putInt("minute", Integer.valueOf(tvMinute.getText().toString()));
-
+             SharedPreferences.Editor editor = sp.edit();
+             editor.putInt("hour", setHour);
+             editor.putInt("minute", setMin);
+             editor.commit();
             }
         });
     }

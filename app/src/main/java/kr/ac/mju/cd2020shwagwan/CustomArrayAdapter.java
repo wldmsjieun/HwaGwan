@@ -40,10 +40,6 @@ public class CustomArrayAdapter extends ArrayAdapter {
     public static TextView mTvKind;
     static ProgressBar pbUsage;
 
-    private int count = 0;
-    public double aDay;
-
-
     public CustomArrayAdapter(Context context, ArrayList items) {
         super(context, 0, items);
 
@@ -111,13 +107,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
 
         Calendar todayCal = Calendar.getInstance();
-//        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        String todayStr = timeFormat.format(todayCalendar.getTime());
-
         Calendar expCal = HomeFragment.expCalendar;
-
-//        expCal.set(Calendar.HOUR_OF_DAY, sp.getInt("hour", 22));
-//        expCal.set(Calendar.MINUTE, sp.getInt("minute", 00));
 
         int alarmCheck = cosmetics.getAlarm();
 
@@ -127,15 +117,9 @@ public class CustomArrayAdapter extends ArrayAdapter {
         //알림 설정 - 한주전 또는 모든 알림 설정 시
         if((alarmCheck == 1 || alarmCheck == 3) ){
             expCal.add(Calendar.DATE, -7);
-            expCal.set(Calendar.SECOND, 00);
-            todayCal.set(Calendar.SECOND, 00);
-            expCal.set(Calendar.MILLISECOND, 00);
-            todayCal.set(Calendar.MILLISECOND, 00);
-            Log.d(TAG , "todayCal : " + todayCal.getTime());
-            Log.d(TAG , "expCal : " + expCal.getTime());
-            Log.d(TAG , "compare Cal : " + expCal.compareTo(todayCal));
+            setSeconds(todayCal, expCal);
+
             if(expCal.compareTo(todayCal) == 0){
-                Log.d(TAG, "알람7 " + aDay);
                 intent.putExtra("cbWeekOn", true);
                 intent.putExtra("weekCid", cosmetics.getId());
                 getContext().startService(intent);
@@ -150,9 +134,35 @@ public class CustomArrayAdapter extends ArrayAdapter {
                 }
             }
             expCal.add(Calendar.DATE, 7);
-        }else {
-            Log.d(TAG , "notiWeek can't" );
-//            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
+        }
+
+        //알림 설정 - 한달전 또는 모든 알림 설정 시
+        if((alarmCheck == 2 || alarmCheck == 3)){
+            expCal.add(Calendar.DATE, -30);
+            setSeconds(todayCal, expCal);
+
+            if(expCal.compareTo(todayCal) == 0){
+                intent.putExtra("cbMonthOn", true);
+                intent.putExtra("monthCid", cosmetics.getId());
+                getContext().startService(intent);
+
+                if(alarmCheck == 2){//알림 아무것도 없이 업데이트
+                    updateAlarm(0, cosmetics);
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
+                }
+                else if (alarmCheck == 3) {//알림 한주전만 남도록 업데이트
+                    updateAlarm(1, cosmetics);
+                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
+                }
+            }
+            expCal.add(Calendar.DATE, 30);
+        }
+
+
+        //사용 기간 만료시 리스트에서 삭제
+        setSeconds(todayCal, expCal);
+        if(expCal.compareTo(todayCal) == 0){
+            deleteData(cosmetics);
         }
 
 
@@ -224,6 +234,14 @@ public class CustomArrayAdapter extends ArrayAdapter {
         }
 
         db.close();
+    }
+
+
+    public void setSeconds(Calendar today, Calendar exp){
+        exp.set(Calendar.SECOND, 00);
+        today.set(Calendar.SECOND, 00);
+        exp.set(Calendar.MILLISECOND, 00);
+        today.set(Calendar.MILLISECOND, 00);
     }
 
 }
