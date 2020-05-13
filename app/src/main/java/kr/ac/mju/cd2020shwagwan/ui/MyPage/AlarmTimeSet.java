@@ -1,4 +1,4 @@
-package kr.ac.mju.cd2020shwagwan.ui.notifications;
+package kr.ac.mju.cd2020shwagwan.ui.MyPage;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -16,8 +15,8 @@ import androidx.annotation.NonNull;
 import kr.ac.mju.cd2020shwagwan.R;
 
 public class AlarmTimeSet extends Dialog {
-    private TextView mHourView;
-    private TextView mMinuteView;
+    private TextView tvHour;
+    private TextView tvMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +36,8 @@ public class AlarmTimeSet extends Dialog {
     void setTime() {
         LinearLayout timeSetButton = (LinearLayout) findViewById(R.id.dialog_alarm_time_set_button);
 
-        mHourView = (TextView) findViewById(R.id.dialog_hour);
-        mMinuteView = (TextView) findViewById(R.id.dialog_minute);
+        tvHour = (TextView) findViewById(R.id.dialog_hour);
+        tvMinute = (TextView) findViewById(R.id.dialog_minute);
 
         timeSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,11 +45,11 @@ public class AlarmTimeSet extends Dialog {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        mHourView.setText(Integer.toString(hourOfDay));
-                        mMinuteView.setText(Integer.toString(minute));
+                        tvHour.setText(Integer.toString(hourOfDay));
+                        tvMinute.setText(Integer.toString(minute));
 
                     }
-                },  Integer.parseInt(mHourView.getText().toString()), Integer.parseInt(mMinuteView.getText().toString()),true);
+                },  Integer.parseInt(tvHour.getText().toString()), Integer.parseInt(tvMinute.getText().toString()),true);
 
                 timePickerDialog.show();
             }

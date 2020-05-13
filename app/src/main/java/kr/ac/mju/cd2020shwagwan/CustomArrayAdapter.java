@@ -22,8 +22,11 @@ import androidx.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
+
+import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -105,77 +108,13 @@ public class CustomArrayAdapter extends ArrayAdapter {
         }
 
 
-        double alarm = exp.getTime()-dt.getTime();
-        double alarmDay = alarm / (24 * 60 * 60 * 1000);
+        Calendar todayCalendar = Calendar.getInstance();
+//        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String todayStr = timeFormat.format(todayCalendar.getTime());
 
-//        aDay = Math.abs(alarmDay);
-        aDay = Math.ceil(alarmDay);
-
-        int alarmCheck = cosmetics.getAlarm();
-
-        Intent intent = new Intent(getContext(), MyService.class);
-        SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetics.getId()), MODE_PRIVATE);
-        int notiWeek = sp.getInt("notiWeek", 0);
-        int notiMonth= sp.getInt("notiMonth", 0);
-        SharedPreferences.Editor editor = sp.edit();
-        intent.putExtra("productName", cosmetics.getProductName());
-
-        //검토
-        Log.d(TAG , "notiWeek : " + notiWeek);
-        Log.d(TAG , "notiMonth : " + notiMonth);
-
-        //알림 설정 - 한주전 또는 모든 알림 설정 시
-        if((alarmCheck == 1 || alarmCheck == 3) ){
-            if(aDay == 7){
-                Log.d(TAG, "알람7 " + aDay);
-                intent.putExtra("cbWeekOn", true);
-                intent.putExtra("weekCid", cosmetics.getId());
-                getContext().startService(intent);
-                editor.putInt("notiWeek", 1);
-                editor.commit();
-                if(alarmCheck == 1) {//알림 아무것도 없이 업데이트
-                    updateAlarm(0, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
-                }
-                else if (alarmCheck == 3) {//알림 한달전만 남도록 업데이트
-                    updateAlarm(2, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
-                }
-            }
-
-        }else {
-            Log.d(TAG , "notiWeek can't" );
-//            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
-        }
-
-        //알림 설정 - 한달전 또는 모든 알림 설정 시
-        if((alarmCheck == 2 || alarmCheck == 3)){
-            if(aDay == 30){
-                Log.d(TAG, "알람7 " + aDay);
-                intent.putExtra("cbMonthOn", true);
-                intent.putExtra("monthCid", cosmetics.getId());
-                getContext().startService(intent);
-                editor.putInt("notiMonth", 1);
-                editor.commit();
-
-                if(alarmCheck == 2){//알림 아무것도 없이 업데이트
-                    updateAlarm(0, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
-                }
-                else if (alarmCheck == 3) {//알림 한주전만 남도록 업데이트
-                    updateAlarm(1, cosmetics);
-                    Log.d(TAG , "notiAlarm : " + cosmetics.getAlarm());
-                }
-            }
-        }else {
-            Log.d(TAG , "notiMonth can't" );
-//            NotificationManagerCompat.from(getContext()).cancel(cosmetics.getId());
-        }
-
-        //사용 기간 만료시 리스트에서 삭제
-        if(aDay <= 0){
-            deleteData(cosmetics);
-        }
+        Calendar expCalendar = HomeFragment.expCalendar;
+        expCalendar.set(Calendar.HOUR_OF_DAY, 22);
+        expCalendar.set(Calendar.MINUTE, 00);
 
 
         ImageView ivDel = convertView.findViewById(R.id.ivDel);

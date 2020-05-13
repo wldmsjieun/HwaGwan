@@ -1,14 +1,14 @@
-package kr.ac.mju.cd2020shwagwan.ui.notifications;
+package kr.ac.mju.cd2020shwagwan.ui.MyPage;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class NotificationsViewModel extends ViewModel {
+public class MypageViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
+    public MypageViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is My Page fragment");
     }
