@@ -157,57 +157,12 @@ public class HomeFragment extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        setKind(mSpinner.getSelectedItem().toString(), true);
-                        break;
-                    case 1:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 2:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 3:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 4:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 5:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 6:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 7:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 8:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 9:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 10:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 11:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 12:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 13:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 14:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    case 15:
-                        setKind(mSpinner.getSelectedItem().toString(), false);
-                        break;
-                    default:
-                }
+               if (position == 0) {
+                   setKind(mSpinner.getSelectedItem().toString(), true);
+               }
+               else {
+                   setKind(mSpinner.getSelectedItem().toString(), false);
+               }
             }
 
             @Override
@@ -228,39 +183,7 @@ public class HomeFragment extends Fragment {
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        // 최신 등록순
-                        setSort(position);
-                        break;
-
-                    case 1:
-                        // 나중 등록순
-                        setSort(position);
-                        break;
-
-                    case 2:
-                        // 사용기간 얼마 안남은 순
-                        setSort(position);
-                        break;
-
-                    case 3:
-                        // 사용기간이 넉넉한 순
-                        setSort(position);
-                        break;
-
-                    case 4:
-                        // 이름순 ㄱ - ㅎ
-                        setSort(position);
-                        break;
-
-                    case 5:
-                        // 이름순 ㅎ - ㄱ
-                        setSort(position);
-                        break;
-
-                }
-
+                setSort(position);
             }
 
             @Override
@@ -273,6 +196,8 @@ public class HomeFragment extends Fragment {
     //정렬 함수
     void setSort(int check) {
         String kind = mSpinner.getSelectedItem().toString();
+        String sortType = "dtOpen";
+
         this.items = new ArrayList<>();
 
         // SQLite 사용
@@ -280,71 +205,36 @@ public class HomeFragment extends Fragment {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         try {
-            // 쿼리문
-
-            switch (check) {
-                case 0:
-                    //개봉일순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT * FROM cosmetics ORDER BY dtOpen";
-                    } else {
-                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtOpen";
-                    }
-                    break;
-
-                case 1:
-                    //개봉일 역순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT * FROM cosmetics ORDER BY dtOpen desc";
-                    } else {
-                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtOpen desc";
-                    }
-                    break;
-
-                case 2:
-                    //사용기한 임박한 순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT * FROM cosmetics ORDER BY dtExp";
-                    } else {
-                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtExp";
-                    }
-                    break;
-
-                case 3:
-                    //사용기한 넉넉한 순
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT * FROM cosmetics ORDER BY dtExp desc";
-                    } else {
-                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY dtExp desc";
-                    }
-                    break;
-
-                case 4:
-                    //제품명 ㄱ ~ ㅎ
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT * FROM cosmetics ORDER BY productName";
-                    } else {
-                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY productName";
-                    }
-                    break;
-
-                case 5:
-                    //제품명 ㅎ ~ ㄱ
-                    if (mSpinner.getSelectedItemPosition() == 0) {
-                        mSql = "SELECT * FROM cosmetics ORDER BY productName desc";
-                    } else {
-                        mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY productName desc";
-                    }
-                    break;
+            // 정렬 기준 선택
+            if (check == 0){
+                sortType = "dtOpen";
+            } else if (check == 1){
+                sortType = "dtOpen desc";
+            } else if (check == 2){
+                sortType = "dtExp";
+            } else if (check == 3){
+                sortType = "dtExp desc";
+            } else if (check == 4){
+                sortType = "productName";
+            } else if (check == 5){
+                sortType = "productName desc";
             }
+
+            // 화장품 종류 선택
+            if (mSpinner.getSelectedItemPosition() == 0) {
+                mSql = "SELECT * FROM cosmetics ORDER BY " + sortType;
+            } else {
+                mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY " + sortType;
+            }
+
             Cursor cursor = db.rawQuery(mSql, null);
             while (cursor.moveToNext()) {
                 // 데이터
                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
                         cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm"))
-                        , cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
+                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
+                        cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
                 );
 
                 this.items.add(cosmetic);
