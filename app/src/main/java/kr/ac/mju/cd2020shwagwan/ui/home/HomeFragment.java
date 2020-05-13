@@ -383,13 +383,22 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
+                        SharedPreferences sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
+
                         expCalendar.set(Calendar.YEAR, year);
                         expCalendar.set(Calendar.MONTH, month);
                         expCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
+
+                        Log.d(TAG , "tvHour : " + sp.getInt("hour", 22));
+                        Log.d(TAG , "tvMinute : " + sp.getInt("minute", 00));
+
+                        expCalendar.set(Calendar.HOUR_OF_DAY, sp.getInt("hour", 22));
+                        expCalendar.set(Calendar.MINUTE, sp.getInt("minute", 00));
+                        String myFormat = "yyyy-MM-dd HH:mm:ss";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
                         edExp.setText(sdf.format(expCalendar.getTime()));
+                        Log.d(TAG , "tvEXP : " + expCalendar.getTime());
                     }
                 };
 
@@ -586,15 +595,6 @@ public class HomeFragment extends Fragment {
                         cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
                         cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
                 );
-
-                SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(cosmetic.getId()), MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                int notiWeek = sp.getInt("notiWeek", 0);
-                int notiMonth= sp.getInt("notiMonth", 0);
-                Log.d(TAG , "notiWeek(home) : " + notiWeek);
-                Log.d(TAG , "notiMonth(home) : " + notiMonth);
-                editor.putInt("notiWeek", notiWeek);
-                editor.putInt("notiMonth", notiMonth);
 
                 this.items.add(cosmetic);
 

@@ -46,14 +46,15 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="저장"
         android:layout_gravity="right"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="#e6b4fa"/>
+        android:backgroundTint="#e6b4fa"
+        android:text="저장" />
 
 
 </LinearLayout>
