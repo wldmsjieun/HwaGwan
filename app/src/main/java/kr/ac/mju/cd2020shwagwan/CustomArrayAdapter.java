@@ -162,13 +162,22 @@ public class CustomArrayAdapter extends ArrayAdapter {
             expCal.add(Calendar.DATE, 30);
         }
 
-
         //사용 기간 만료시 리스트에서 삭제
-        setSeconds(todayCal, expCal);
-        if(expCal.compareTo(todayCal) == 0){
-            deleteData(cosmetics);
+        Calendar expCalendar = Calendar.getInstance();
+        try{
+            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date tempDate = sdFormat.parse(cosmetics.getDtExp());
+            Log.d(TAG , "alarm set expdate : " + tempDate);
+            expCalendar.setTime(tempDate);
+        }catch (Exception e){
+            Log.d(TAG , "str to cal err : " + e.getMessage());
         }
-
+        expCalendar.set(Calendar.HOUR_OF_DAY, sp.getInt("hour", 22));
+        expCalendar.set(Calendar.MINUTE, sp.getInt("minute", 00));
+        setSeconds(todayCal, expCalendar);
+        if (expCalendar.compareTo(todayCal) == 0) {
+            moveMypage(cosmetics);
+        }
 
         ImageView ivDel = convertView.findViewById(R.id.ivDel);
         ivDel.setOnClickListener(new View.OnClickListener() {
@@ -200,9 +209,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
                             @Override
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 // 삭제
-                                addData(cosmetics.getBrandName(), cosmetics.getProductName(), cosmetics.getDtOpen(),
-                                        cosmetics.getDtExp(), cosmetics.getKind(), cosmetics.getVolume(), cosmetics.getAdditionalContent());
-                                deleteData(cosmetics);
+                                moveMypage(cosmetics);
                             }
                         })
                         .setNegativeButton("NO", null)
@@ -288,4 +295,12 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         db.close();
     }
+
+    /* cosmetics에서 삭제, mypage에 추가 */
+    private void moveMypage(Cosmetics cos){
+        addData(cos.getBrandName(), cos.getProductName(), cos.getDtOpen(),
+                cos.getDtExp(), cos.getKind(), cos.getVolume(), cos.getAdditionalContent());
+        deleteData(cos);
+    }
+
 }
