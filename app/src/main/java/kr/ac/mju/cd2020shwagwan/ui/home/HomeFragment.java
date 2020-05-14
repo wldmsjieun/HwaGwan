@@ -84,6 +84,7 @@ public class HomeFragment extends Fragment {
     static public Calendar expCalendar = Calendar.getInstance(); //만료일을 위한 달력
     static public CheckBox  cbWeek, cbMonth; //체크박스
 
+    String mInseartSql = "INSERT INTO "+DBHelper.TABLE_COSMETIC+"(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -623,7 +624,7 @@ public class HomeFragment extends Fragment {
         try {
             // 등록
             Object[] args = {brand, name, open, exp, kind, alarm, volume, additionalContent};
-            String sql = "INSERT INTO cosmetics(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
+            String sql = mInseartSql;
 
             db.execSQL(sql, args);
 

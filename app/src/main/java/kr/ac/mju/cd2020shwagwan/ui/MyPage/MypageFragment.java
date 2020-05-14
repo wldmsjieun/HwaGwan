@@ -3,6 +3,7 @@ package kr.ac.mju.cd2020shwagwan.ui.MyPage;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +20,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+
 
 import kr.ac.mju.cd2020shwagwan.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class MypageFragment extends Fragment {
+
+    private MypageViewModel mypageViewModel;
 
     private View mRoot;
     static public TextView tvHour;
@@ -33,8 +39,10 @@ public class MypageFragment extends Fragment {
     SharedPreferences sp;
     View layout;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    private FragmentManager mFragmentManager;
 
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_mypage, container, false);
         layout = inflater.inflate(R.layout.alarm_time_set, null);
         sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
@@ -45,9 +53,28 @@ public class MypageFragment extends Fragment {
         tvHour.setText(String.valueOf(sp.getInt("hour", 22)));
         tvMinute.setText(String.valueOf(sp.getInt("minute", 00)));
 
+        mFragmentManager = getActivity().getSupportFragmentManager();
+        mypageViewModel =
+                ViewModelProviders.of(this).get(MypageViewModel.class);
+
+        setCompletedUse();
+
         setSwitch();
+
         setAlarmTime();
+
         return mRoot;
+    }
+
+    void setCompletedUse() {
+        Button CompletedUseButton = (Button) mRoot.findViewById(R.id.mypage_completed_use_button);
+        CompletedUseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CompletedUse.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //활성 판단 함수
@@ -68,6 +95,7 @@ public class MypageFragment extends Fragment {
     //알람 시각을 설정할 수 있는 함수
     void setAlarmTime() {
         Button alarmTimeSet = (Button) mRoot.findViewById(R.id.my_page_alarm_time_set_button);
+
         alarmTimeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

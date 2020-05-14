@@ -16,6 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_COSMETIC = "cosmetics";
     public static final String TABLE_BARCODE_INFO = "barcodeinfos";
+    public static final String TABLE_MYPAGE = "mypage";
 
     /* 싱글톤 패턴 적용  */
     public static DBHelper getInstance(Context context) {
@@ -38,11 +39,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 테이블 생성
         try {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_COSMETIC);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BARCODE_INFO);
-
             db.execSQL("CREATE TABLE "+TABLE_COSMETIC+"(cID INTEGER PRIMARY KEY AUTOINCREMENT, brandName TEXT, productName TEXT, dtOpen TEXT, dtExp TEXT," +
                     " kind TEXT, alarm INTEGER, volume TEXT, additionalContent Text);");
+
+            db.execSQL("CREATE TABLE "+TABLE_MYPAGE+"(mID INTEGER PRIMARY KEY AUTOINCREMENT, brandName TEXT, productName TEXT, dtOpen TEXT, dtExp TEXT," +
+                    " kind TEXT, volume TEXT, additionalContent Text);");
 
             db.execSQL("CREATE TABLE "+TABLE_BARCODE_INFO+"(bID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "bcdId TEXT, bcdBrand TEXT, bcdProduct TEXT, bcdVolume TEXT);");

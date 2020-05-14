@@ -1,4 +1,4 @@
-package kr.ac.mju.cd2020shwagwan;
+package kr.ac.mju.cd2020shwagwan.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import kr.ac.mju.cd2020shwagwan.R;
 
 public class ResultActivity extends AppCompatActivity {
 

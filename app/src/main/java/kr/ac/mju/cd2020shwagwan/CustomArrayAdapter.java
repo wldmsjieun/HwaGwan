@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,8 +27,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+import kr.ac.mju.cd2020shwagwan.Notification.MyService;
 import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class CustomArrayAdapter extends ArrayAdapter {
@@ -35,6 +39,8 @@ public class CustomArrayAdapter extends ArrayAdapter {
     private ArrayList items;
     public static TextView mTvKind;
     static ProgressBar pbUsage;
+
+    String mMyPageInseartSql = "INSERT INTO "+DBHelper.TABLE_MYPAGE+"(brandName, productName, dtOpen, dtExp, kind,  volume, additionalContent) VALUES(?,?,?,?,?,?,?)";
 
     public CustomArrayAdapter(Context context, ArrayList items) {
         super(context, 0, items);
@@ -183,6 +189,28 @@ public class CustomArrayAdapter extends ArrayAdapter {
             }
         });
 
+        Button btComplete = convertView.findViewById(R.id.btComplete);
+        btComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(context)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull DialogInterface dialog, int which) {
+                                // 삭제
+                                addData(cosmetics.getBrandName(), cosmetics.getProductName(), cosmetics.getDtOpen(),
+                                        cosmetics.getDtExp(), cosmetics.getKind(), cosmetics.getVolume(), cosmetics.getAdditionalContent());
+                                deleteData(cosmetics);
+                            }
+                        })
+                        .setNegativeButton("NO", null)
+                        .setCancelable(false)
+                        .setTitle("사용완료 처리 하시겠습니까? ")
+                        .setMessage("선택된 제품 : " + cosmetics.getProductName())
+                        .show();
+            }
+        });
+
         return convertView;
     }
 
@@ -240,4 +268,22 @@ public class CustomArrayAdapter extends ArrayAdapter {
         today.set(Calendar.MILLISECOND, 00);
     }
 
+    /* MY PAGE 추가 */
+    private void addData(String brand, String name, String open, String exp, String kind, String volume, String additionalContent) {
+        // SQLite 사용
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        try {
+            // 등록
+            Object[] args = {brand, name, open, exp, kind, volume, additionalContent};
+            String sql = mMyPageInseartSql;
+
+            db.execSQL(sql, args);
+
+        } catch (SQLException e) {
+        }
+
+        db.close();
+    }
 }

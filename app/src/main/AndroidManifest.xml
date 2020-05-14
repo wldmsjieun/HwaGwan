@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".MyService"
+            android:name=".Notification.MyService"
             android:enabled="true"
             android:exported="true"></service>
 
@@ -24,14 +24,20 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- 바코드 설정 -->
+        </activity>
+
+        <activity
+            android:name=".ui.MyPage.CompletedUse"
+            android:label="@string/title_completed_use">
+        </activity>
+        <!-- 바코드 설정 -->
         <activity android:name=".ScanBarcode" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" /> <!-- 노티피케이션 설정 -->
         <activity
-            android:name=".ResultActivity"
+            android:name=".Notification.ResultActivity"
             android:parentActivityName=".MainActivity"></activity>
     </application>
 

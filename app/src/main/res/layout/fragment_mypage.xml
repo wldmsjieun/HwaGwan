@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/my_page_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <Button
+        android:id="@+id/mypage_completed_use_button"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@android:color/transparent"
         android:paddingLeft="20dp"
         android:text="사용완료 목록"
         android:gravity="left|center"
+        android:background="@android:color/transparent"
         android:drawableLeft="@drawable/check"
         android:drawablePadding="15dp"/>
 
@@ -47,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             style="@style/SwitchButtonStyle"
-            android:backgroundTint="#e6b4fa"
+            android:backgroundTint="#E6B4FA"
             android:layout_weight="5" />
     </LinearLayout>
+
 </LinearLayout>

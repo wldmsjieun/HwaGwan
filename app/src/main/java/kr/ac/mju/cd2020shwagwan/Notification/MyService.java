@@ -1,4 +1,4 @@
-package kr.ac.mju.cd2020shwagwan;
+package kr.ac.mju.cd2020shwagwan.Notification;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,13 +9,13 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
+import kr.ac.mju.cd2020shwagwan.MainActivity;
+import kr.ac.mju.cd2020shwagwan.R;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -24,6 +24,7 @@ public class MyService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
     private int count = 0;
     int weekCid, monthCid;
+    int mCosmeticId;
     String productName;
     private final IBinder myBinder = new LocalBinder();
     public MyService() {
@@ -43,13 +44,14 @@ public class MyService extends Service {
         try{
             boolean checkedWeek = intent.getBooleanExtra("cbWeekOn",false);
             boolean checkedMonth = intent.getBooleanExtra("cbMonthOn",false);
+            mCosmeticId = intent.getIntExtra("id", -1);
             productName = intent.getStringExtra("productName");
             weekCid =  intent.getIntExtra("weekCid",-1);
             monthCid = intent.getIntExtra("monthCid",-1);
 
             Thread.sleep(220);
             if(checkedWeek == true){
-                Notification(weekCid, " 만료 일주일전", productName);
+                Notification(weekCid, " 만료 일주일전 = " + mCosmeticId, productName);
             }
             if(checkedMonth == true){
                 Notification(monthCid, " 만료 한달전", productName);
