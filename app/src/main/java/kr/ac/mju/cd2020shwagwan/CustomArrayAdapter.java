@@ -107,10 +107,12 @@ public class CustomArrayAdapter extends ArrayAdapter {
             Log.d(TAG , " pb - error : " + e.getMessage());
         }
 
-
+        SharedPreferences sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
         Calendar todayCal = Calendar.getInstance();
         Calendar expCal = HomeFragment.expCalendar;
-
+        expCal.set(Calendar.HOUR_OF_DAY, sp.getInt("hour", 22));
+        expCal.set(Calendar.MINUTE, sp.getInt("minute", 00));
+        Log.d(TAG , "alarm set expCal : " + expCal.getTime());
         int alarmCheck = cosmetics.getAlarm();
 
         Intent intent = new Intent(getContext(), MyService.class);

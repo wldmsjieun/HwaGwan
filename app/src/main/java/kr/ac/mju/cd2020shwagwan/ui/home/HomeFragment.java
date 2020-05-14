@@ -158,12 +158,12 @@ public class HomeFragment extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               if (position == 0) {
-                   setKind(mSpinner.getSelectedItem().toString(), true);
-               }
-               else {
-                   setKind(mSpinner.getSelectedItem().toString(), false);
-               }
+                if (position == 0) {
+                    setKind(mSpinner.getSelectedItem().toString(), true);
+                }
+                else {
+                    setKind(mSpinner.getSelectedItem().toString(), false);
+                }
             }
 
             @Override
@@ -269,11 +269,11 @@ public class HomeFragment extends Fragment {
             Cursor cursor = db.rawQuery(mSql, null);
             while (cursor.moveToNext()) {
                 // 데이터
-                 Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
+                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
                         cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
                         cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
                         cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
-                         cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent")));
+                        cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent")));
 
                 this.items.add(cosmetic);
             }
@@ -390,8 +390,8 @@ public class HomeFragment extends Fragment {
                         expCalendar.set(Calendar.MONTH, month);
                         expCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                        Log.d(TAG , "tvHour : " + sp.getInt("hour", 22));
-                        Log.d(TAG , "tvMinute : " + sp.getInt("minute", 00));
+                        Log.d(TAG , "set HOME tvHour : " + sp.getInt("hour", 22));
+                        Log.d(TAG , "set HOME tvMinute : " + sp.getInt("minute", 00));
 
                         expCalendar.set(Calendar.HOUR_OF_DAY, sp.getInt("hour", 22));
                         expCalendar.set(Calendar.MINUTE, sp.getInt("minute", 00));
@@ -653,4 +653,3 @@ public class HomeFragment extends Fragment {
     }
 
 }
-

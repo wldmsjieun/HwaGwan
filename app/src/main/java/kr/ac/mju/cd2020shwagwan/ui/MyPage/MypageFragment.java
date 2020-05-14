@@ -54,8 +54,7 @@ public class MypageFragment extends Fragment {
         tvMinute.setText(String.valueOf(sp.getInt("minute", 00)));
 
         mFragmentManager = getActivity().getSupportFragmentManager();
-        mypageViewModel =
-                ViewModelProviders.of(this).get(MypageViewModel.class);
+        mypageViewModel = ViewModelProviders.of(this).get(MypageViewModel.class);
 
         setCompletedUse();
 
@@ -107,7 +106,8 @@ public class MypageFragment extends Fragment {
                         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
+                                Log.d("alarm set picker hour", String.valueOf(setHour));
+                                Log.d("alarm set picker minute", String.valueOf(setMin));
                                 tvHour.setText(Integer.toString(hourOfDay));
                                 tvMinute.setText(Integer.toString(minute));
                                 setHour = hourOfDay;
@@ -130,8 +130,8 @@ public class MypageFragment extends Fragment {
                             @Override
                             public void onClick(@NonNull DialogInterface dialog, int which) {
                                 SharedPreferences.Editor editor = sp.edit();
-                                Log.d("save hour", String.valueOf(setHour));
-                                Log.d("save minute", String.valueOf(setMin));
+                                Log.d("alarm set save hour", String.valueOf(setHour));
+                                Log.d("alarm set save minute", String.valueOf(setMin));
                                 editor.putInt("hour", setHour);
                                 editor.putInt("minute", setMin);
                                 editor.commit();
