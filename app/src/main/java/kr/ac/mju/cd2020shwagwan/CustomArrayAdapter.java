@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -26,11 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-import kr.ac.mju.cd2020shwagwan.ui.MyPage.AlarmTimeSet;
-import kr.ac.mju.cd2020shwagwan.ui.MyPage.MypageFragment;
 import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
-import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class CustomArrayAdapter extends ArrayAdapter {
