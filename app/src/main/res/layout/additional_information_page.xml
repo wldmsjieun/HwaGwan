@@ -83,12 +83,12 @@
             android:progressTint="#878585"
             android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/additional_information_ivModify"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            app:srcCompat="@drawable/delete_icon" />
+        <Button
+            android:id="@+id/btComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="#e6b4fa"
+            android:text="수정" />
     </LinearLayout>
         <TextView
             android:layout_width="wrap_content"

@@ -207,7 +207,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
                         })
                         .setNegativeButton("NO", null)
                         .setCancelable(false)
-                        .setTitle("사용완료 처리 하시겠습니까? ")
+                        .setTitle("사용완료 처리를 하시겠습니까? ")
                         .setMessage("선택된 제품 : " + cosmetics.getProductName())
                         .show();
             }

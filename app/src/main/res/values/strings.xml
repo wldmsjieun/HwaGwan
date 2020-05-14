@@ -35,10 +35,6 @@
         <item>제품명 (ㅎ~ㄱ)</item>
     </string-array>
 
-    <string-array name="usekind_array">
-        <item>사용중인 제품</item>
-        <item>사용완료 제품</item>
-    </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
