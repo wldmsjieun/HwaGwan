@@ -15,22 +15,22 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.result_main);
+        setContentView(R.layout.additional_information_page);
 
 
-        String text = "전달 받은 값은";
+//        String text = "전달 받은 값은";
         int id = 0;
-
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            text = "값을 전달 받는데 문제 발생";
-        }
-        else
-            id = extras.getInt("notificationId");
-
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(text + " " + id);
-
+//
+//        Bundle extras = getIntent().getExtras();
+//        if (extras == null) {
+//            text = "값을 전달 받는데 문제 발생";
+//        }
+//        else
+//            id = extras.getInt("notificationId");
+//
+//        TextView textView = (TextView) findViewById(R.id.textView);
+//        textView.setText(text + " " + id);
+//
         NotificationManager notificationManager =  (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         //노티피케이션 제거

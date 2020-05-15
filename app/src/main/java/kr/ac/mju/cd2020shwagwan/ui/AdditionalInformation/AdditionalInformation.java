@@ -49,41 +49,38 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AdditionalInformation extends AppCompatActivity {
 
-    private TextView mBrandView;
-    private TextView mKindView;
-    private TextView mNameView;
-    private TextView mVolumeView;
-    private TextView mOpenView;
-    private TextView mExpView;
-    private TextView mAdditionalContentView;
+    private TextView tvBrand;
+    private TextView tvKind;
+    private TextView tvName;
+    private TextView tvVolume;
+    private TextView tvOeen;
+    private TextView tvExp;
+    private TextView tvAddCont;
 
-    private String mBrandString;
+    private String brandStr;
     private String mKindString;
-    private String mNameString;
-    private String mVolumeString;
-    private String mOpenString;
-    private String mExpString;
-    private String mAdditionalContentString;
+    private String nameStr;
+    private String volumeStr;
+    private String openStr;
+    private String expStr;
+    private String addContStr;
 
     private EditText edOpen, edExp; //개봉일, 만료일
-    private EditText etBrand, etName, etAdditionalContent, etVolume; //브랜드명, 상품명, 추가사항, 용량
+    private EditText etBrand, etName, etAddCont, etVolume; //브랜드명, 상품명, 추가사항, 용량
     private TextView tvComment,tvBarcode;
     int openYear = 0, openMonth = 0, openDay = 0; //개봉일 연도, 월, 일
     private CheckBox cbWeek, cbMonth; //체크박스
 
-    private ProgressBar mUsageView;
+    private ProgressBar pbUsage;
 
-    private Button mModifyButton;
+    private Button btModify;
 
     private String mCheck;
 
     private Context mContext;
 
     private int mId;
-    private int initPeriod = 0; //사용 권장 기한
     private int mAlarmCheck;
-
-    private SwipeRefreshLayout mHomeSwipeRefreshLayout;
 
     private Calendar expCalendar = Calendar.getInstance(); //만료일을 위한 달력
 
@@ -105,17 +102,17 @@ public class AdditionalInformation extends AppCompatActivity {
     }
 
     void setId() {
-        mBrandView = (TextView) findViewById(R.id.additional_information_tvBrand);
-        mKindView = (TextView) findViewById(R.id.additional_information_tvKind);
-        mNameView = (TextView) findViewById(R.id.additional_information_tvName);
-        mVolumeView = (TextView) findViewById(R.id.additional_information_volume);
-        mOpenView = (TextView) findViewById(R.id.additional_information_tvOpen);
-        mExpView = (TextView) findViewById(R.id.additional_information_tvExp);
-        mAdditionalContentView = (TextView) findViewById(R.id.additional_information_additionalContent);
+        tvBrand = findViewById(R.id.additional_information_tvBrand);
+        tvKind =findViewById(R.id.additional_information_tvKind);
+        tvName = findViewById(R.id.additional_information_tvName);
+        tvVolume = findViewById(R.id.additional_information_volume);
+        tvOeen = findViewById(R.id.additional_information_tvOpen);
+        tvExp = findViewById(R.id.additional_information_tvExp);
+        tvAddCont = findViewById(R.id.additional_information_additionalContent);
 
-        mUsageView = (ProgressBar) findViewById(R.id.additional_information_pbUsage);
+        pbUsage = findViewById(R.id.additional_information_pbUsage);
 
-        mModifyButton = (Button) findViewById(R.id.btModify);
+        btModify = findViewById(R.id.btModify);
     }
 
     void setDB() {
@@ -134,48 +131,46 @@ public class AdditionalInformation extends AppCompatActivity {
             Cursor cursor = db.rawQuery(sql, null);
 
             while (cursor.moveToNext()) {
-                mBrandString = cursor.getString(cursor.getColumnIndex("brandName"));
+                brandStr = cursor.getString(cursor.getColumnIndex("brandName"));
                 mKindString = cursor.getString(cursor.getColumnIndex("kind"));
-                mNameString = cursor.getString(cursor.getColumnIndex("productName"));
-                mVolumeString = cursor.getString(cursor.getColumnIndex("volume"));
-                mOpenString = cursor.getString(cursor.getColumnIndex("dtOpen"));
-                mExpString = cursor.getString(cursor.getColumnIndex("dtExp"));
+                nameStr = cursor.getString(cursor.getColumnIndex("productName"));
+                volumeStr = cursor.getString(cursor.getColumnIndex("volume"));
+                openStr = cursor.getString(cursor.getColumnIndex("dtOpen"));
+                expStr = cursor.getString(cursor.getColumnIndex("dtExp"));
                 if(mCheck.equals("home")) {
                     mAlarmCheck = cursor.getInt(cursor.getColumnIndex("alarm"));
                 }
-                mAdditionalContentString = cursor.getString(cursor.getColumnIndex("additionalContent"));
+                addContStr = cursor.getString(cursor.getColumnIndex("additionalContent"));
             }
             cursor.close();
-        } catch (SQLException e) {
-        }
+        } catch (SQLException e) { }
 
         db.close();
     }
 
     void setText() {
-        mBrandView.setText(mBrandString);
-        mKindView.setText(mKindString);
-        mNameView.setText(mNameString);
-        mVolumeView.setText(mVolumeString);
-        mOpenView.setText(mOpenString);
-        mExpView.setText(mExpString);
-        mAdditionalContentView.setText(mAdditionalContentString);
+        tvBrand.setText(brandStr);
+        tvKind.setText(mKindString);
+        tvName.setText(nameStr);
+        tvVolume.setText(volumeStr);
+        tvOeen.setText(openStr);
+        tvExp.setText(expStr);
+        tvAddCont.setText(addContStr);
 
         if (mCheck.equals("completeUse")) {
-            mUsageView.setVisibility(View.GONE);
-
+            pbUsage.setVisibility(View.GONE);
         }
 
         // 프로그레스바 설정
         try{
             SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd");
-            Date open = trans.parse(mOpenString);
-            Date exp = trans.parse(mExpString);
+            Date open = trans.parse(openStr);
+            Date exp = trans.parse(expStr);
 
             long period = exp.getTime() - open.getTime();
             long periodDay = period / (24 * 60 * 60 * 1000);
 
-            mUsageView.setMax((int)periodDay);
+            pbUsage.setMax((int)periodDay);
 
             long now = System.currentTimeMillis();
             Date dt = new Date(now);
@@ -183,15 +178,13 @@ public class AdditionalInformation extends AppCompatActivity {
             long usage = dt.getTime() - open.getTime();
             long usageDay = usage / (24 * 60 * 60 * 1000);
 
-            mUsageView.setProgress((int) usageDay);
+            pbUsage.setProgress((int) usageDay);
 
-
-        }catch(Exception e){
-        }
+        }catch(Exception e){ }
     }
 
     void setModify() {
-        mModifyButton.setOnClickListener(new View.OnClickListener() {
+        btModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showModifyDialog();
@@ -221,18 +214,18 @@ public class AdditionalInformation extends AppCompatActivity {
         tvBarcode = layout.findViewById(R.id.tvBarcode);
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
-        etVolume = (EditText) layout.findViewById(R.id.etVolume);
-        etAdditionalContent = (EditText) layout.findViewById(R.id.etcontent);
-        TextView tvChoose = (TextView) layout.findViewById(R.id.tvChoose);
+        etVolume = layout.findViewById(R.id.etVolume);
+        etAddCont = layout.findViewById(R.id.etcontent);
+        TextView tvChoose = layout.findViewById(R.id.tvChoose);
 
         tvBarcode.setVisibility(View.GONE);
 
-        etBrand.setText(mBrandString);
-        etName.setText(mNameString);
-        edOpen.setText(mOpenString);
-        edExp.setText(mExpString);
-        etVolume.setText(mVolumeString);
-        etAdditionalContent.setText(mAdditionalContentString);
+        etBrand.setText(brandStr);
+        etName.setText(nameStr);
+        edOpen.setText(openStr);
+        edExp.setText(expStr);
+        etVolume.setText(volumeStr);
+        etAddCont.setText(addContStr);
 
         int spinnerIndex = 0;
         String[] productKind = getResources().getStringArray(R.array.product_kinds_array);
@@ -258,8 +251,8 @@ public class AdditionalInformation extends AppCompatActivity {
                     cbWeek.setChecked(true);
                     cbMonth.setChecked(true);
                     break;
-                    default:
-                        break;
+                default:
+                    break;
             }
         } else {
             cbWeek.setVisibility(View.GONE);
@@ -363,35 +356,23 @@ public class AdditionalInformation extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Calendar cCal = Calendar.getInstance();
-                String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
+                String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-11
                 if (position == 1 || position == 2 || position == 11 || position == 12 || position == 13 || position == 14) {
                     //6개월 이내
                     //자외선 차단제,  립밤,           립스틱,         립글로스,          아이라이너,        마스카라
-//                    cCal.add(Calendar.DATE, 180);
-//                    edExp.setText(sdf.format(cCal.getTime()));
                     tvComment.setText("사용 권장 기한 : 6개월 이내");
                 } else if (position == 3) {
                     //8개월 이내
                     //에센스
-                    edExp.setText("Exp : 8개월 이내");
-//                    cCal.add(Calendar.DATE, 240);
-//                    edExp.setText(sdf.format(cCal.getTime()));
                     tvComment.setText("사용 권장 기한 : 8개월 이내");
                 } else if (position == 0 || position == 4 || position == 5 || position == 6 || position == 8 || position == 9 || position == 10 || position == 15) {
                     //1년 이내
                     //스킨,              크림,             메이크업 베이스,   컨실러,           아이새도우,        아이브로우,      블러셔,           클렌저
-//                    cCal.add(Calendar.DATE, 365);
-//                    edExp.setText(sdf.format(cCal.getTime()));
                     tvComment.setText("사용 권장 기한 : 1년 이내");
                 } else if (position == 7) {
                     //2년 이내
                     //파우더
-//                    cCal.add(Calendar.DATE, 730);
-//                    edExp.setText(sdf.format(cCal.getTime()));
                     tvComment.setText("사용 권장 기한 : 2년 이내");
-                } else if (position == 16) {
-//                    edExp.setText("");
                 }
                 expCalendar = cCal;
             }
@@ -404,7 +385,7 @@ public class AdditionalInformation extends AppCompatActivity {
 
         /* 추가폼에 데이터 입력 */
         new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
-                .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
                         // 추가
@@ -420,31 +401,9 @@ public class AdditionalInformation extends AppCompatActivity {
                             return;
                         }
 
-
-                        if (spKinds.getSelectedItemPosition() == 1 || spKinds.getSelectedItemPosition() == 2
-                                || spKinds.getSelectedItemPosition() == 11 || spKinds.getSelectedItemPosition() == 12
-                                || spKinds.getSelectedItemPosition() == 13 || spKinds.getSelectedItemPosition() == 14) {
-                            //6개월 이내
-                            initPeriod = 180;
-                        } else if (spKinds.getSelectedItemPosition() == 3) {
-                            //8개월 이내
-                            initPeriod = 240;
-                        } else if (spKinds.getSelectedItemPosition() == 0 || spKinds.getSelectedItemPosition() == 4
-                                || spKinds.getSelectedItemPosition() == 5 || spKinds.getSelectedItemPosition() == 6
-                                || spKinds.getSelectedItemPosition() == 8 || spKinds.getSelectedItemPosition() == 9
-                                || spKinds.getSelectedItemPosition() == 10 || spKinds.getSelectedItemPosition() == 15) {
-                            //1년 이내
-                            initPeriod = 365;
-                        } else if (spKinds.getSelectedItemPosition() == 7) {
-                            //2년 이내
-                            initPeriod = 730;
-                        } else if (spKinds.getSelectedItemPosition() == 16) {
-                            initPeriod = 365;
-                        }
-
                         // 데이터 추가
                         ModifyData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(),
-                                setCheckBox(), etVolume.getText().toString(), etAdditionalContent.getText().toString());
+                                setCheckBox(), etVolume.getText().toString(), etAddCont.getText().toString());
                     }
                 })
                 .setCancelable(true)
@@ -489,9 +448,8 @@ public class AdditionalInformation extends AppCompatActivity {
             }
 
 
-        } catch (SQLException e) {
+        } catch (SQLException e) { }
 
-        }
         db.close();
 
         //새로고침
@@ -499,11 +457,5 @@ public class AdditionalInformation extends AppCompatActivity {
         finish();
         startActivity(intent);
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        if (mCheck.equals("home")) {
-        } else {
-
-        }
     }
 }

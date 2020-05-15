@@ -25,17 +25,12 @@ import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
 
 public class CompletedUse extends AppCompatActivity {
-    private ListView mCompletedUseListview;
 
+    private ListView lvUsed;
     private String mSql;
-
     private CompleteArrayAdapter mCompleteArrayAdapter;
-
     private ArrayList<MyPage> mMyPageArrayList;
-
-    private View mRoot;
-
-    private Spinner mKindSpinner; //사용내역 목록에서 화장품 종류 스피너
+    private Spinner spKind; //사용내역 목록에서 화장품 종류 스피너
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +42,8 @@ public class CompletedUse extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        Log.d("확인", "CompletedUse onDestroyView");
-//        mFragmentManager.popBackStack();
-//        mFragmentManager.beginTransaction()
-//                .remove(CompletedUse.this)
-//                .commit();
-//    }
-
     void setId() {
-        mCompletedUseListview = (ListView) findViewById(R.id.completed_use_listview);
+        lvUsed = findViewById(R.id.completed_use_listview);
     }
 
     void setKind(String kind, boolean all) {
@@ -95,24 +80,24 @@ public class CompletedUse extends AppCompatActivity {
 
         // 리스트 구성
         mCompleteArrayAdapter = new CompleteArrayAdapter(this, mMyPageArrayList);
-        mCompletedUseListview.setAdapter(mCompleteArrayAdapter);
+        lvUsed.setAdapter(mCompleteArrayAdapter);
     }
 
     // 사용완료 내역에서 화장품 종류 스피너 설정
     void setSpinner() {
-        mKindSpinner = (Spinner) findViewById(R.id.spUseKindSpinner);
+        spKind = findViewById(R.id.spUseKindSpinner);
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(this, R.array.kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mKindSpinner.setAdapter(kindsAdapter);
+        spKind.setAdapter(kindsAdapter);
 
-        mKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    setKind(mKindSpinner.getSelectedItem().toString(), true);
+                    setKind(spKind.getSelectedItem().toString(), true);
                 }
                 else {
-                    setKind(mKindSpinner.getSelectedItem().toString(), false);
+                    setKind(spKind.getSelectedItem().toString(), false);
                 }
             }
 
@@ -154,6 +139,6 @@ public class CompletedUse extends AppCompatActivity {
 
         mCompleteArrayAdapter = new CompleteArrayAdapter(this, mMyPageArrayList);
 
-        mCompletedUseListview.setAdapter(mCompleteArrayAdapter);
+        lvUsed.setAdapter(mCompleteArrayAdapter);
     }
 }

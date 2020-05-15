@@ -30,7 +30,7 @@ import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
 public class CompleteArrayAdapter  extends ArrayAdapter {
     private Context mContext;
     private ArrayList mData;
-    private TextView mTvKind;
+    private TextView tvKind;
 
     public CompleteArrayAdapter(@NonNull Context context, ArrayList data) {
         super(context, 0, data);
@@ -51,16 +51,14 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
         TextView tvName = convertView.findViewById(R.id.tvName);
         TextView tvOpen = convertView.findViewById(R.id.tvOpen);
         TextView tvExp = convertView.findViewById(R.id.tvExp);
-        mTvKind = convertView.findViewById(R.id.tvKind);
+        tvKind = convertView.findViewById(R.id.tvKind);
 
 
         tvBrand.setText(myPage.getBrandName());
         tvName.setText(myPage.getProductName());
         tvOpen.setText(myPage.getDtOpen());
         tvExp.setText(myPage.getDtExp());
-        mTvKind.setText(myPage.getKind());
-
-        Date exp = new Date(), dt = new Date();
+        tvKind.setText(myPage.getKind());
 
         Button btComplete = convertView.findViewById(R.id.btComplete);
         ProgressBar pbUsage = convertView.findViewById(R.id.pbUsage);
@@ -106,6 +104,7 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
         });
         return convertView;
     }
+
 
     /* 삭제 */
     private void deleteData(MyPage myPage) {

@@ -61,8 +61,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private ListView listView;
     private String mSql; //SQL문을 위한 변수
-    private Spinner mSpinner; //화장품 종류 스피너
-    private Spinner mSortSpinner; //정렬 스피너
+    private Spinner spKind; //화장품 종류 스피너
+    private Spinner spSort; //정렬 스피너
     private ArrayList<Cosmetics> items; //리스트를 위한 변수
     private SimpleDateFormat sdfNow;
     private EditText edOpen, edExp; //개봉일, 만료일
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
     int openYear = 0, openMonth = 0, openDay = 0; //개봉일 연도, 월, 일
     String barcode; //바코드 번호를 위한 변수
     TextView tvComment, tvBarcode; //사용 권장 기한, 바코드 번호 텍스트뷰
-    EditText etBrand, etName, etAdditionalContent, etVolume; //브랜드명, 상품명, 추가사항, 용량
+    EditText etBrand, etName, etAddCont, etVolume; //브랜드명, 상품명, 추가사항, 용량
     FloatingActionButton fabBarcode; //fab버튼
     Calendar openCalendar = Calendar.getInstance(); //개봉일을 위한 달력
 
@@ -81,7 +81,6 @@ public class HomeFragment extends Fragment {
     public String bcdBrand, bcdProduct; //바코드 상품명, 브랜드명 변수
 
     //static
-    static int initPeriod = 0; //사용 권장 기한
     static public Calendar expCalendar = Calendar.getInstance(); //만료일을 위한 달력
     static public CheckBox  cbWeek, cbMonth; //체크박스
 
@@ -98,7 +97,7 @@ public class HomeFragment extends Fragment {
         listView = mRoot.findViewById(R.id.lvItem);
 
         //초기 설정
-//        listData();
+        listData();
         setSpinner();
         setSortSpinner();
         setKind(null, true);
@@ -151,19 +150,19 @@ public class HomeFragment extends Fragment {
 
     // 화장품 종류 스피너 설정
     void setSpinner() {
-        mSpinner = (Spinner) mRoot.findViewById(R.id.spShowKinds);
+        spKind = mRoot.findViewById(R.id.spShowKinds);
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(kindsAdapter);
+        spKind.setAdapter(kindsAdapter);
 
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    setKind(mSpinner.getSelectedItem().toString(), true);
+                    setKind(spKind.getSelectedItem().toString(), true);
                 }
                 else {
-                    setKind(mSpinner.getSelectedItem().toString(), false);
+                    setKind(spKind.getSelectedItem().toString(), false);
                 }
             }
 
@@ -176,28 +175,26 @@ public class HomeFragment extends Fragment {
 
     //정렬 스피너 설정
     void setSortSpinner() {
-        mSortSpinner = (Spinner) mRoot.findViewById(R.id.spSort);
+        spSort = (Spinner) mRoot.findViewById(R.id.spSort);
 
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSortSpinner.setAdapter(kindsAdapter);
+        spSort.setAdapter(kindsAdapter);
 
-        mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSort(position);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
     }
 
     //정렬 함수
     void setSort(int check) {
-        String kind = mSpinner.getSelectedItem().toString();
+        String kind = spKind.getSelectedItem().toString();
         String sortType = "dtOpen";
 
         this.items = new ArrayList<>();
@@ -223,7 +220,7 @@ public class HomeFragment extends Fragment {
             }
 
             // 화장품 종류 선택
-            if (mSpinner.getSelectedItemPosition() == 0) {
+            if (spKind.getSelectedItemPosition() == 0) {
                 mSql = "SELECT * FROM cosmetics ORDER BY " + sortType;
             } else {
                 mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY " + sortType;
@@ -243,8 +240,7 @@ public class HomeFragment extends Fragment {
             }
 
             cursor.close();
-        } catch (SQLException e) {
-        }
+        } catch (SQLException e) { }
 
         db.close();
 
@@ -280,8 +276,7 @@ public class HomeFragment extends Fragment {
             }
 
             cursor.close();
-        } catch (SQLException e) {
-        }
+        } catch (SQLException e) { }
 
         db.close();
 
@@ -289,7 +284,7 @@ public class HomeFragment extends Fragment {
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
         this.listView.setAdapter(this.adapter);
 
-        setSort(mSortSpinner.getSelectedItemPosition());
+        setSort(spSort.getSelectedItemPosition());
     }
 
     /* 추가폼 호출 */
@@ -313,8 +308,8 @@ public class HomeFragment extends Fragment {
         tvBarcode = layout.findViewById(R.id.tvBarcode);
         cbWeek = layout.findViewById(R.id.cbWeek);
         cbMonth = layout.findViewById(R.id.cbMonth);
-        etVolume = (EditText) layout.findViewById(R.id.etVolume);
-        etAdditionalContent = (EditText) layout.findViewById(R.id.etcontent);
+        etVolume = layout.findViewById(R.id.etVolume);
+        etAddCont = layout.findViewById(R.id.etcontent);
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);
@@ -449,9 +444,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
 
@@ -474,31 +467,9 @@ public class HomeFragment extends Fragment {
                             return;
                         }
 
-
-                        if (spKinds.getSelectedItemPosition() == 1 || spKinds.getSelectedItemPosition() == 2
-                                || spKinds.getSelectedItemPosition() == 11 || spKinds.getSelectedItemPosition() == 12
-                                || spKinds.getSelectedItemPosition() == 13 || spKinds.getSelectedItemPosition() == 14) {
-                            //6개월 이내
-                            initPeriod = 180;
-                        } else if (spKinds.getSelectedItemPosition() == 3) {
-                            //8개월 이내
-                            initPeriod = 240;
-                        } else if (spKinds.getSelectedItemPosition() == 0 || spKinds.getSelectedItemPosition() == 4
-                                || spKinds.getSelectedItemPosition() == 5 || spKinds.getSelectedItemPosition() == 6
-                                || spKinds.getSelectedItemPosition() == 8 || spKinds.getSelectedItemPosition() == 9
-                                || spKinds.getSelectedItemPosition() == 10 || spKinds.getSelectedItemPosition() == 15) {
-                            //1년 이내
-                            initPeriod = 365;
-                        } else if (spKinds.getSelectedItemPosition() == 7) {
-                            //2년 이내
-                            initPeriod = 730;
-                        } else if (spKinds.getSelectedItemPosition() == 16) {
-                            initPeriod = 365;
-                        }
-
                         // 데이터 추가
                         addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(),
-                                setCheckBox(), etVolume.getText().toString(), etAdditionalContent.getText().toString());
+                                setCheckBox(), etVolume.getText().toString(), etAddCont.getText().toString());
                     }
                 })
                 .setCancelable(true)
@@ -603,8 +574,7 @@ public class HomeFragment extends Fragment {
             }
 
             cursor.close();
-        } catch (SQLException e) {
-        }
+        } catch (SQLException e) { }
 
         db.close();
 
@@ -621,7 +591,7 @@ public class HomeFragment extends Fragment {
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        mSpinner.setSelection(0);
+        spKind.setSelection(0);
         try {
             // 등록
             Object[] args = {brand, name, open, exp, kind, alarm, volume, additionalContent};
