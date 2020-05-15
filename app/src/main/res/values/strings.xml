@@ -4,6 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_my_page">My Page</string>
     <string name="title_completed_use">사용 내역</string>
+    <string name="additional_information">추가 정보</string>
 
     <string-array name="kinds_array">
         <item>전체</item>

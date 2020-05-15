@@ -1,5 +1,6 @@
 package kr.ac.mju.cd2020shwagwan;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,6 +19,8 @@ import java.io.InputStream;
 
 import jxl.Sheet;
 import jxl.Workbook;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
+import kr.ac.mju.cd2020shwagwan.ui.MyPage.CompletedUse;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -115,6 +118,26 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             if (workbook != null) {
                 workbook.close();
+            }
+        }
+
+        setAdditionalInformation();
+    }
+
+    void setAdditionalInformation() {
+        int id;
+
+        Bundle bundle = getIntent().getExtras();
+
+        if ( bundle != null) {
+            id = bundle.getInt("cid", -1);
+
+            if (id != -1) {
+                Log.d("확인", "id = " + id);
+                Intent intent = new Intent(this, AdditionalInformation.class);
+                intent.putExtra("id", id);
+                intent.putExtra("check","home");
+                startActivity(intent);
             }
         }
     }

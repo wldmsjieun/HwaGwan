@@ -10,39 +10,62 @@
         android:layout_width="273dp"
         android:layout_height="36dp" />
 
-    <EditText
-        android:id="@+id/etBrand"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="브랜드명"
-        android:inputType="text"
-        android:textColor="#000000"
-        android:textColorHint="#999999"
-        android:textSize="14sp" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="브랜드명 : "
+            android:textColor="#000000"
+            />
 
+        <EditText
+            android:id="@+id/etBrand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="브랜드명"
+            android:inputType="text"
+            android:textColor="#000000"
+            android:textColorHint="#999999"
+            android:textSize="14sp" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="상품명 : "
+            android:textColor="#000000"
+            />
+
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginTop="8dp"
             android:hint="상품명"
             android:inputType="text"
             android:textColor="#000000"
             android:textColorHint="#999999"
             android:textSize="14sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="용량 : "
+            android:textColor="#000000"
+            />
+
         <EditText
             android:id="@+id/etVolume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="2"
+            android:layout_weight="1.7"
             android:hint="용량"
             android:inputType="text"
             android:textColor="#000000"
@@ -64,7 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="  개봉일" />
+                android:text="  개봉일"
+                android:textColor="#000000"/>
 
             <EditText
                 android:id="@+id/edOpen"
@@ -90,7 +114,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="만료일" />
+                android:text="만료일"
+                android:textColor="#000000"/>
 
             <EditText
                 android:id="@+id/edExp"
@@ -136,6 +161,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="한 달전 알림" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="추가 정보 : "
+        android:layout_marginTop="10dp"
+        android:textColor="#000000"
+        />
 
     <EditText
         android:id="@+id/etcontent"

@@ -3,6 +3,7 @@ package kr.ac.mju.cd2020shwagwan.ui.MyPage;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import java.util.Date;
 
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
 
 public class CompleteArrayAdapter  extends ArrayAdapter {
     private Context mContext;
@@ -59,6 +63,9 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
         Date exp = new Date(), dt = new Date();
 
         Button btComplete = convertView.findViewById(R.id.btComplete);
+        ProgressBar pbUsage = convertView.findViewById(R.id.pbUsage);
+
+        pbUsage.setVisibility(View.INVISIBLE);
         btComplete.setVisibility(View.GONE);
 
         Log.d("확인", "용량 = " + myPage.getVolume());
@@ -85,6 +92,18 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
             }
         });
 
+        LinearLayout itemLayout = convertView.findViewById(R.id.item_layout);
+
+        itemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AdditionalInformation.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("id", myPage.getId());
+                intent.putExtra("check", "completeUse");
+                getContext().startActivity(intent);
+            }
+        });
         return convertView;
     }
 

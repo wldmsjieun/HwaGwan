@@ -54,11 +54,12 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 public class HomeFragment extends Fragment {
 
+    public static View mRoot;
+    public static CustomArrayAdapter adapter;
+
     //private
     private HomeViewModel homeViewModel;
     private ListView listView;
-    private CustomArrayAdapter adapter;
-    private View mRoot;
     private String mSql; //SQL문을 위한 변수
     private Spinner mSpinner; //화장품 종류 스피너
     private Spinner mSortSpinner; //정렬 스피너

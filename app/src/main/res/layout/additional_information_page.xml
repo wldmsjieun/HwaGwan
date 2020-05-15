@@ -49,54 +49,64 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="378dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="개봉일 : "
+            android:textColor="@android:color/black"/>
         <TextView
             android:id="@+id/additional_information_tvOpen"
-            android:layout_width="44dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="개봉일" />
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="만료일 : "
+            android:textColor="@android:color/black"/>
         <TextView
             android:id="@+id/additional_information_tvExp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="만료일" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/additional_information_pbUsage"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progressTint="#878585" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="22dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/additional_information_pbUsage"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:progressTint="#878585"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/btComplete"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:backgroundTint="#e6b4fa"
-            android:text="수정" />
-    </LinearLayout>
+        android:gravity="center_vertical">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="추가사항"/>
+            android:layout_height="20dp"
+            android:text="추가사항 :      "/>
 
         <TextView
             android:id="@+id/additional_information_additionalContent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="2"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btModify"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:backgroundTint="#e6b4fa"
+        android:layout_gravity="right"
+        android:text="수정" />
+
 </LinearLayout>

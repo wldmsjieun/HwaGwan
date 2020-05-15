@@ -14,8 +14,12 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import org.apache.log4j.chainsaw.Main;
+
 import kr.ac.mju.cd2020shwagwan.MainActivity;
 import kr.ac.mju.cd2020shwagwan.R;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
+import kr.ac.mju.cd2020shwagwan.ui.MyPage.CompletedUse;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -44,14 +48,14 @@ public class MyService extends Service {
         try{
             boolean checkedWeek = intent.getBooleanExtra("cbWeekOn",false);
             boolean checkedMonth = intent.getBooleanExtra("cbMonthOn",false);
-            mCosmeticId = intent.getIntExtra("id", -1);
+            mCosmeticId = intent.getIntExtra("cid", -1);
             productName = intent.getStringExtra("productName");
             weekCid =  intent.getIntExtra("weekCid",-1);
             monthCid = intent.getIntExtra("monthCid",-1);
 
             Thread.sleep(220);
             if(checkedWeek == true){
-                Notification(weekCid, " 만료 일주일전 ", productName);
+                Notification(weekCid, " 만료 일주일전 = " + mCosmeticId, productName);
             }
             if(checkedMonth == true){
                 Notification(monthCid, " 만료 한달전", productName);
@@ -78,7 +82,7 @@ public class MyService extends Service {
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-        notificationIntent.putExtra("notificationId", count); //전달할 값
+        notificationIntent.putExtra("cid", mCosmeticId); //전달할 값
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import java.util.Date;
 
 
 import kr.ac.mju.cd2020shwagwan.Notification.MyService;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
 import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -73,7 +75,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         Date exp = new Date(), dt = new Date();
 
-        Log.d("확인", "용량 = " + cosmetics.getVolume());
+        Log.d("확인", "용량 = " + cosmetics.getVolume() + " 알람 = " + cosmetics.getAlarm());
 
         // 프로그레스바 설정
         try{
@@ -117,6 +119,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
 
         Intent intent = new Intent(getContext(), MyService.class);
         intent.putExtra("productName", cosmetics.getProductName());
+        intent.putExtra("cid", cosmetics.getId());
 
         //알림 설정 - 한주전 또는 모든 알림 설정 시
         if((alarmCheck == 1 || alarmCheck == 3) ){
@@ -217,6 +220,19 @@ public class CustomArrayAdapter extends ArrayAdapter {
                         .setTitle("사용완료 처리를 하시겠습니까? ")
                         .setMessage("선택된 제품 : " + cosmetics.getProductName())
                         .show();
+            }
+        });
+
+        LinearLayout itemLayout = convertView.findViewById(R.id.item_layout);
+
+        itemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AdditionalInformation.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("id", cosmetics.getId());
+                intent.putExtra("check", "home");
+                getContext().startActivity(intent);
             }
         });
 
