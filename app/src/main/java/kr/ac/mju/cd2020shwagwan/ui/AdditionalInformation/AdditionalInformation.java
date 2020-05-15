@@ -35,11 +35,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
+import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ui.MyPage.CompletedUse;
@@ -86,6 +88,11 @@ public class AdditionalInformation extends AppCompatActivity {
 
     private Spinner spKinds;
 
+    // 최저가
+    private ArrayList lowestItem;
+    private LowestArrayAdapter lowestAdapter;
+    private ListView lvLowest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +106,15 @@ public class AdditionalInformation extends AppCompatActivity {
         setText();
 
         setModify();
+
+        lvLowest = findViewById(R.id.lvLowest);
+
+        this.lowestItem = new ArrayList<>();
+        this.lowestAdapter = new LowestArrayAdapter(mContext, this.lowestItem);
+        this.lowestItem.add("1");
+        this.lvLowest.setAdapter(this.lowestAdapter);
     }
+
 
     void setId() {
         tvBrand = findViewById(R.id.additional_information_tvBrand);
@@ -114,6 +129,7 @@ public class AdditionalInformation extends AppCompatActivity {
 
         btModify = findViewById(R.id.btModify);
     }
+
 
     void setDB() {
         mId = getIntent().getIntExtra("id", -1);
@@ -147,6 +163,7 @@ public class AdditionalInformation extends AppCompatActivity {
 
         db.close();
     }
+
 
     void setText() {
         tvBrand.setText(brandStr);
@@ -183,6 +200,7 @@ public class AdditionalInformation extends AppCompatActivity {
         }catch(Exception e){ }
     }
 
+
     void setModify() {
         btModify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +209,7 @@ public class AdditionalInformation extends AppCompatActivity {
             }
         });
     }
+
 
     /* 추가폼 호출 */
     public void showModifyDialog() {

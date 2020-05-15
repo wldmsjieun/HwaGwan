@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
 
     //private
     private HomeViewModel homeViewModel;
-    private ListView listView;
+    private ListView lvCosmetics;
     private String mSql; //SQL문을 위한 변수
     private Spinner spKind; //화장품 종류 스피너
     private Spinner spSort; //정렬 스피너
@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment {
         mContext = getContext();
         //findViewById
         final FloatingActionButton fabAdd = mRoot.findViewById(R.id.fabAdd);
-        listView = mRoot.findViewById(R.id.lvItem);
+        lvCosmetics = mRoot.findViewById(R.id.lvItem);
 
         //초기 설정
         listData();
@@ -246,7 +246,7 @@ public class HomeFragment extends Fragment {
 
         // 리스트 구성
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
+        this.lvCosmetics.setAdapter(this.adapter);
     }
 
     void setKind(String kind, boolean all) {
@@ -282,7 +282,7 @@ public class HomeFragment extends Fragment {
 
         // 리스트 구성
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
+        this.lvCosmetics.setAdapter(this.adapter);
 
         setSort(spSort.getSelectedItemPosition());
     }
@@ -580,7 +580,7 @@ public class HomeFragment extends Fragment {
 
         // 리스트 구성
         this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.listView.setAdapter(this.adapter);
+        this.lvCosmetics.setAdapter(this.adapter);
 
     }
 
