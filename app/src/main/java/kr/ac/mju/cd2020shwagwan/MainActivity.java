@@ -1,5 +1,6 @@
 package kr.ac.mju.cd2020shwagwan;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -27,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
     Object[] args;
     String maSql = "INSERT INTO "+DBHelper.TABLE_BARCODE_INFO+"(bcdId, bcdBrand, bcdProduct, bcdVolume) VALUES(?,?,?,?)";
     String TABLE_BARCODE_INFO = "barcodeinfos";
-
+    private static Context maContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView maBottomNavView = findViewById(R.id.nav_view);
-
+        maContext = getApplicationContext();
 
         maDbHelper = DBHelper.getInstance(this);
         maDb = maDbHelper.getReadableDatabase();
@@ -134,4 +135,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public static Context getMyContext() {
+        return maContext;
+    }
+
 }

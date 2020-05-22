@@ -1,5 +1,6 @@
 package kr.ac.mju.cd2020shwagwan.ui.home;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -66,7 +67,7 @@ public class HomeFragment extends Fragment {
     private ArrayList<Cosmetics> hfCosArrList; //리스트를 위한 변수
     private SimpleDateFormat hfSdfToday;
     private EditText hfEdOpen, hfEdExp; //개봉일, 만료일
-    private Context hfContext;
+
 
     //
     int REQUEST_SUCESS = 0; //바코드 얻어오는 부분에서 사용
@@ -83,7 +84,7 @@ public class HomeFragment extends Fragment {
     //static
     static public Calendar hfExpCal = Calendar.getInstance(); //만료일을 위한 달력
     static public CheckBox  hfCbWeek, hfCbMonth; //체크박스
-
+    static public Context hfContext;
     String insertCosSql = "INSERT INTO "+DBHelper.TABLE_COSMETIC+"(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
 
 
@@ -125,6 +126,7 @@ public class HomeFragment extends Fragment {
         });
         return hfView;
     }
+
 
 
     //바코드 얻어오는 부분

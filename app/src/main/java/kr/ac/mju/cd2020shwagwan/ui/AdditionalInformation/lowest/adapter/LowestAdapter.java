@@ -1,15 +1,27 @@
 package kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.adapter;
 
+import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
+
+import kr.ac.mju.cd2020shwagwan.MainActivity;
+import kr.ac.mju.cd2020shwagwan.MyApplication;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseItem;
+import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -36,14 +48,14 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         lowcosViewHolder.tvLowAdaptPrice.setText(Html.fromHtml(item.getLprice()));
         lowcosViewHolder.tvLowAdaptMall.setText(Html.fromHtml(item.getMallName()));
 
-//        try {
-//            Glide.with(HomeFragment.mContext)
-//                    .load(item.getImage())
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .into(lowcosViewHolder.getImage());
-//        } catch (NullPointerException e) {
-//            Log.d(TAG, "Not Found Image Url");
-//        }
+        try {
+            Glide.with(MainActivity.getMyContext())
+                    .load(item.getImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(lowcosViewHolder.getImage());
+        } catch (NullPointerException e) {
+            Log.d(TAG, "Not Found Image Url");
+        }
 
     }
 
