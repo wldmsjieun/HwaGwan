@@ -33,7 +33,7 @@
         <activity android:name=".ui.AdditionalInformation.lowest.search.SearchActivity" />
 
         <activity
-            android:name=".ui.MyPage.CompletedUse"
+            android:name=".ui.MyPage.UsedPage"
             android:label="@string/title_completed_use">
         </activity>
 

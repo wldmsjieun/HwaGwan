@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_layout"
+    android:id="@+id/ci_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/lpi_tvBrand"
+            android:id="@+id/ci_tvBrand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="브랜드명" />
 
         <TextView
-            android:id="@+id/tvKind"
+            android:id="@+id/ci_tvKind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -26,7 +26,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/lpi_tvName"
+        android:id="@+id/ci_tvName"
         android:layout_width="378dp"
         android:layout_height="wrap_content"
         android:text="상품명"
@@ -40,14 +40,14 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/ca_tvOpen"
+            android:id="@+id/ci_tvOpen"
             android:layout_width="44dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="개봉일" />
 
         <TextView
-            android:id="@+id/ca_tvExp"
+            android:id="@+id/ci_tvExp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -62,7 +62,7 @@
         android:orientation="horizontal">
 
         <ProgressBar
-            android:id="@+id/aip_pbUsage"
+            android:id="@+id/ci_pbUsage"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -70,7 +70,7 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/ivDel"
+            android:id="@+id/ci_ivDel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
@@ -79,7 +79,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btComplete"
+        android:id="@+id/ci_btUsed"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:backgroundTint="#e6b4fa"

@@ -6,12 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,18 +15,16 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
-import kr.ac.mju.cd2020shwagwan.Cosmetics;
-import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
 
-public class CompletedUse extends AppCompatActivity {
+public class UsedPage extends AppCompatActivity {
 
-    private ListView lvUsed;
+    private ListView upLvComplete;
     private String mSql;
-    private CompleteArrayAdapter mCompleteArrayAdapter;
-    private ArrayList<MyPage> mMyPageArrayList;
-    private Spinner spKind; //사용내역 목록에서 화장품 종류 스피너
+    private UsedArrayAdapter upUsedArrAdapter;
+    private ArrayList<MyPage> upMypageArrList;
+    private Spinner upSpKind; //사용내역 목록에서 화장품 종류 스피너
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +33,14 @@ public class CompletedUse extends AppCompatActivity {
         setId();
         setSpinner();
         setList();
-
     }
 
     void setId() {
-        lvUsed = findViewById(R.id.completed_use_listview);
+        upLvComplete = findViewById(R.id.mc_lvUsed);
     }
 
     void setKind(String kind, boolean all) {
-        mMyPageArrayList = new ArrayList<>();
+        upMypageArrList = new ArrayList<>();
 
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(this);
@@ -63,13 +56,13 @@ public class CompletedUse extends AppCompatActivity {
             Cursor cursor = db.rawQuery(mSql, null);
             while (cursor.moveToNext()) {
                 // 데이터
-                MyPage myPage = new MyPage(cursor.getInt(cursor.getColumnIndex("mID")),
+                MyPage upMypage = new MyPage(cursor.getInt(cursor.getColumnIndex("mID")),
                         cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
                         cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
                         cursor.getString(cursor.getColumnIndex("kind")), cursor.getString(cursor.getColumnIndex("volume")),
                         cursor.getString(cursor.getColumnIndex("additionalContent")));
 
-                mMyPageArrayList.add(myPage);
+                upMypageArrList.add(upMypage);
             }
 
             cursor.close();
@@ -79,25 +72,25 @@ public class CompletedUse extends AppCompatActivity {
         db.close();
 
         // 리스트 구성
-        mCompleteArrayAdapter = new CompleteArrayAdapter(this, mMyPageArrayList);
-        lvUsed.setAdapter(mCompleteArrayAdapter);
+        upUsedArrAdapter = new UsedArrayAdapter(this, upMypageArrList);
+        upLvComplete.setAdapter(upUsedArrAdapter);
     }
 
     // 사용완료 내역에서 화장품 종류 스피너 설정
     void setSpinner() {
-        spKind = findViewById(R.id.spUseKindSpinner);
-        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(this, R.array.kinds_array, android.R.layout.simple_spinner_item);
-        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spKind.setAdapter(kindsAdapter);
+        upSpKind = findViewById(R.id.mc_spKind);
+        ArrayAdapter upArrAdapter = ArrayAdapter.createFromResource(this, R.array.kinds_array, android.R.layout.simple_spinner_item);
+        upArrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        upSpKind.setAdapter(upArrAdapter);
 
-        spKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        upSpKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    setKind(spKind.getSelectedItem().toString(), true);
+                    setKind(upSpKind.getSelectedItem().toString(), true);
                 }
                 else {
-                    setKind(spKind.getSelectedItem().toString(), false);
+                    setKind(upSpKind.getSelectedItem().toString(), false);
                 }
             }
 
@@ -109,7 +102,7 @@ public class CompletedUse extends AppCompatActivity {
     }
 
     void setList() {
-        mMyPageArrayList = new ArrayList<>();
+        upMypageArrList = new ArrayList<>();
 
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(this);
@@ -118,27 +111,27 @@ public class CompletedUse extends AppCompatActivity {
         try {
             mSql = "SELECT * FROM mypage";
 
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
+            Cursor upMypageCur = db.rawQuery(mSql, null);
+            while (upMypageCur.moveToNext()) {
                 // 데이터
-                MyPage myPage = new MyPage(cursor.getInt(cursor.getColumnIndex("mID")),
-                        cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
-                        cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getString(cursor.getColumnIndex("volume")),
-                        cursor.getString(cursor.getColumnIndex("additionalContent"))
+                MyPage myPage = new MyPage(upMypageCur.getInt(upMypageCur.getColumnIndex("mID")),
+                        upMypageCur.getString(upMypageCur.getColumnIndex("brandName")), upMypageCur.getString(upMypageCur.getColumnIndex("productName")),
+                        upMypageCur.getString(upMypageCur.getColumnIndex("dtOpen")), upMypageCur.getString(upMypageCur.getColumnIndex("dtExp")),
+                        upMypageCur.getString(upMypageCur.getColumnIndex("kind")), upMypageCur.getString(upMypageCur.getColumnIndex("volume")),
+                        upMypageCur.getString(upMypageCur.getColumnIndex("additionalContent"))
                 );
 
-                mMyPageArrayList.add(myPage);
+                upMypageArrList.add(myPage);
             }
 
-            cursor.close();
+            upMypageCur.close();
         } catch (SQLException e) {
         }
 
         db.close();
 
-        mCompleteArrayAdapter = new CompleteArrayAdapter(this, mMyPageArrayList);
+        upUsedArrAdapter = new UsedArrayAdapter(this, upMypageArrList);
 
-        lvUsed.setAdapter(mCompleteArrayAdapter);
+        upLvComplete.setAdapter(upUsedArrAdapter);
     }
 }

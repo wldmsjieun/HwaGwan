@@ -206,7 +206,7 @@ public class SearchActivity extends AppCompatActivity {
         final View saLayout = saInflater.inflate(R.layout.content_add, null);
 
         //스피너 생성
-        saSpKinds = saLayout.findViewById(R.id.ca_spKinds);
+        saSpKinds = saLayout.findViewById(R.id.ca_spKind);
         ArrayAdapter saKindsAdapter = ArrayAdapter.createFromResource(this, R.array.product_kinds_array, android.R.layout.simple_spinner_item);
         saKindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         saSpKinds.setAdapter(saKindsAdapter);
@@ -221,7 +221,7 @@ public class SearchActivity extends AppCompatActivity {
         saCbWeek = saLayout.findViewById(R.id.ca_cbWeek);
         saCbMonth = saLayout.findViewById(R.id.ca_cbMonth);
         saEtVolume = saLayout.findViewById(R.id.ca_etVolume);
-        saEtAddCont = saLayout.findViewById(R.id.ca_etContent);
+        saEtAddCont = saLayout.findViewById(R.id.ca_etComment);
         TextView saTvChoose = saLayout.findViewById(R.id.ca_tvChoose);
 
         saTvBarcode.setVisibility(View.GONE);

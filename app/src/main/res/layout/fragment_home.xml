@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <Spinner
-            android:id="@+id/spShowKinds"
+            android:id="@+id/hfSpKind"
             android:layout_width="136dp"
             android:layout_height="39dp" />
 
@@ -22,7 +22,7 @@
             android:layout_weight="1" />
 
         <Spinner
-            android:id="@+id/spSort"
+            android:id="@+id/hfSpSort"
             android:layout_width="193dp"
             android:layout_height="match_parent" />
     </LinearLayout>
@@ -44,7 +44,7 @@
             android:orientation="vertical"
             android:layout_marginBottom="120dp" >
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabAdd"
+                android:id="@+id/hfFabDirect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
@@ -53,7 +53,7 @@
                 android:src="@drawable/add_icon3" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabBarcode"
+                android:id="@+id/hfFabBarcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

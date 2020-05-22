@@ -44,7 +44,7 @@ import java.util.Locale;
 
 import kr.ac.mju.cd2020shwagwan.BarcodeInfo;
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
-import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
+import kr.ac.mju.cd2020shwagwan.CosmeticArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ScanBarcode;
@@ -54,47 +54,47 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 public class HomeFragment extends Fragment {
 
-    public static View mRoot;
-    public static CustomArrayAdapter adapter;
+    public static View hfView;
+    public static CosmeticArrayAdapter hfCosArrAdapter;
 
     //private
     private HomeViewModel homeViewModel;
-    private ListView lvCosmetics;
+    private ListView hfLvCos;
     private String mSql; //SQL문을 위한 변수
-    private Spinner spKind; //화장품 종류 스피너
-    private Spinner spSort; //정렬 스피너
-    private ArrayList<Cosmetics> items; //리스트를 위한 변수
-    private SimpleDateFormat sdfNow;
-    private EditText edOpen, edExp; //개봉일, 만료일
-    private Context mContext;
+    private Spinner hfSpKind; //화장품 종류 스피너
+    private Spinner hfSpSort; //정렬 스피너
+    private ArrayList<Cosmetics> hfCosArrList; //리스트를 위한 변수
+    private SimpleDateFormat hfSdfToday;
+    private EditText hfEdOpen, hfEdExp; //개봉일, 만료일
+    private Context hfContext;
 
     //
     int REQUEST_SUCESS = 0; //바코드 얻어오는 부분에서 사용
-    int openYear = 0, openMonth = 0, openDay = 0; //개봉일 연도, 월, 일
-    String barcode; //바코드 번호를 위한 변수
-    TextView tvComment, tvBarcode; //사용 권장 기한, 바코드 번호 텍스트뷰
-    EditText etBrand, etName, etAddCont, etVolume; //브랜드명, 상품명, 추가사항, 용량
-    FloatingActionButton fabBarcode; //fab버튼
-    Calendar openCalendar = Calendar.getInstance(); //개봉일을 위한 달력
+    int hfOpenYear = 0, hfOpenMonth = 0, hfOpenDay = 0; //개봉일 연도, 월, 일
+    String hfbarcode; //바코드 번호를 위한 변수
+    TextView hfTvComment, hfTvBarcode; //사용 권장 기한, 바코드 번호 텍스트뷰
+    EditText hfEtBrand, hfEtName, hfEtComment, hfEtVolume; //브랜드명, 상품명, 추가사항, 용량
+    FloatingActionButton hfFabBarcode; //fab버튼
+    Calendar hfOpenCal = Calendar.getInstance(); //개봉일을 위한 달력
 
     //public
     public String bcdBrand, bcdProduct; //바코드 상품명, 브랜드명 변수
 
     //static
-    static public Calendar expCalendar = Calendar.getInstance(); //만료일을 위한 달력
-    static public CheckBox  cbWeek, cbMonth; //체크박스
+    static public Calendar hfExpCal = Calendar.getInstance(); //만료일을 위한 달력
+    static public CheckBox  hfCbWeek, hfCbMonth; //체크박스
 
-    String mInseartSql = "INSERT INTO "+DBHelper.TABLE_COSMETIC+"(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
+    String insertCosSql = "INSERT INTO "+DBHelper.TABLE_COSMETIC+"(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater hfLayoutInflater, ViewGroup container, Bundle savedInstanceState) {
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        mRoot = inflater.inflate(R.layout.fragment_home, container, false);
-        mContext = getContext();
+        hfView = hfLayoutInflater.inflate(R.layout.fragment_home, container, false);
+        hfContext = getContext();
         //findViewById
-        final FloatingActionButton fabAdd = mRoot.findViewById(R.id.fabAdd);
-        lvCosmetics = mRoot.findViewById(R.id.lvItem);
+        final FloatingActionButton hfFabDirect = hfView.findViewById(R.id.hfFabDirect);
+        hfLvCos = hfView.findViewById(R.id.lvItem);
 
         //초기 설정
         listData();
@@ -105,8 +105,8 @@ public class HomeFragment extends Fragment {
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                //fabAdd 누르면 입력폼 보여줌
-                fabAdd.setOnClickListener(new View.OnClickListener() {
+                //hfFabDirect 누르면 입력폼 보여줌
+                hfFabDirect.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         showAddDialog();
@@ -116,14 +116,14 @@ public class HomeFragment extends Fragment {
         });
 
         //바코드 스캔 실행 버튼
-        fabBarcode = mRoot.findViewById(R.id.fabBarcode);
-        fabBarcode.setOnClickListener(new View.OnClickListener() {
+        hfFabBarcode = hfView.findViewById(R.id.hfFabBarcode);
+        hfFabBarcode.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ScanBarcode.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                Intent hfIntent = new Intent(getContext(), ScanBarcode.class);
+                startActivityForResult(hfIntent, REQUEST_CODE);
             }
         });
-        return mRoot;
+        return hfView;
     }
 
 
@@ -133,13 +133,13 @@ public class HomeFragment extends Fragment {
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
-            barcode = data.getStringExtra("barcode");
+            hfbarcode = data.getStringExtra("barcode");
             if (resultCode == REQUEST_SUCESS) {//성공시
-                compareBarcode(barcode);
+                compareBarcode(hfbarcode);
                 showAddDialog();
-                tvBarcode.setText(barcode);
-                etBrand.setText(bcdBrand);
-                etName.setText(bcdProduct);
+                hfTvBarcode.setText(hfbarcode);
+                hfEtBrand.setText(bcdBrand);
+                hfEtName.setText(bcdProduct);
             } else {//실패시
                 Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
             }
@@ -150,19 +150,19 @@ public class HomeFragment extends Fragment {
 
     // 화장품 종류 스피너 설정
     void setSpinner() {
-        spKind = mRoot.findViewById(R.id.spShowKinds);
-        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
-        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spKind.setAdapter(kindsAdapter);
+        hfSpKind = hfView.findViewById(R.id.hfSpKind);
+        ArrayAdapter hfKindArrAdapter = ArrayAdapter.createFromResource(getContext(), R.array.kinds_array, android.R.layout.simple_spinner_item);
+        hfKindArrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hfSpKind.setAdapter(hfKindArrAdapter);
 
-        spKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        hfSpKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    setKind(spKind.getSelectedItem().toString(), true);
+                    setKind(hfSpKind.getSelectedItem().toString(), true);
                 }
                 else {
-                    setKind(spKind.getSelectedItem().toString(), false);
+                    setKind(hfSpKind.getSelectedItem().toString(), false);
                 }
             }
 
@@ -175,29 +175,29 @@ public class HomeFragment extends Fragment {
 
     //정렬 스피너 설정
     void setSortSpinner() {
-        spSort = (Spinner) mRoot.findViewById(R.id.spSort);
+        hfSpSort = hfView.findViewById(R.id.hfSpSort);
 
-        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort, android.R.layout.simple_spinner_item);
-        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spSort.setAdapter(kindsAdapter);
+        ArrayAdapter hfKindArrAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort, android.R.layout.simple_spinner_item);
+        hfKindArrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hfSpSort.setAdapter(hfKindArrAdapter);
 
-        spSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        hfSpSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSort(position);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
+            public void onNothingSelected(AdapterView<?> hfCosArrAdapterView) { }
         });
     }
 
     //정렬 함수
     void setSort(int check) {
-        String kind = spKind.getSelectedItem().toString();
-        String sortType = "dtOpen";
+        String kind = hfSpKind.getSelectedItem().toString();
+        String hfStrSortType = "dtOpen";
 
-        this.items = new ArrayList<>();
+        this.hfCosArrList = new ArrayList<>();
 
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
@@ -206,51 +206,51 @@ public class HomeFragment extends Fragment {
         try {
             // 정렬 기준 선택
             if (check == 0){
-                sortType = "dtOpen";
+                hfStrSortType = "dtOpen";
             } else if (check == 1){
-                sortType = "dtOpen desc";
+                hfStrSortType = "dtOpen desc";
             } else if (check == 2){
-                sortType = "dtExp";
+                hfStrSortType = "dtExp";
             } else if (check == 3){
-                sortType = "dtExp desc";
+                hfStrSortType = "dtExp desc";
             } else if (check == 4){
-                sortType = "productName";
+                hfStrSortType = "productName";
             } else if (check == 5){
-                sortType = "productName desc";
+                hfStrSortType = "productName desc";
             }
 
             // 화장품 종류 선택
-            if (spKind.getSelectedItemPosition() == 0) {
-                mSql = "SELECT * FROM cosmetics ORDER BY " + sortType;
+            if (hfSpKind.getSelectedItemPosition() == 0) {
+                mSql = "SELECT * FROM cosmetics ORDER BY " + hfStrSortType;
             } else {
-                mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY " + sortType;
+                mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "' ORDER BY " + hfStrSortType;
             }
 
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
+            Cursor hfCosCur = db.rawQuery(mSql, null);
+            while (hfCosCur.moveToNext()) {
                 // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
-                        cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
-                        cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
+                Cosmetics hfCos = new Cosmetics(hfCosCur.getInt(hfCosCur.getColumnIndex("cID")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("brandName")), hfCosCur.getString(hfCosCur.getColumnIndex("productName")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("dtOpen")), hfCosCur.getString(hfCosCur.getColumnIndex("dtExp")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("kind")), hfCosCur.getInt(hfCosCur.getColumnIndex("alarm")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("volume")), hfCosCur.getString(hfCosCur.getColumnIndex("additionalContent"))
                 );
 
-                this.items.add(cosmetic);
+                this.hfCosArrList.add(hfCos);
             }
 
-            cursor.close();
+            hfCosCur.close();
         } catch (SQLException e) { }
 
         db.close();
 
         // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.lvCosmetics.setAdapter(this.adapter);
+        this.hfCosArrAdapter = new CosmeticArrayAdapter(getContext(), this.hfCosArrList);
+        this.hfLvCos.setAdapter(this.hfCosArrAdapter);
     }
 
     void setKind(String kind, boolean all) {
-        this.items = new ArrayList<>();
+        this.hfCosArrList = new ArrayList<>();
 
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
@@ -263,116 +263,116 @@ public class HomeFragment extends Fragment {
             } else {
                 mSql = "SELECT * FROM cosmetics WHERE kind='" + kind + "'";
             }
-            Cursor cursor = db.rawQuery(mSql, null);
-            while (cursor.moveToNext()) {
+            Cursor hfCosCur = db.rawQuery(mSql, null);
+            while (hfCosCur.moveToNext()) {
                 // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
-                        cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
-                        cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent")));
+                Cosmetics hfCos = new Cosmetics(hfCosCur.getInt(hfCosCur.getColumnIndex("cID")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("brandName")), hfCosCur.getString(hfCosCur.getColumnIndex("productName")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("dtOpen")), hfCosCur.getString(hfCosCur.getColumnIndex("dtExp")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("kind")), hfCosCur.getInt(hfCosCur.getColumnIndex("alarm")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("volume")), hfCosCur.getString(hfCosCur.getColumnIndex("additionalContent")));
 
-                this.items.add(cosmetic);
+                this.hfCosArrList.add(hfCos);
             }
 
-            cursor.close();
+            hfCosCur.close();
         } catch (SQLException e) { }
 
         db.close();
 
         // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.lvCosmetics.setAdapter(this.adapter);
+        this.hfCosArrAdapter = new CosmeticArrayAdapter(getContext(), this.hfCosArrList);
+        this.hfLvCos.setAdapter(this.hfCosArrAdapter);
 
-        setSort(spSort.getSelectedItemPosition());
+        setSort(hfSpSort.getSelectedItemPosition());
     }
 
     /* 추가폼 호출 */
     public void showAddDialog() {
         // AlertDialog View layout
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View layout = inflater.inflate(R.layout.content_add, null);
+        LayoutInflater hfLayoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View hfViewDialog = hfLayoutInflater.inflate(R.layout.content_add, null);
 
         //스피너 생성
-        final Spinner spKinds = layout.findViewById(R.id.ca_spKinds);
-        ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.product_kinds_array, android.R.layout.simple_spinner_item);
-        kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spKinds.setAdapter(kindsAdapter);
+        final Spinner hfSpAddKind = hfViewDialog.findViewById(R.id.ca_spKind);
+        ArrayAdapter hfKindArrAdapter = ArrayAdapter.createFromResource(getContext(), R.array.product_kinds_array, android.R.layout.simple_spinner_item);
+        hfKindArrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hfSpAddKind.setAdapter(hfKindArrAdapter);
 
         // findViewById
-        edOpen = layout.findViewById(R.id.ca_edOpen);
-        edExp = layout.findViewById(R.id.ca_edExp);
-        etBrand = layout.findViewById(R.id.ca_etBrand);
-        etName = layout.findViewById(R.id.ca_etName);
-        tvComment = layout.findViewById(R.id.ca_tvComment);
-        tvBarcode = layout.findViewById(R.id.ca_tvBarcode);
-        cbWeek = layout.findViewById(R.id.ca_cbWeek);
-        cbMonth = layout.findViewById(R.id.ca_cbMonth);
-        etVolume = layout.findViewById(R.id.ca_etVolume);
-        etAddCont = layout.findViewById(R.id.ca_etContent);
+        hfEdOpen = hfViewDialog.findViewById(R.id.ca_edOpen);
+        hfEdExp = hfViewDialog.findViewById(R.id.ca_edExp);
+        hfEtBrand = hfViewDialog.findViewById(R.id.ca_etBrand);
+        hfEtName = hfViewDialog.findViewById(R.id.ca_etName);
+        hfTvComment = hfViewDialog.findViewById(R.id.ca_tvComment);
+        hfTvBarcode = hfViewDialog.findViewById(R.id.ca_tvBarcode);
+        hfCbWeek = hfViewDialog.findViewById(R.id.ca_cbWeek);
+        hfCbMonth = hfViewDialog.findViewById(R.id.ca_cbMonth);
+        hfEtVolume = hfViewDialog.findViewById(R.id.ca_etVolume);
+        hfEtComment = hfViewDialog.findViewById(R.id.ca_etComment);
 
         // 개봉일 현재 날짜로 설정
-        setToday(edOpen);
+        setToday(hfEdOpen);
 
         // 개봉일 캘린더로 선택
-        edOpen.setOnClickListener(new View.OnClickListener() {
+        hfEdOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        openCalendar.set(Calendar.YEAR, year);
-                        openCalendar.set(Calendar.MONTH, month);
-                        openCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
+                        hfOpenCal.set(Calendar.YEAR, year);
+                        hfOpenCal.set(Calendar.MONTH, month);
+                        hfOpenCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        String hfFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
+                        SimpleDateFormat hfSdfExp = new SimpleDateFormat(hfFormat, Locale.KOREA);
 
-                        edOpen.setText(sdf.format(openCalendar.getTime()));
+                        hfEdOpen.setText(hfSdfExp.format(hfOpenCal.getTime()));
 
                         //상품별 만료일 자동 계산
-                        if (spKinds.getSelectedItemPosition() == 1 || spKinds.getSelectedItemPosition() == 2
-                                || spKinds.getSelectedItemPosition() == 11 || spKinds.getSelectedItemPosition() == 12
-                                || spKinds.getSelectedItemPosition() == 13 || spKinds.getSelectedItemPosition() == 14) {
+                        if (hfSpAddKind.getSelectedItemPosition() == 1 || hfSpAddKind.getSelectedItemPosition() == 2
+                                || hfSpAddKind.getSelectedItemPosition() == 11 || hfSpAddKind.getSelectedItemPosition() == 12
+                                || hfSpAddKind.getSelectedItemPosition() == 13 || hfSpAddKind.getSelectedItemPosition() == 14) {
                             //6개월 이내
-                            openCalendar.add(Calendar.DATE, 180);
-                            edExp.setText(sdf.format(openCalendar.getTime()));
-                        } else if (spKinds.getSelectedItemPosition() == 3) {
+                            hfOpenCal.add(Calendar.DATE, 180);
+                            hfEdExp.setText(hfSdfExp.format(hfOpenCal.getTime()));
+                        } else if (hfSpAddKind.getSelectedItemPosition() == 3) {
                             //8개월 이내
-                            openCalendar.add(Calendar.DATE, 240);
-                            edExp.setText(sdf.format(openCalendar.getTime()));
-                        } else if (spKinds.getSelectedItemPosition() == 0 || spKinds.getSelectedItemPosition() == 4
-                                || spKinds.getSelectedItemPosition() == 5 || spKinds.getSelectedItemPosition() == 6
-                                || spKinds.getSelectedItemPosition() == 8 || spKinds.getSelectedItemPosition() == 9
-                                || spKinds.getSelectedItemPosition() == 10 || spKinds.getSelectedItemPosition() == 15) {
+                            hfOpenCal.add(Calendar.DATE, 240);
+                            hfEdExp.setText(hfSdfExp.format(hfOpenCal.getTime()));
+                        } else if (hfSpAddKind.getSelectedItemPosition() == 0 || hfSpAddKind.getSelectedItemPosition() == 4
+                                || hfSpAddKind.getSelectedItemPosition() == 5 || hfSpAddKind.getSelectedItemPosition() == 6
+                                || hfSpAddKind.getSelectedItemPosition() == 8 || hfSpAddKind.getSelectedItemPosition() == 9
+                                || hfSpAddKind.getSelectedItemPosition() == 10 || hfSpAddKind.getSelectedItemPosition() == 15) {
                             //1년 이내
-                            openCalendar.add(Calendar.DATE, 365);
-                            edExp.setText(sdf.format(openCalendar.getTime()));
-                        } else if (spKinds.getSelectedItemPosition() == 7) {
+                            hfOpenCal.add(Calendar.DATE, 365);
+                            hfEdExp.setText(hfSdfExp.format(hfOpenCal.getTime()));
+                        } else if (hfSpAddKind.getSelectedItemPosition() == 7) {
                             //2년 이내
-                            openCalendar.add(Calendar.DATE, 730);
-                            edExp.setText(sdf.format(openCalendar.getTime()));
-                        } else if (spKinds.getSelectedItemPosition() == 16) {
+                            hfOpenCal.add(Calendar.DATE, 730);
+                            hfEdExp.setText(hfSdfExp.format(hfOpenCal.getTime()));
+                        } else if (hfSpAddKind.getSelectedItemPosition() == 16) {
                             Toast ts = Toast.makeText(getContext(), "만료일을 설정하세요", Toast.LENGTH_SHORT);
                             ts.setGravity(Gravity.CENTER, 0, 0);
                             ts.show();
-                            edExp.setText("");
+                            hfEdExp.setText("");
                         }
                     }
                 };
 
-                openYear = openCalendar.get(Calendar.YEAR);
-                openMonth = openCalendar.get(Calendar.MONTH);
-                openDay = openCalendar.get(Calendar.DAY_OF_MONTH);
+                hfOpenYear = hfOpenCal.get(Calendar.YEAR);
+                hfOpenMonth = hfOpenCal.get(Calendar.MONTH);
+                hfOpenDay = hfOpenCal.get(Calendar.DAY_OF_MONTH);
 
-                new DatePickerDialog(getContext(), myDatePicker, openYear, openMonth, openDay).show();
+                new DatePickerDialog(getContext(), myDatePicker, hfOpenYear, hfOpenMonth, hfOpenDay).show();
 
             }
         });
 
 
         // 만료일 캘린더로 선택 및 최소날짜 세팅
-        edExp.setOnClickListener(new View.OnClickListener() {
+        hfEdExp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -380,67 +380,67 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        SharedPreferences sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
+                        SharedPreferences hfSPAlarm = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
 
-                        expCalendar.set(Calendar.YEAR, year);
-                        expCalendar.set(Calendar.MONTH, month);
-                        expCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        hfExpCal.set(Calendar.YEAR, year);
+                        hfExpCal.set(Calendar.MONTH, month);
+                        hfExpCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                        Log.d(TAG , "set HOME tvHour : " + sp.getInt("hour", 22));
-                        Log.d(TAG , "set HOME tvMinute : " + sp.getInt("minute", 00));
+                        Log.d(TAG , "set HOME tvHour : " + hfSPAlarm.getInt("hour", 22));
+                        Log.d(TAG , "set HOME tvMinute : " + hfSPAlarm.getInt("minute", 00));
 
-                        expCalendar.set(Calendar.HOUR_OF_DAY, sp.getInt("hour", 22));
-                        expCalendar.set(Calendar.MINUTE, sp.getInt("minute", 00));
-                        String myFormat = "yyyy-MM-dd HH:mm:ss";
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
+                        hfExpCal.set(Calendar.HOUR_OF_DAY, hfSPAlarm.getInt("hour", 22));
+                        hfExpCal.set(Calendar.MINUTE, hfSPAlarm.getInt("minute", 00));
+                        String hfFormat = "yyyy-MM-dd HH:mm:ss";
+                        SimpleDateFormat hfSdfExp = new SimpleDateFormat(hfFormat, Locale.KOREA);
 
-                        edExp.setText(sdf.format(expCalendar.getTime()));
-                        Log.d(TAG , "tvEXP : " + expCalendar.getTime());
+                        hfEdExp.setText(hfSdfExp.format(hfExpCal.getTime()));
+                        Log.d(TAG , "tvEXP : " + hfExpCal.getTime());
                     }
                 };
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), myDatePicker, expCalendar.get(Calendar.YEAR), expCalendar.get(Calendar.MONTH), expCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.getDatePicker().setMinDate(openCalendar.getTimeInMillis());
-                datePickerDialog.show();
+                DatePickerDialog hfDpdExp = new DatePickerDialog(getContext(), myDatePicker, hfExpCal.get(Calendar.YEAR), hfExpCal.get(Calendar.MONTH), hfExpCal.get(Calendar.DAY_OF_MONTH));
+                hfDpdExp.getDatePicker().setMinDate(hfOpenCal.getTimeInMillis());
+                hfDpdExp.show();
             }
         });
 
 
-        spKinds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        hfSpAddKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Calendar cCal = Calendar.getInstance();
-                String myFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
+                Calendar hfCalTmp = Calendar.getInstance();
+                String hfFormat = "yyyy-MM-dd";    // 출력형식   2018-11-18
+                SimpleDateFormat hfSdfExp = new SimpleDateFormat(hfFormat, Locale.KOREA);
                 if (position == 1 || position == 2 || position == 11 || position == 12 || position == 13 || position == 14) {
                     //6개월 이내
                     //자외선 차단제,  립밤,           립스틱,         립글로스,          아이라이너,        마스카라
-                    cCal.add(Calendar.DATE, 180);
-                    edExp.setText(sdf.format(cCal.getTime()));
-                    tvComment.setText("사용 권장 기한 : 6개월 이내");
+                    hfCalTmp.add(Calendar.DATE, 180);
+                    hfEdExp.setText(hfSdfExp.format(hfCalTmp.getTime()));
+                    hfTvComment.setText("사용 권장 기한 : 6개월 이내");
                 } else if (position == 3) {
                     //8개월 이내
                     //에센스
-                    edExp.setText("Exp : 8개월 이내");
-                    cCal.add(Calendar.DATE, 240);
-                    edExp.setText(sdf.format(cCal.getTime()));
-                    tvComment.setText("사용 권장 기한 : 8개월 이내");
+                    hfEdExp.setText("Exp : 8개월 이내");
+                    hfCalTmp.add(Calendar.DATE, 240);
+                    hfEdExp.setText(hfSdfExp.format(hfCalTmp.getTime()));
+                    hfTvComment.setText("사용 권장 기한 : 8개월 이내");
                 } else if (position == 0 || position == 4 || position == 5 || position == 6 || position == 8 || position == 9 || position == 10 || position == 15) {
                     //1년 이내
                     //스킨,              크림,             메이크업 베이스,   컨실러,           아이새도우,        아이브로우,      블러셔,           클렌저
-                    cCal.add(Calendar.DATE, 365);
-                    edExp.setText(sdf.format(cCal.getTime()));
-                    tvComment.setText("사용 권장 기한 : 1년 이내");
+                    hfCalTmp.add(Calendar.DATE, 365);
+                    hfEdExp.setText(hfSdfExp.format(hfCalTmp.getTime()));
+                    hfTvComment.setText("사용 권장 기한 : 1년 이내");
                 } else if (position == 7) {
                     //2년 이내
                     //파우더
-                    cCal.add(Calendar.DATE, 730);
-                    edExp.setText(sdf.format(cCal.getTime()));
-                    tvComment.setText("사용 권장 기한 : 2년 이내");
+                    hfCalTmp.add(Calendar.DATE, 730);
+                    hfEdExp.setText(hfSdfExp.format(hfCalTmp.getTime()));
+                    hfTvComment.setText("사용 권장 기한 : 2년 이내");
                 } else if (position == 16) {
-                    edExp.setText("");
+                    hfEdExp.setText("");
                 }
-                expCalendar = cCal;
+                hfExpCal = hfCalTmp;
             }
 
             @Override
@@ -455,26 +455,26 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
                         // 추가
-                        String brand = etBrand.getText().toString();
-                        if (TextUtils.isEmpty(brand)) {
+                        String hfStrbrand = hfEtBrand.getText().toString();
+                        if (TextUtils.isEmpty(hfStrbrand)) {
                             Toast.makeText(getContext(), "Brand empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        String name = etName.getText().toString();
-                        if (TextUtils.isEmpty(name)) {
+                        String hfStrname = hfEtName.getText().toString();
+                        if (TextUtils.isEmpty(hfStrname)) {
                             Toast.makeText(getContext(), "Name empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         // 데이터 추가
-                        addData(brand, name, edOpen.getText().toString(), edExp.getText().toString(), spKinds.getSelectedItem().toString(),
-                                setCheckBox(), etVolume.getText().toString(), etAddCont.getText().toString());
+                        addData(hfStrbrand, hfStrname, hfEdOpen.getText().toString(), hfEdExp.getText().toString(), hfSpKind.getSelectedItem().toString(),
+                                setCheckBox(), hfEtVolume.getText().toString(), hfEtComment.getText().toString());
                     }
                 })
                 .setCancelable(true)
                 .setTitle("화장품 추가 관리")
-                .setView(layout)
+                .setView(hfViewDialog)
                 .show();
     }
 
@@ -482,11 +482,11 @@ public class HomeFragment extends Fragment {
     /* 개봉일 현재 날짜로 설정 */
     public void setToday(EditText ed) {
 
-        long now = System.currentTimeMillis();
-        Date dt = new Date(now);
-        sdfNow = new SimpleDateFormat("yyyy-MM-dd");
-        String formatDate = sdfNow.format(dt);
-        ed.setText(formatDate);
+        long hfUnixTimeNow = System.currentTimeMillis();
+        Date hfDtNow = new Date(hfUnixTimeNow);
+        hfSdfToday = new SimpleDateFormat("yyyy-MM-dd");
+        String hfFormat = hfSdfToday.format(hfDtNow);
+        ed.setText(hfFormat);
     }
 
 
@@ -495,37 +495,37 @@ public class HomeFragment extends Fragment {
     public void compareBarcode(String barcode){
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        int isSame = 0;
+        int hfIsSame = 0;
 
         try {
             // 쿼리문
             Log.d(TAG , "compareBarcode try 입성");
 
-            String sql = "SELECT bID, bcdId, bcdBrand, bcdProduct, bcdVolume FROM barcodeInfos";
-            Cursor cursor = db.rawQuery(sql, null);
-            while (cursor.moveToNext()) {
+            String hfSelectBarcodeSql = "SELECT bID, bcdId, bcdBrand, bcdProduct, bcdVolume FROM barcodeInfos";
+            Cursor hfBarcodeCur = db.rawQuery(hfSelectBarcodeSql, null);
+            while (hfBarcodeCur.moveToNext()) {
                 // 데이터
                 Log.d(TAG , "compareBarcode while 입성");
-                BarcodeInfo barcodeInfo = new BarcodeInfo(cursor.getInt(cursor.getColumnIndex("bID")),
-                        cursor.getString(cursor.getColumnIndex("bcdId")), cursor.getString(cursor.getColumnIndex("bcdBrand")),
-                        cursor.getString(cursor.getColumnIndex("bcdProduct")), cursor.getString(cursor.getColumnIndex("bcdVolume"))
+                BarcodeInfo barcodeInfo = new BarcodeInfo(hfBarcodeCur.getInt(hfBarcodeCur.getColumnIndex("bID")),
+                        hfBarcodeCur.getString(hfBarcodeCur.getColumnIndex("bcdId")), hfBarcodeCur.getString(hfBarcodeCur.getColumnIndex("bcdBrand")),
+                        hfBarcodeCur.getString(hfBarcodeCur.getColumnIndex("bcdProduct")), hfBarcodeCur.getString(hfBarcodeCur.getColumnIndex("bcdVolume"))
                 );
-                String cmp =barcodeInfo.getBcdId().substring(0,13);
+                String hfStrCmp = barcodeInfo.getBcdId().substring(0,13);
                 Log.d(TAG , "barcode : "+barcode);
-                Log.d(TAG , "cmp : "+cmp);
+                Log.d(TAG , "hfStrCmp : "+hfStrCmp);
 
-                if(cmp.equals(barcode)) {
+                if(hfStrCmp.equals(barcode)) {
                     Toast.makeText(getContext(), "바코드 정보 가져오기 성공", Toast.LENGTH_SHORT).show();
                     bcdBrand = barcodeInfo.getBcdBrand();
                     bcdProduct = barcodeInfo.getBcdProduct();
-                    isSame = 1;
+                    hfIsSame = 1;
                     break;
                 } else{
                     String barcodeBrand = barcode.substring(0, 7);
-                    String barcodeInfoBrand = cmp.substring(0, 7);
+                    String barcodeInfoBrand = hfStrCmp.substring(0, 7);
 
-                    Log.d(TAG , "cmp - barcodeBrand : "+barcodeBrand);
-                    Log.d(TAG , "cmp - barcodeInfoBrand : "+barcodeInfoBrand);
+                    Log.d(TAG , "hfStrCmp - barcodeBrand : "+barcodeBrand);
+                    Log.d(TAG , "hfStrCmp - barcodeInfoBrand : "+barcodeInfoBrand);
 
                     if (barcodeInfoBrand.equals(barcodeBrand)) {
                         bcdBrand = barcodeInfo.getBcdBrand();
@@ -535,10 +535,10 @@ public class HomeFragment extends Fragment {
                 }
 
             }
-            if (isSame == 0){
+            if (hfIsSame == 0){
                 Toast.makeText(getContext(), "바코드 정보 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
-            cursor.close();
+            hfBarcodeCur.close();
         } catch (SQLException e) {
             Log.d(TAG , "compareBarcode error : " + e.getMessage());
         }
@@ -550,7 +550,7 @@ public class HomeFragment extends Fragment {
 
     /* 리스트 구성 */
     private void listData() {
-        this.items = new ArrayList<>();
+        this.hfCosArrList = new ArrayList<>();
 
         // SQLite 사용
         DBHelper dbHelper = DBHelper.getInstance(getContext());
@@ -558,29 +558,29 @@ public class HomeFragment extends Fragment {
 
         try {
             // 쿼리문
-            String sql = "SELECT * FROM cosmetics";
-            Cursor cursor = db.rawQuery(sql, null);
-            while (cursor.moveToNext()) {
+            String hfSelectCosSql = "SELECT * FROM cosmetics";
+            Cursor hfCosCur = db.rawQuery(hfSelectCosSql, null);
+            while (hfCosCur.moveToNext()) {
                 // 데이터
-                Cosmetics cosmetic = new Cosmetics(cursor.getInt(cursor.getColumnIndex("cID")),
-                        cursor.getString(cursor.getColumnIndex("brandName")), cursor.getString(cursor.getColumnIndex("productName")),
-                        cursor.getString(cursor.getColumnIndex("dtOpen")), cursor.getString(cursor.getColumnIndex("dtExp")),
-                        cursor.getString(cursor.getColumnIndex("kind")), cursor.getInt(cursor.getColumnIndex("alarm")),
-                        cursor.getString(cursor.getColumnIndex("volume")), cursor.getString(cursor.getColumnIndex("additionalContent"))
+                Cosmetics hfCos = new Cosmetics(hfCosCur.getInt(hfCosCur.getColumnIndex("cID")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("brandName")), hfCosCur.getString(hfCosCur.getColumnIndex("productName")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("dtOpen")), hfCosCur.getString(hfCosCur.getColumnIndex("dtExp")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("kind")), hfCosCur.getInt(hfCosCur.getColumnIndex("alarm")),
+                        hfCosCur.getString(hfCosCur.getColumnIndex("volume")), hfCosCur.getString(hfCosCur.getColumnIndex("additionalContent"))
                 );
 
-                this.items.add(cosmetic);
+                this.hfCosArrList.add(hfCos);
 
             }
 
-            cursor.close();
+            hfCosCur.close();
         } catch (SQLException e) { }
 
         db.close();
 
         // 리스트 구성
-        this.adapter = new CustomArrayAdapter(getContext(), this.items);
-        this.lvCosmetics.setAdapter(this.adapter);
+        this.hfCosArrAdapter = new CosmeticArrayAdapter(getContext(), this.hfCosArrList);
+        this.hfLvCos.setAdapter(this.hfCosArrAdapter);
 
     }
 
@@ -591,11 +591,11 @@ public class HomeFragment extends Fragment {
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        spKind.setSelection(0);
+        hfSpKind.setSelection(0);
         try {
             // 등록
             Object[] args = {brand, name, open, exp, kind, alarm, volume, additionalContent};
-            String sql = mInseartSql;
+            String sql = insertCosSql;
 
             db.execSQL(sql, args);
 
@@ -613,12 +613,12 @@ public class HomeFragment extends Fragment {
     private int setCheckBox() {
         // no : 0, week : 1, month : 2, all : 3
 
-        if (cbWeek.isChecked() == false){
-            if (cbMonth.isChecked() == false)  return 0;
+        if (hfCbWeek.isChecked() == false){
+            if (hfCbMonth.isChecked() == false)  return 0;
             else    return 2;
         }
         else{
-            if (cbMonth.isChecked() == false)  return 1;
+            if (hfCbMonth.isChecked() == false)  return 1;
             else    return 3;
         }
     }

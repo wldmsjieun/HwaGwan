@@ -6,7 +6,7 @@
     android:padding="12dp">
 
     <Spinner
-        android:id="@+id/ca_spKinds"
+        android:id="@+id/ca_spKind"
         android:layout_width="273dp"
         android:layout_height="36dp" />
 
@@ -110,7 +110,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/ca_tvExp"
+                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -171,7 +171,7 @@
         />
 
     <EditText
-        android:id="@+id/ca_etContent"
+        android:id="@+id/ca_etComment"
         android:inputType="textMultiLine"
         android:lines="5"
         android:minLines="3"

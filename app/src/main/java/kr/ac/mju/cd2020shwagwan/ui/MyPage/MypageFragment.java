@@ -39,8 +39,8 @@ public class MypageFragment extends Fragment {
         mfLayout = inflater.inflate(R.layout.alarm_time_set, null);
         mfSp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
 
-        mfTvHour = mfLayout.findViewById(R.id.dialog_hour);
-        mfTvMinute = mfLayout.findViewById(R.id.dialog_minute);
+        mfTvHour = mfLayout.findViewById(R.id.ats_tvHour);
+        mfTvMinute = mfLayout.findViewById(R.id.ats_tvMinute);
 
         mfTvHour.setText(String.valueOf(mfSp.getInt("hour", 22)));
         mfTvMinute.setText(String.valueOf(mfSp.getInt("minute", 00)));
@@ -56,11 +56,11 @@ public class MypageFragment extends Fragment {
     }
 
     void setCompletedUse() {
-        Button mfBtUsed = (Button) mfRoot.findViewById(R.id.mypage_completed_use_button);
+        Button mfBtUsed = (Button) mfRoot.findViewById(R.id.fm_btnUsed);
         mfBtUsed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mfIntent = new Intent(getActivity(), CompletedUse.class);
+                Intent mfIntent = new Intent(getActivity(), UsedPage.class);
                 startActivity(mfIntent);
             }
         });
@@ -68,12 +68,12 @@ public class MypageFragment extends Fragment {
 
     //알람 시각을 설정할 수 있는 함수
     void setAlarmTime() {
-        Button mfBtAlarmTimeSet = (Button) mfRoot.findViewById(R.id.my_page_alarm_time_set_button);
+        Button mfBtAlarmTimeSet = (Button) mfRoot.findViewById(R.id.fm_btnAlarm);
 
         mfBtAlarmTimeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinearLayout mfLinearlayout = mfLayout.findViewById(R.id.dialog_alarm_time_set_button);
+                LinearLayout mfLinearlayout = mfLayout.findViewById(R.id.ats_layout);
 
                 mfLinearlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
