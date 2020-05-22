@@ -31,26 +31,27 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
     private RecyclerView sfRecyclerView;
     private LowestAdapter sfLowestAdapter;
     private RecyclerView.LayoutManager sfLayoutManager;
-    private EditText sfEtKeyword;
-    private Button sfBtSearch;
     private InputMethodManager sfInputMethodManager;
     private EndlessRecyclerViewScrollListener sfEndlessRecyclerViewScrollListener;
+    private String sfProduct;
 
     public static SearchFragment newInstance() {
-        return new SearchFragment();
+        return new SearchFragment("");
     }
 
-    public SearchFragment() {}
+    public SearchFragment(String product) {
+        sfProduct = product;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View sfRoot = inflater.inflate(R.layout.lowest_list, container, false);
-        setupRecyclerView(sfRoot);
-        sfEtKeyword = sfRoot.findViewById(R.id.et_keyword);
-        sfBtSearch = sfRoot.findViewById(R.id.btn_search);
-        sfBtSearch.setOnClickListener(this);
-        // 키보드 관리(나오게 하고, 들어가게 하고)
+        setupRecyclerView(sfRoot, sfProduct);
+
         sfInputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        sfInputMethodManager.hideSoftInputFromWindow(sfRoot.getWindowToken(), 0);
+        sfEndlessRecyclerViewScrollListener.resetState();
+        sfPresenter.startSearch(sfProduct);
         return sfRoot;
     }
 
@@ -65,7 +66,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
         sfPresenter = (SearchPresenter) presenter;
     }
 
-    private void setupRecyclerView(View view) {
+    private void setupRecyclerView(View view, String product) {
         sfRecyclerView = view.findViewById(R.id.rvLowest);
         sfRecyclerView.setHasFixedSize(true);
         sfLayoutManager = new LinearLayoutManager(getContext());
@@ -81,7 +82,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
         sfEndlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) sfLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                sfPresenter.getLowCos(sfEtKeyword.getText().toString(), page * LOWEST_DISPLAY_SIZE + 1);
+                sfPresenter.getLowCos(sfProduct, page * LOWEST_DISPLAY_SIZE + 1);
             }
         };
         sfRecyclerView.addOnScrollListener(sfEndlessRecyclerViewScrollListener);
@@ -95,19 +96,18 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
     public void onClick(View view) {
         sfInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         sfEndlessRecyclerViewScrollListener.resetState();
-        sfPresenter.startSearch(sfEtKeyword.getText().toString());
+        sfPresenter.startSearch(sfProduct);
     }
 
     @Override
     public void showEmptyField() {
-        Toast.makeText(getContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showNotFindItem() {
         sfLowestAdapter.clearItems();
-        Toast.makeText(getContext(), "\'" + sfEtKeyword.getText().toString()
-                + "\' 검색결과는 없습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "검색결과는 없습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

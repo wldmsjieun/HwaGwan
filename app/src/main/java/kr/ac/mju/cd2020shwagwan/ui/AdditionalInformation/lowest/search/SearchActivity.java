@@ -52,6 +52,7 @@ public class SearchActivity extends AppCompatActivity {
     private String saOpenStr;
     private String saExpStr;
     private String saAddContStr;
+    private String saTitle;
 
     private EditText saEdOpen, saEdExp; //개봉일, 만료일
     private EditText saEtBrand, saEtName, saEtAddCont, saEtVolume; //브랜드명, 상품명, 추가사항, 용량
@@ -91,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
         SearchFragment saSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.flLowestList);
         // 앱의 검색 활동은 SearchFragment가 포함된 선형 레이아웃을 사용해야한다.
         // 이 프래그먼트는 검색 결과를 표시하기 위해 SearchFragment.SearchResultProvider 인터페이스도 구현해야한다.
-        saSearchFragment = saSearchFragment.newInstance();
+        saSearchFragment = new SearchFragment(saNameStr);
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), saSearchFragment, R.id.flLowestList);
 
         String saBaseUrl = getResources().getString(R.string.baseUrl);
