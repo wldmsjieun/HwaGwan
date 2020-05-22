@@ -391,7 +391,7 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         /* 추가폼에 데이터 입력 */
-        new AlertDialog.Builder(saContext, R.style.MyAlertDialogStyle)
+        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {
