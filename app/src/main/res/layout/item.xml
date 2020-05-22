@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/tvBrand"
+            android:id="@+id/tvLowAdaptBrand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -26,7 +26,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvLowAdaptName"
         android:layout_width="378dp"
         android:layout_height="wrap_content"
         android:text="상품명"

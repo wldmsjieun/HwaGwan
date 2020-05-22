@@ -14,12 +14,8 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import org.apache.log4j.chainsaw.Main;
-
 import kr.ac.mju.cd2020shwagwan.MainActivity;
 import kr.ac.mju.cd2020shwagwan.R;
-import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
-import kr.ac.mju.cd2020shwagwan.ui.MyPage.CompletedUse;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 

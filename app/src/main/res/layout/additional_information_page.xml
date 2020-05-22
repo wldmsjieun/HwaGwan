@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/additional_information_tvBrand"
+            android:id="@+id/saTvInfoBrand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="브랜드명" />
 
         <TextView
-            android:id="@+id/additional_information_tvKind"
+            android:id="@+id/saTvInfoKind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/additional_information_tvName"
+            android:id="@+id/saTvInfoName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="용량 : " />
         <TextView
-            android:id="@+id/additional_information_volume"
+            android:id="@+id/saTvInfoVolume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -59,7 +59,7 @@
             android:text="개봉일 : "
             android:textColor="@android:color/black"/>
         <TextView
-            android:id="@+id/additional_information_tvOpen"
+            android:id="@+id/saTvInfoOpen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -71,7 +71,7 @@
             android:text="만료일 : "
             android:textColor="@android:color/black"/>
         <TextView
-            android:id="@+id/additional_information_tvExp"
+            android:id="@+id/saTvInfoExp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/additional_information_pbUsage"
+        android:id="@+id/pbUsage"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
             android:text="추가사항 :      "/>
 
         <TextView
-            android:id="@+id/additional_information_additionalContent"
+            android:id="@+id/saTvInfoAddCont"
             android:layout_width="226dp"
             android:layout_height="wrap_content"
             android:layout_weight="2" />
@@ -110,9 +110,11 @@
             android:text="수정" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lvLowest"
+    <FrameLayout
+        android:id="@+id/flLowestList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
 </LinearLayout>

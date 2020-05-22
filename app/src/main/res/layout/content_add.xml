@@ -142,7 +142,7 @@
         android:layout_height="wrap_content"
         android:text="바코드 식별 코드" />
     <TextView
-        android:id="@+id/tvChoose"
+        android:id="@+id/saTvChoose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"

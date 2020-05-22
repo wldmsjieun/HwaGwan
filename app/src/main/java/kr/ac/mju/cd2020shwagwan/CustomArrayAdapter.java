@@ -29,7 +29,7 @@ import java.util.Date;
 
 
 import kr.ac.mju.cd2020shwagwan.Notification.MyService;
-import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.search.SearchActivity;
 import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -59,8 +59,8 @@ public class CustomArrayAdapter extends ArrayAdapter {
         }
         final Cosmetics cosmetics = (Cosmetics) getItem(position);
 
-        TextView tvBrand = convertView.findViewById(R.id.tvBrand);
-        TextView tvName = convertView.findViewById(R.id.tvName);
+        TextView tvBrand = convertView.findViewById(R.id.tvLowAdaptBrand);
+        TextView tvName = convertView.findViewById(R.id.tvLowAdaptName);
         TextView tvOpen = convertView.findViewById(R.id.tvOpen);
         TextView tvExp = convertView.findViewById(R.id.tvExp);
         mTvKind = convertView.findViewById(R.id.tvKind);
@@ -228,7 +228,7 @@ public class CustomArrayAdapter extends ArrayAdapter {
         itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AdditionalInformation.class);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("id", cosmetics.getId());
                 intent.putExtra("check", "home");

@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,9 +29,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,24 +36,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import kr.ac.mju.cd2020shwagwan.Cosmetics;
-import kr.ac.mju.cd2020shwagwan.CustomArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
-import kr.ac.mju.cd2020shwagwan.ui.MyPage.CompletedUse;
-import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AdditionalInformation extends AppCompatActivity {
 
-    private TextView tvBrand;
-    private TextView tvKind;
-    private TextView tvName;
-    private TextView tvVolume;
-    private TextView tvOeen;
-    private TextView tvExp;
-    private TextView tvAddCont;
+    private TextView tvInfoBrand;
+    private TextView tvInfoKind;
+    private TextView tvInfoName;
+    private TextView tvInfoVolume;
+    private TextView tvInfoOeen;
+    private TextView tvInfoExp;
+    private TextView tvInfoAddCont;
 
     private String brandStr;
     private String mKindString;
@@ -90,8 +82,8 @@ public class AdditionalInformation extends AppCompatActivity {
 
     // 최저가
     private ArrayList lowestItem;
-    private LowestArrayAdapter lowestAdapter;
-    private ListView lvLowest;
+
+    private ListView rvLowest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,41 +91,59 @@ public class AdditionalInformation extends AppCompatActivity {
         setContentView(R.layout.additional_information_page);
         mContext = this;
 
-        setId();
 
-        setDB();
+       // setId();
 
-        setText();
+//        setDB();
+//
+//        setText();
+//
+//        setModify();
 
-        setModify();
+//        rvLowest = findViewById(R.id.rvLowest);
+//
+//        this.lowestItem = new ArrayList<>();
+//        this.lowestAdapter = new LowestArrayAdapter(mContext, this.lowestItem);
+//        this.lowestItem.add("1");
+//        this.rvLowest.setAdapter(this.lowestAdapter);
+//        SearchActivity searchActivity = new SearchActivity();
+    }
 
-        lvLowest = findViewById(R.id.lvLowest);
+//    public static Context getContext() {
+//        return mContext;
+//    }
 
-        this.lowestItem = new ArrayList<>();
-        this.lowestAdapter = new LowestArrayAdapter(mContext, this.lowestItem);
-        this.lowestItem.add("1");
-        this.lvLowest.setAdapter(this.lowestAdapter);
+
+    public void setObject(int id, String check){
+        mId = id;
+        mCheck = check;
+        Log.d(TAG , "setObject mId : " + mId);
+        Log.d(TAG , "setObject mCheck : " + mCheck);
     }
 
 
-    void setId() {
-        tvBrand = findViewById(R.id.additional_information_tvBrand);
-        tvKind =findViewById(R.id.additional_information_tvKind);
-        tvName = findViewById(R.id.additional_information_tvName);
-        tvVolume = findViewById(R.id.additional_information_volume);
-        tvOeen = findViewById(R.id.additional_information_tvOpen);
-        tvExp = findViewById(R.id.additional_information_tvExp);
-        tvAddCont = findViewById(R.id.additional_information_additionalContent);
+    public void setId() {
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View addRoot = inflater.inflate(R.layout.additional_information_page, null);
 
-        pbUsage = findViewById(R.id.additional_information_pbUsage);
+        tvInfoBrand = addRoot.findViewById(R.id.saTvInfoBrand);
+        tvInfoKind = addRoot.findViewById(R.id.saTvInfoKind);
+        tvInfoName = addRoot.findViewById(R.id.saTvInfoName);
+        tvInfoVolume = addRoot.findViewById(R.id.saTvInfoVolume);
+        tvInfoOeen = addRoot.findViewById(R.id.saTvInfoOpen);
+        tvInfoExp = addRoot.findViewById(R.id.saTvInfoExp);
+        tvInfoAddCont = addRoot.findViewById(R.id.saTvInfoAddCont);
 
-        btModify = findViewById(R.id.btModify);
+        pbUsage = addRoot.findViewById(R.id.pbUsage);
+
+        btModify = addRoot.findViewById(R.id.btModify);
     }
 
 
-    void setDB() {
-        mId = getIntent().getIntExtra("id", -1);
-        mCheck = getIntent().getStringExtra("check");
+    public void setDB(int id, String check) {
+        mId = id;
+        mCheck = check;
+
         String sql;
         DBHelper dbHelper = DBHelper.getInstance(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -162,17 +172,24 @@ public class AdditionalInformation extends AppCompatActivity {
         } catch (SQLException e) { }
 
         db.close();
+
+        try{
+            Thread.sleep(220);
+            setText();
+        }
+        catch(Exception e){}
+
     }
 
 
-    void setText() {
-        tvBrand.setText(brandStr);
-        tvKind.setText(mKindString);
-        tvName.setText(nameStr);
-        tvVolume.setText(volumeStr);
-        tvOeen.setText(openStr);
-        tvExp.setText(expStr);
-        tvAddCont.setText(addContStr);
+    public void setText() {
+        tvInfoBrand.setText(brandStr);
+        tvInfoKind.setText(mKindString);
+        tvInfoName.setText(nameStr);
+        tvInfoVolume.setText(volumeStr);
+        tvInfoOeen.setText(openStr);
+        tvInfoExp.setText(expStr);
+        tvInfoAddCont.setText(addContStr);
 
         if (mCheck.equals("completeUse")) {
             pbUsage.setVisibility(View.GONE);
@@ -201,7 +218,7 @@ public class AdditionalInformation extends AppCompatActivity {
     }
 
 
-    void setModify() {
+    public void setModify() {
         btModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -235,7 +252,7 @@ public class AdditionalInformation extends AppCompatActivity {
         cbMonth = layout.findViewById(R.id.cbMonth);
         etVolume = layout.findViewById(R.id.etVolume);
         etAddCont = layout.findViewById(R.id.etcontent);
-        TextView tvChoose = layout.findViewById(R.id.tvChoose);
+        TextView tvChoose = layout.findViewById(R.id.saTvChoose);
 
         tvBarcode.setVisibility(View.GONE);
 

@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
@@ -47,8 +46,8 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
         }
         final MyPage myPage = (MyPage) getItem(position);
 
-        TextView tvBrand = convertView.findViewById(R.id.tvBrand);
-        TextView tvName = convertView.findViewById(R.id.tvName);
+        TextView tvBrand = convertView.findViewById(R.id.tvLowAdaptBrand);
+        TextView tvName = convertView.findViewById(R.id.tvLowAdaptName);
         TextView tvOpen = convertView.findViewById(R.id.tvOpen);
         TextView tvExp = convertView.findViewById(R.id.tvExp);
         tvKind = convertView.findViewById(R.id.tvKind);
