@@ -11,5 +11,6 @@ public interface LowestApiInterface {
     @GET("/v1/search/shop.json")
     Call<ResponseInfo> getLowestList(@Query("query") String title,
                              @Query("display") int displaySize,
-                             @Query("start") int startPosition);
+                             @Query("start") int startPosition,
+                             @Query("sort") String sortWay);
 }

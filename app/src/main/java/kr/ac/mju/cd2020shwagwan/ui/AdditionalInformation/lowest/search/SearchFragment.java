@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
         sfEndlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) sfLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                sfPresenter.getLowCos(sfProduct, page * LOWEST_DISPLAY_SIZE + 1);
+                sfPresenter.getLowCos(sfProduct, page * LOWEST_DISPLAY_SIZE + 1, "asc");
             }
         };
         sfRecyclerView.addOnScrollListener(sfEndlessRecyclerViewScrollListener);

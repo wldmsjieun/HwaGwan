@@ -20,7 +20,7 @@ public interface SearchContract {
     interface Presenter extends BasePresenter {
 
         void startSearch(String title);
-        void getLowCos(String title, int startPosition);
+        void getLowCos(String title, int startPosition, String sortWay);
 
     }
 

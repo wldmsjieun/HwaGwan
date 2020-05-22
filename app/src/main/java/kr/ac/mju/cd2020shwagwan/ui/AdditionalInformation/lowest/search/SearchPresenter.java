@@ -38,15 +38,17 @@ public class SearchPresenter implements SearchContract.Presenter {
             spSearchView.showEmptyField();
         } else {
             spPageNo = 1;
-            getLowCos(title, 1);
+            getLowCos(title, 1, "asc");
         }
     }
 
+
+
     @Override
-    public void getLowCos(String title, int startPosition) {
+    public void getLowCos(String title, int startPosition, String sortWay) {
         if ((spPageNo != -1 || startPosition == 1) && startPosition < 1001) {
             spPageNo = startPosition;
-            spCallLowInfoList = spLowestApiInterface.getLowestList(title, LOWEST_DISPLAY_SIZE, startPosition);
+            spCallLowInfoList = spLowestApiInterface.getLowestList(title, LOWEST_DISPLAY_SIZE, startPosition, sortWay);
             spCallLowInfoList.enqueue(spRetrofitCallback);
         }
     }
