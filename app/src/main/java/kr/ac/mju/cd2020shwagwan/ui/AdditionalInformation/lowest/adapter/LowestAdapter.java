@@ -1,6 +1,5 @@
 package kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.adapter;
 
-import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +15,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import kr.ac.mju.cd2020shwagwan.MainActivity;
-import kr.ac.mju.cd2020shwagwan.MyApplication;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseItem;
-import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
