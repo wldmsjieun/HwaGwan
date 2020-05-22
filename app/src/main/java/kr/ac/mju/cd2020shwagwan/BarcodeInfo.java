@@ -1,11 +1,8 @@
 package kr.ac.mju.cd2020shwagwan;
 
-
-
 public class BarcodeInfo {
 
     private int id;
-
     private String bcdId;
     private String bcdBrand;
     private String bcdProduct;

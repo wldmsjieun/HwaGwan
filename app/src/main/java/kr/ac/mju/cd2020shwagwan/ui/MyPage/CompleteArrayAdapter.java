@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 import kr.ac.mju.cd2020shwagwan.DBHelper;
 import kr.ac.mju.cd2020shwagwan.R;
-import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.AdditionalInformation;
 
 public class CompleteArrayAdapter  extends ArrayAdapter {
     private Context mContext;
@@ -46,10 +45,10 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
         }
         final MyPage myPage = (MyPage) getItem(position);
 
-        TextView tvBrand = convertView.findViewById(R.id.tvLowAdaptBrand);
-        TextView tvName = convertView.findViewById(R.id.tvLowAdaptName);
-        TextView tvOpen = convertView.findViewById(R.id.tvOpen);
-        TextView tvExp = convertView.findViewById(R.id.tvExp);
+        TextView tvBrand = convertView.findViewById(R.id.lpi_tvBrand);
+        TextView tvName = convertView.findViewById(R.id.lpi_tvName);
+        TextView tvOpen = convertView.findViewById(R.id.ca_edOpen);
+        TextView tvExp = convertView.findViewById(R.id.ca_tvExp);
         tvKind = convertView.findViewById(R.id.tvKind);
 
 
@@ -60,7 +59,7 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
         tvKind.setText(myPage.getKind());
 
         Button btComplete = convertView.findViewById(R.id.btComplete);
-        ProgressBar pbUsage = convertView.findViewById(R.id.pbUsage);
+        ProgressBar pbUsage = convertView.findViewById(R.id.aip_pbUsage);
 
         pbUsage.setVisibility(View.INVISIBLE);
         btComplete.setVisibility(View.GONE);
@@ -91,16 +90,16 @@ public class CompleteArrayAdapter  extends ArrayAdapter {
 
         LinearLayout itemLayout = convertView.findViewById(R.id.item_layout);
 
-        itemLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AdditionalInformation.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("id", myPage.getId());
-                intent.putExtra("check", "completeUse");
-                getContext().startActivity(intent);
-            }
-        });
+//        itemLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getContext(), AdditionalInformation.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.putExtra("id", myPage.getId());
+//                intent.putExtra("check", "completeUse");
+//                getContext().startActivity(intent);
+//            }
+//        });
         return convertView;
     }
 

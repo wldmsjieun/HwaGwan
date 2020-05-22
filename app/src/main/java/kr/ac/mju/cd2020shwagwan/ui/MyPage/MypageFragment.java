@@ -10,136 +10,111 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
-
-
 import kr.ac.mju.cd2020shwagwan.R;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public class MypageFragment extends Fragment {
 
-    private MypageViewModel mypageViewModel;
+    private MypageViewModel mfMyPageViewModel;
 
-    private View mRoot;
-    static public TextView tvHour;
-    static public TextView tvMinute;
-    int setHour=22, setMin=0;
-    SharedPreferences sp;
-    View layout;
+    private View mfRoot;
+    static public TextView mfTvHour;
+    static public TextView mfTvMinute;
+    int mfSetHour =22, mfSetMin =0;
+    SharedPreferences mfSp;
+    View mfLayout;
 
-    private FragmentManager mFragmentManager;
+    private FragmentManager mfFragmentManager;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.fragment_mypage, container, false);
-        layout = inflater.inflate(R.layout.alarm_time_set, null);
-        sp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mfRoot = inflater.inflate(R.layout.fragment_mypage, container, false);
+        mfLayout = inflater.inflate(R.layout.alarm_time_set, null);
+        mfSp = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
 
-        tvHour = layout.findViewById(R.id.dialog_hour);
-        tvMinute = layout.findViewById(R.id.dialog_minute);
+        mfTvHour = mfLayout.findViewById(R.id.dialog_hour);
+        mfTvMinute = mfLayout.findViewById(R.id.dialog_minute);
 
-        tvHour.setText(String.valueOf(sp.getInt("hour", 22)));
-        tvMinute.setText(String.valueOf(sp.getInt("minute", 00)));
+        mfTvHour.setText(String.valueOf(mfSp.getInt("hour", 22)));
+        mfTvMinute.setText(String.valueOf(mfSp.getInt("minute", 00)));
 
-        mFragmentManager = getActivity().getSupportFragmentManager();
-        mypageViewModel = ViewModelProviders.of(this).get(MypageViewModel.class);
+        mfFragmentManager = getActivity().getSupportFragmentManager();
+        mfMyPageViewModel = ViewModelProviders.of(this).get(MypageViewModel.class);
 
         setCompletedUse();
 
-        setSwitch();
-
         setAlarmTime();
 
-        return mRoot;
+        return mfRoot;
     }
 
     void setCompletedUse() {
-        Button CompletedUseButton = (Button) mRoot.findViewById(R.id.mypage_completed_use_button);
-        CompletedUseButton.setOnClickListener(new View.OnClickListener() {
+        Button mfBtUsed = (Button) mfRoot.findViewById(R.id.mypage_completed_use_button);
+        mfBtUsed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CompletedUse.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    //활성 판단 함수
-    void setSwitch() {
-        SwitchCompat pushAlarmButton = (SwitchCompat) mRoot.findViewById(R.id.my_page_push_alarm_button);
-        pushAlarmButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    Toast.makeText(getActivity(), "활성화", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "비활성화", Toast.LENGTH_SHORT).show();
-                }
+                Intent mfIntent = new Intent(getActivity(), CompletedUse.class);
+                startActivity(mfIntent);
             }
         });
     }
 
     //알람 시각을 설정할 수 있는 함수
     void setAlarmTime() {
-        Button alarmTimeSet = (Button) mRoot.findViewById(R.id.my_page_alarm_time_set_button);
+        Button mfBtAlarmTimeSet = (Button) mfRoot.findViewById(R.id.my_page_alarm_time_set_button);
 
-        alarmTimeSet.setOnClickListener(new View.OnClickListener() {
+        mfBtAlarmTimeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinearLayout timeSetButton = layout.findViewById(R.id.dialog_alarm_time_set_button);
+                LinearLayout mfLinearlayout = mfLayout.findViewById(R.id.dialog_alarm_time_set_button);
 
-                timeSetButton.setOnClickListener(new View.OnClickListener() {
+                mfLinearlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Log.d("alarm set picker hour", String.valueOf(setHour));
-                                Log.d("alarm set picker minute", String.valueOf(setMin));
-                                tvHour.setText(Integer.toString(hourOfDay));
-                                tvMinute.setText(Integer.toString(minute));
-                                setHour = hourOfDay;
-                                setMin = minute;
+                                Log.d("alarm set picker hour", String.valueOf(mfSetHour));
+                                Log.d("alarm set picker minute", String.valueOf(mfSetMin));
+                                mfTvHour.setText(Integer.toString(hourOfDay));
+                                mfTvMinute.setText(Integer.toString(minute));
+                                mfSetHour = hourOfDay;
+                                mfSetMin = minute;
 
                             }
-                        },  Integer.parseInt(tvHour.getText().toString()), Integer.parseInt(tvMinute.getText().toString()),true);
+                        },  Integer.parseInt(mfTvHour.getText().toString()), Integer.parseInt(mfTvMinute.getText().toString()),true);
 
                         timePickerDialog.show();
 
                     }
                 });
 
-                if (layout.getParent() != null){
-                    ((ViewGroup) layout.getParent()).removeView(layout);
+                if (mfLayout.getParent() != null){
+                    ((ViewGroup) mfLayout.getParent()).removeView(mfLayout);
                 }
 
                 new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle)
                         .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(@NonNull DialogInterface dialog, int which) {
-                                SharedPreferences.Editor editor = sp.edit();
-                                Log.d("alarm set save hour", String.valueOf(setHour));
-                                Log.d("alarm set save minute", String.valueOf(setMin));
-                                editor.putInt("hour", setHour);
-                                editor.putInt("minute", setMin);
+                                SharedPreferences.Editor editor = mfSp.edit();
+                                Log.d("alarm set save hour", String.valueOf(mfSetHour));
+                                Log.d("alarm set save minute", String.valueOf(mfSetMin));
+                                editor.putInt("hour", mfSetHour);
+                                editor.putInt("minute", mfSetMin);
                                 editor.commit();
                             }
                         })
                         .setCancelable(true)
                         .setTitle("현재 설정된 알림 시각")
-                        .setView(layout)
+                        .setView(mfLayout)
                         .show();
             }
         });

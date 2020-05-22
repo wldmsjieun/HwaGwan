@@ -13,7 +13,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:id="@+id/ivLowAdaptProductImg">
+            android:id="@+id/lpi_ivProduct">
         </ImageView>
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:layout_weight="1"/>
 
                 <TextView
-                    android:id="@+id/tvLowAdaptBrand"
+                    android:id="@+id/lpi_tvBrand"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
@@ -46,7 +46,7 @@
                     android:layout_weight="1"/>
 
                 <TextView
-                    android:id="@+id/tvLowAdaptName"
+                    android:id="@+id/lpi_tvName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
@@ -62,7 +62,7 @@
                     android:layout_weight="1"/>
 
                 <TextView
-                    android:id="@+id/tvLowAdaptPrice"
+                    android:id="@+id/lpi_tvPrice"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
@@ -78,7 +78,7 @@
                     android:layout_weight="1"/>
 
                 <TextView
-                    android:id="@+id/tvLowAdaptMall"
+                    android:id="@+id/lpi_tvMall"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />

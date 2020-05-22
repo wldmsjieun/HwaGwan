@@ -37,10 +37,6 @@
             android:label="@string/title_completed_use">
         </activity>
 
-        <activity
-            android:name=".ui.AdditionalInformation.AdditionalInformation"
-            android:label="@string/additional_information">
-        </activity>
         <!-- 바코드 설정 -->
         <activity android:name=".ScanBarcode" />
         <activity

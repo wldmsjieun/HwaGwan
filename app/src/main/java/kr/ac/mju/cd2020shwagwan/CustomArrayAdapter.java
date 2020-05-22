@@ -17,21 +17,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-
 import kr.ac.mju.cd2020shwagwan.Notification.MyService;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.search.SearchActivity;
 import kr.ac.mju.cd2020shwagwan.ui.home.HomeFragment;
-
 import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -59,12 +53,12 @@ public class CustomArrayAdapter extends ArrayAdapter {
         }
         final Cosmetics cosmetics = (Cosmetics) getItem(position);
 
-        TextView tvBrand = convertView.findViewById(R.id.tvLowAdaptBrand);
-        TextView tvName = convertView.findViewById(R.id.tvLowAdaptName);
-        TextView tvOpen = convertView.findViewById(R.id.tvOpen);
-        TextView tvExp = convertView.findViewById(R.id.tvExp);
+        TextView tvBrand = convertView.findViewById(R.id.lpi_tvBrand);
+        TextView tvName = convertView.findViewById(R.id.lpi_tvName);
+        TextView tvOpen = convertView.findViewById(R.id.ca_tvOpen);
+        TextView tvExp = convertView.findViewById(R.id.ca_tvExp);
         mTvKind = convertView.findViewById(R.id.tvKind);
-        pbUsage = convertView.findViewById(R.id.pbUsage);
+        pbUsage = convertView.findViewById(R.id.aip_pbUsage);
 
 
         tvBrand.setText(cosmetics.getBrandName());

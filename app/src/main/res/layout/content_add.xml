@@ -6,7 +6,7 @@
     android:padding="12dp">
 
     <Spinner
-        android:id="@+id/spKinds"
+        android:id="@+id/ca_spKinds"
         android:layout_width="273dp"
         android:layout_height="36dp" />
 
@@ -22,7 +22,7 @@
             />
 
         <EditText
-            android:id="@+id/etBrand"
+            android:id="@+id/ca_etBrand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="브랜드명"
@@ -44,7 +44,7 @@
             />
 
         <EditText
-            android:id="@+id/etName"
+            android:id="@+id/ca_etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -62,7 +62,7 @@
             />
 
         <EditText
-            android:id="@+id/etVolume"
+            android:id="@+id/ca_etVolume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.7"
@@ -83,7 +83,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/tvOpen"
+                android:id="@+id/ca_tvOpen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -91,7 +91,7 @@
                 android:textColor="#000000"/>
 
             <EditText
-                android:id="@+id/edOpen"
+                android:id="@+id/ca_edOpen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -110,7 +110,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/tvExp"
+                android:id="@+id/ca_tvExp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -118,7 +118,7 @@
                 android:textColor="#000000"/>
 
             <EditText
-                android:id="@+id/edExp"
+                android:id="@+id/ca_edExp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -131,18 +131,18 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvComment"
+        android:id="@+id/ca_tvComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="사용 권장 기한 :" />
 
     <TextView
-        android:id="@+id/tvBarcode"
+        android:id="@+id/ca_tvBarcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="바코드 식별 코드" />
     <TextView
-        android:id="@+id/saTvChoose"
+        android:id="@+id/ca_tvChoose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
@@ -150,14 +150,14 @@
 
 
     <CheckBox
-        android:id="@+id/cbWeek"
+        android:id="@+id/ca_cbWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="한 주전 알림"
         />
 
     <CheckBox
-        android:id="@+id/cbMonth"
+        android:id="@+id/ca_cbMonth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="한 달전 알림" />
@@ -171,7 +171,7 @@
         />
 
     <EditText
-        android:id="@+id/etcontent"
+        android:id="@+id/ca_etContent"
         android:inputType="textMultiLine"
         android:lines="5"
         android:minLines="3"

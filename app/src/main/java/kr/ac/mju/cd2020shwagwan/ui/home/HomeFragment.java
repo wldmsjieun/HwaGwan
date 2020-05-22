@@ -294,22 +294,22 @@ public class HomeFragment extends Fragment {
         final View layout = inflater.inflate(R.layout.content_add, null);
 
         //스피너 생성
-        final Spinner spKinds = layout.findViewById(R.id.spKinds);
+        final Spinner spKinds = layout.findViewById(R.id.ca_spKinds);
         ArrayAdapter kindsAdapter = ArrayAdapter.createFromResource(getContext(), R.array.product_kinds_array, android.R.layout.simple_spinner_item);
         kindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spKinds.setAdapter(kindsAdapter);
 
         // findViewById
-        edOpen = layout.findViewById(R.id.edOpen);
-        edExp = layout.findViewById(R.id.edExp);
-        etBrand = layout.findViewById(R.id.etBrand);
-        etName = layout.findViewById(R.id.etName);
-        tvComment = layout.findViewById(R.id.tvComment);
-        tvBarcode = layout.findViewById(R.id.tvBarcode);
-        cbWeek = layout.findViewById(R.id.cbWeek);
-        cbMonth = layout.findViewById(R.id.cbMonth);
-        etVolume = layout.findViewById(R.id.etVolume);
-        etAddCont = layout.findViewById(R.id.etcontent);
+        edOpen = layout.findViewById(R.id.ca_edOpen);
+        edExp = layout.findViewById(R.id.ca_edExp);
+        etBrand = layout.findViewById(R.id.ca_etBrand);
+        etName = layout.findViewById(R.id.ca_etName);
+        tvComment = layout.findViewById(R.id.ca_tvComment);
+        tvBarcode = layout.findViewById(R.id.ca_tvBarcode);
+        cbWeek = layout.findViewById(R.id.ca_cbWeek);
+        cbMonth = layout.findViewById(R.id.ca_cbMonth);
+        etVolume = layout.findViewById(R.id.ca_etVolume);
+        etAddCont = layout.findViewById(R.id.ca_etContent);
 
         // 개봉일 현재 날짜로 설정
         setToday(edOpen);

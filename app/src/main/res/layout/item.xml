@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/tvLowAdaptBrand"
+            android:id="@+id/lpi_tvBrand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -26,7 +26,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvLowAdaptName"
+        android:id="@+id/lpi_tvName"
         android:layout_width="378dp"
         android:layout_height="wrap_content"
         android:text="상품명"
@@ -40,14 +40,14 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tvOpen"
+            android:id="@+id/ca_tvOpen"
             android:layout_width="44dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="개봉일" />
 
         <TextView
-            android:id="@+id/tvExp"
+            android:id="@+id/ca_tvExp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -62,7 +62,7 @@
         android:orientation="horizontal">
 
         <ProgressBar
-            android:id="@+id/pbUsage"
+            android:id="@+id/aip_pbUsage"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

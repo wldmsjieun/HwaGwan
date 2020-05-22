@@ -99,15 +99,15 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setId() {
-        saTvInfoBrand = findViewById(R.id.saTvInfoBrand);
-        saTvInfoKind = findViewById(R.id.saTvInfoName);
-        saTvInfoName = findViewById(R.id.saTvInfoName);
-        saTvInfoVolume = findViewById(R.id.saTvInfoVolume);
-        saTvInfoOpen = findViewById(R.id.saTvInfoOpen);
-        saTvInfoExp = findViewById(R.id.saTvInfoExp);
-        saTvInfoAddCont = findViewById(R.id.saTvInfoAddCont);
-        saPbUsage = findViewById(R.id.pbUsage);
-        saBtModify = findViewById(R.id.btModify);
+        saTvInfoBrand = findViewById(R.id.aip_tvBrand);
+        saTvInfoKind = findViewById(R.id.aip_tvName);
+        saTvInfoName = findViewById(R.id.aip_tvName);
+        saTvInfoVolume = findViewById(R.id.aip_tvVolume);
+        saTvInfoOpen = findViewById(R.id.aip_tvOpen);
+        saTvInfoExp = findViewById(R.id.aip_tvExp);
+        saTvInfoAddCont = findViewById(R.id.aip_tvAddCont);
+        saPbUsage = findViewById(R.id.aip_pbUsage);
+        saBtModify = findViewById(R.id.aip_btModify);
     }
 
 
@@ -206,23 +206,23 @@ public class SearchActivity extends AppCompatActivity {
         final View saLayout = saInflater.inflate(R.layout.content_add, null);
 
         //스피너 생성
-        saSpKinds = saLayout.findViewById(R.id.spKinds);
+        saSpKinds = saLayout.findViewById(R.id.ca_spKinds);
         ArrayAdapter saKindsAdapter = ArrayAdapter.createFromResource(this, R.array.product_kinds_array, android.R.layout.simple_spinner_item);
         saKindsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         saSpKinds.setAdapter(saKindsAdapter);
 
         // findViewById
-        saEdOpen = saLayout.findViewById(R.id.edOpen);
-        saEdExp = saLayout.findViewById(R.id.edExp);
-        saEtBrand = saLayout.findViewById(R.id.etBrand);
-        saEtName = saLayout.findViewById(R.id.etName);
-        saTvComment = saLayout.findViewById(R.id.tvComment);
-        saTvBarcode = saLayout.findViewById(R.id.tvBarcode);
-        saCbWeek = saLayout.findViewById(R.id.cbWeek);
-        saCbMonth = saLayout.findViewById(R.id.cbMonth);
-        saEtVolume = saLayout.findViewById(R.id.etVolume);
-        saEtAddCont = saLayout.findViewById(R.id.etcontent);
-        TextView saTvChoose = saLayout.findViewById(R.id.saTvChoose);
+        saEdOpen = saLayout.findViewById(R.id.ca_edOpen);
+        saEdExp = saLayout.findViewById(R.id.ca_edExp);
+        saEtBrand = saLayout.findViewById(R.id.ca_etBrand);
+        saEtName = saLayout.findViewById(R.id.ca_etName);
+        saTvComment = saLayout.findViewById(R.id.ca_tvComment);
+        saTvBarcode = saLayout.findViewById(R.id.ca_tvBarcode);
+        saCbWeek = saLayout.findViewById(R.id.ca_cbWeek);
+        saCbMonth = saLayout.findViewById(R.id.ca_cbMonth);
+        saEtVolume = saLayout.findViewById(R.id.ca_etVolume);
+        saEtAddCont = saLayout.findViewById(R.id.ca_etContent);
+        TextView saTvChoose = saLayout.findViewById(R.id.ca_tvChoose);
 
         saTvBarcode.setVisibility(View.GONE);
 

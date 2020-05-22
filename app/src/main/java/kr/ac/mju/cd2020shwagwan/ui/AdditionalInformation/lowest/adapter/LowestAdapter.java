@@ -82,11 +82,11 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         LowCosViewHolder(View view) {
             super(view);
-            ivLowAdaptProductImg = view.findViewById(R.id.ivLowAdaptProductImg);
-            tvLowAdaptBrand = view.findViewById(R.id.tvLowAdaptBrand);
-            tvLowAdaptName = view.findViewById(R.id.tvLowAdaptName);
-            tvLowAdaptPrice = view.findViewById(R.id.tvLowAdaptPrice);
-            tvLowAdaptMall = view.findViewById(R.id.tvLowAdaptMall);
+            ivLowAdaptProductImg = view.findViewById(R.id.lpi_ivProduct);
+            tvLowAdaptBrand = view.findViewById(R.id.lpi_tvBrand);
+            tvLowAdaptName = view.findViewById(R.id.lpi_tvName);
+            tvLowAdaptPrice = view.findViewById(R.id.lpi_tvPrice);
+            tvLowAdaptMall = view.findViewById(R.id.lpi_tvMall);
         }
 
         public ImageView getImage() {

@@ -1,34 +1,28 @@
 package kr.ac.mju.cd2020shwagwan;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import java.io.InputStream;
-
 import jxl.Sheet;
 import jxl.Workbook;
-
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean checkDB;
-    DBHelper dbHelper;
-    SQLiteDatabase db;
+    boolean maCheckDB;
+    DBHelper maDbHelper;
+    SQLiteDatabase maDb;
     Object[] args;
-    String mSql = "INSERT INTO "+DBHelper.TABLE_BARCODE_INFO+"(bcdId, bcdBrand, bcdProduct, bcdVolume) VALUES(?,?,?,?)";
+    String maSql = "INSERT INTO "+DBHelper.TABLE_BARCODE_INFO+"(bcdId, bcdBrand, bcdProduct, bcdVolume) VALUES(?,?,?,?)";
     String TABLE_BARCODE_INFO = "barcodeinfos";
 
 
@@ -36,37 +30,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        BottomNavigationView maBottomNavView = findViewById(R.id.nav_view);
 
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-
-
-        dbHelper = DBHelper.getInstance(this);
-        db = dbHelper.getReadableDatabase();
+        maDbHelper = DBHelper.getInstance(this);
+        maDb = maDbHelper.getReadableDatabase();
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_notifications)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
-
+        NavController maNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, maNavController, appBarConfiguration);
+        NavigationUI.setupWithNavController(maBottomNavView, maNavController);
 
         Workbook workbook = null;
         Sheet sheet = null;
 
         try {
             String sql = "SELECT bID, bcdId, bcdBrand, bcdProduct, bcdVolume FROM barcodeinfos";
-            Cursor cursor = db.rawQuery(sql, null);
+            Cursor maCursor = maDb.rawQuery(sql, null);
 
-            checkDB = true;
+            maCheckDB = true;
 
-            while (cursor.moveToNext()) {
-                if ((cursor.getString(0)) != null) {
-                    checkDB = false;
+            while (maCursor.moveToNext()) {
+                if ((maCursor.getString(0)) != null) {
+                    maCheckDB = false;
                     break;
                 }
             }
@@ -75,19 +65,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            InputStream is = getBaseContext().getResources().getAssets().open("barcode_info.xls");
-            if(is != null){
+            InputStream maIs = getBaseContext().getResources().getAssets().open("barcode_info.xls");
+            if(maIs != null){
                 Log.d(TAG, "xls open");
             }
 
-            workbook = Workbook.getWorkbook(is);
+            workbook = Workbook.getWorkbook(maIs);
 
             if (workbook != null) {
                 sheet = workbook.getSheet(0);
 
                 if (sheet != null) {
 
-                    if (checkDB) {
+                    if (maCheckDB) {
                         int nMaxColumn = 4;
                         int nRowStartIndex = 0;
                         int nRowEndIndex = sheet.getColumn(nMaxColumn - 1).length - 1;
@@ -102,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
                             String bVolume = sheet.getCell(nColumnStartIndex + 3, nRow).getContents();
                             Log.d(TAG, "바코드 정보 " + bInfo + " : " + bName);
                             args = new Object[]{bInfo, bBrand, bName, bVolume};
-                            db.execSQL(mSql, args);
+                            maDb.execSQL(maSql, args);
                         }
-                        db.close();
+                        maDb.close();
                     }
                 } else {
                     Log.d(TAG, "바코드 정보 - sheet is null");
@@ -119,26 +109,5 @@ public class MainActivity extends AppCompatActivity {
                 workbook.close();
             }
         }
-
-      //  setAdditionalInformation();
     }
-
-//    void setAdditionalInformation() {
-//        int id;
-//
-//        Bundle bundle = getIntent().getExtras();
-//
-//        if ( bundle != null) {
-//            id = bundle.getInt("cid", -1);
-//
-//            if (id != -1) {
-//                Log.d("확인", "id = " + id);
-//                Intent intent = new Intent(this, AdditionalInformation.class);
-//                intent.putExtra("id", id);
-//                intent.putExtra("check","home");
-//                startActivity(intent);
-//            }
-//        }
- //   }
-
 }

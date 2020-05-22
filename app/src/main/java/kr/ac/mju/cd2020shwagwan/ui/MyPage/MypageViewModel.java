@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class MypageViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private MutableLiveData<String> mvmMLD;
 
     public MypageViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is My Page fragment");
+        mvmMLD = new MutableLiveData<>();
+        mvmMLD.setValue("This is My Page fragment");
     }
 
     public LiveData<String> getText() {
-        return mText;
+        return mvmMLD;
     }
 }

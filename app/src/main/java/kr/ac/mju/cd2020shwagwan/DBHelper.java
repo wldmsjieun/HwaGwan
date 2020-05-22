@@ -61,13 +61,4 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     }
-
-   /* public BarcodeInfo open() throws SQLException {
-        DBHelper =  DBHelper.this;
-        db = DBHelper.getReadableDatabase();
-        return this;
-    }
-*/
-
-
 }
