@@ -2,6 +2,7 @@ package kr.ac.mju.cd2020shwagwan.ui.home;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +23,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,16 +41,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import kr.ac.mju.cd2020shwagwan.BarcodeInfo;
 import kr.ac.mju.cd2020shwagwan.Cosmetics;
 import kr.ac.mju.cd2020shwagwan.CosmeticArrayAdapter;
 import kr.ac.mju.cd2020shwagwan.DBHelper;
+import kr.ac.mju.cd2020shwagwan.MainActivity;
 import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ScanBarcode;
 
@@ -77,6 +93,15 @@ public class HomeFragment extends Fragment {
     EditText hfEtBrand, hfEtName, hfEtComment, hfEtVolume; //브랜드명, 상품명, 추가사항, 용량
     FloatingActionButton hfFabBarcode; //fab버튼
     Calendar hfOpenCal = Calendar.getInstance(); //개봉일을 위한 달력
+
+    String mJsonString;
+
+    private static final String TAG_JSON="result";
+    private static final String TAG_BID = "bID";
+    private static final String TAG_BCDID = "bcdId";
+    private static final String TAG_BCDBRAND ="bcdBrand";
+    private static final String TAG_BCDPRODUCT ="bcdProduct";
+    private static final String TAG_BCDVOLUME ="bcdVolume";
 
     //public
     public String bcdBrand, bcdProduct; //바코드 상품명, 브랜드명 변수
@@ -124,6 +149,8 @@ public class HomeFragment extends Fragment {
                 startActivityForResult(hfIntent, REQUEST_CODE);
             }
         });
+
+        barcode();
         return hfView;
     }
 
@@ -623,6 +650,149 @@ public class HomeFragment extends Fragment {
             if (hfCbMonth.isChecked() == false)  return 1;
             else    return 3;
         }
+    }
+
+    void barcode() {
+        GetData task = new GetData();
+        task.execute("8809576160147");
+    }
+
+    private class GetData extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(getContext(),
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+
+            Log.d("확인", "response - " + result);
+
+            if (result == null){
+
+                Log.d("확인", "error");
+            }
+            else {
+
+                mJsonString = result;
+                showResult();
+            }
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String barcode = params[0];
+
+            String serverURL = "http://192.168.253.1/PHP_connection.php";
+            String postParameters = "bcdId=" + barcode;
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d("확인", "response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+                errorString = e.toString();
+
+                return null;
+            }
+
+        }
+    }
+
+    private void showResult(){
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
+            for(int i=0;i<jsonArray.length();i++){
+
+                JSONObject item = jsonArray.getJSONObject(i);
+
+                String bid = item.getString(TAG_BID);
+                String bcdId = item.getString(TAG_BCDID);
+                String bcdBrand = item.getString(TAG_BCDBRAND);
+                String bcdProduct = item.getString(TAG_BCDPRODUCT);
+                String bcdVolume = item.getString(TAG_BCDVOLUME);
+
+                HashMap<String,String> hashMap = new HashMap<>();
+
+                hashMap.put(TAG_BID, bid);
+                hashMap.put(TAG_BCDID, bcdId);
+                hashMap.put(TAG_BCDBRAND, bcdBrand);
+                hashMap.put(TAG_BCDPRODUCT, bcdProduct);
+                hashMap.put(TAG_BCDVOLUME, bcdVolume);
+
+//                mArrayList.add(hashMap);
+
+                Log.d("확인", "bid = " + bid + " bcdid = " + bcdId + " bcdBrand = " + bcdBrand);
+            }
+
+
+        } catch (JSONException e) {
+
+            Log.d(TAG, "showResult : ", e);
+        }
+
     }
 
 }
