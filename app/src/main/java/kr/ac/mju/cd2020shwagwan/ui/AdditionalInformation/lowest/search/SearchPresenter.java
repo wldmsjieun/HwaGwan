@@ -21,7 +21,7 @@ public class SearchPresenter implements SearchContract.Presenter {
     private Retrofit spRetrofit;
     private LowestApiInterface spLowestApiInterface;
     private Call<ResponseInfo> spCallLowInfoList;
-    private int spPageNo, spItemNo;
+    private int spPageNo;
     private String spStrName;
     private ArrayList<ResponseItem> spResultArrList = new ArrayList();
 
@@ -44,7 +44,6 @@ public class SearchPresenter implements SearchContract.Presenter {
             spSearchView.showEmptyField();
         } else {
             spPageNo = 1;
-            spItemNo = 1;
             getLowCos(title, 1, "asc");
         }
     }
@@ -63,7 +62,6 @@ public class SearchPresenter implements SearchContract.Presenter {
 
                     if (spResult.getItems() == null) {
                         spPageNo = -1;
-                        spItemNo = -1;
                         return;
                     }
                     if (spResult.getItems().size() == 0) {
@@ -93,7 +91,6 @@ public class SearchPresenter implements SearchContract.Presenter {
                     }
                     if (spResult.getItems().size() < LOWEST_DISPLAY_SIZE) {
                         spPageNo = -1;
-                        spItemNo = -1;
                     }
                 }
 
