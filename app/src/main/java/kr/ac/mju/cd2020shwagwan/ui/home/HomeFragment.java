@@ -149,8 +149,6 @@ public class HomeFragment extends Fragment {
                 startActivityForResult(hfIntent, REQUEST_CODE);
             }
         });
-
-        barcode();
         return hfView;
     }
 
@@ -164,11 +162,10 @@ public class HomeFragment extends Fragment {
         if (result != null) {
             hfbarcode = data.getStringExtra("barcode");
             if (resultCode == REQUEST_SUCESS) {//성공시
-                compareBarcode(hfbarcode);
+                getBarcode(hfbarcode);
+//                compareBarcode(hfbarcode);
                 showAddDialog();
                 hfTvBarcode.setText(hfbarcode);
-                hfEtBrand.setText(bcdBrand);
-                hfEtName.setText(bcdProduct);
             } else {//실패시
                 Toast.makeText(getContext(), "바코드를 스캔해주세요", Toast.LENGTH_LONG).show();
             }
@@ -652,9 +649,12 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    void barcode() {
+    /*얻은 바코드 id로 정보 가져오기*/
+
+    void getBarcode(String barcode) {
         GetData task = new GetData();
-        task.execute("8809576160147");
+        Log.d("확인", "barcode = " + barcode);
+        task.execute(barcode);
     }
 
     private class GetData extends AsyncTask<String, Void, String> {
@@ -671,6 +671,7 @@ public class HomeFragment extends Fragment {
         }
 
 
+        // 에러의 경우 에러메시지 보여주고 아니면 JSON 파싱하여 화면에 보여주기
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -696,7 +697,8 @@ public class HomeFragment extends Fragment {
 
             String barcode = params[0];
 
-            String serverURL = "http://192.168.253.1/PHP_connection.php";
+            //HTTP 통신의 아규먼트로 하여 서버에 있는 PHP파일 실행
+            String serverURL = "http://16485ed1.ngrok.io/PHP_connection.php";
             String postParameters = "bcdId=" + barcode;
 
 
@@ -720,7 +722,7 @@ public class HomeFragment extends Fragment {
 
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d("확인", "response code - " + responseStatusCode);
+                Log.d("확인", "response code - " + responseStatusCode); // 오류확인
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -730,7 +732,7 @@ public class HomeFragment extends Fragment {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
-
+                //StringBuilder를 사용하여 PHP가 보여준 문자열 저장, 스트링으로 변환해서 리턴
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -762,7 +764,7 @@ public class HomeFragment extends Fragment {
     private void showResult(){
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON); //TAG_JSON 키를 갖는 JSONArray 가져오기
 
             for(int i=0;i<jsonArray.length();i++){
 
@@ -770,20 +772,14 @@ public class HomeFragment extends Fragment {
 
                 String bid = item.getString(TAG_BID);
                 String bcdId = item.getString(TAG_BCDID);
-                String bcdBrand = item.getString(TAG_BCDBRAND);
-                String bcdProduct = item.getString(TAG_BCDPRODUCT);
+                bcdBrand = item.getString(TAG_BCDBRAND);
+                bcdProduct = item.getString(TAG_BCDPRODUCT);
                 String bcdVolume = item.getString(TAG_BCDVOLUME);
 
-                HashMap<String,String> hashMap = new HashMap<>();
-
-                hashMap.put(TAG_BID, bid);
-                hashMap.put(TAG_BCDID, bcdId);
-                hashMap.put(TAG_BCDBRAND, bcdBrand);
-                hashMap.put(TAG_BCDPRODUCT, bcdProduct);
-                hashMap.put(TAG_BCDVOLUME, bcdVolume);
-
-//                mArrayList.add(hashMap);
-
+                //바코드 스캔을 통해 입력폼에 내용 입력
+                hfEtBrand.setText(bcdBrand);
+                hfEtName.setText(bcdProduct);
+                hfEtVolume.setText(bcdVolume);
                 Log.d("확인", "bid = " + bid + " bcdid = " + bcdId + " bcdBrand = " + bcdBrand);
             }
 
