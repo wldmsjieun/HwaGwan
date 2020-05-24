@@ -100,7 +100,7 @@ public class SearchActivity extends AppCompatActivity {
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), saSearchFragment, R.id.flLowestList);
 
         String saBaseUrl = getResources().getString(R.string.baseUrl);
-        saSearchPresenter = new SearchPresenter(saSearchFragment, saBaseUrl, saNameStr);
+        saSearchPresenter = new SearchPresenter(saSearchFragment, saBaseUrl, saNameStr, saKindStr);
     }
 
     public void setId() {

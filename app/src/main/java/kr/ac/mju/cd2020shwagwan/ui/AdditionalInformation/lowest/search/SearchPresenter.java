@@ -22,16 +22,17 @@ public class SearchPresenter implements SearchContract.Presenter {
     private LowestApiInterface spLowestApiInterface;
     private Call<ResponseInfo> spCallLowInfoList;
     private int spPageNo;
-    private String spStrName;
+    private String spStrName, spStrKind;
     private ArrayList<ResponseItem> spResultArrList = new ArrayList();
 
 
-    public SearchPresenter(@NonNull SearchContract.View searchView, String baseUrl, String saName) {
+    public SearchPresenter(@NonNull SearchContract.View searchView, String baseUrl, String saName, String saKind) {
         spRetrofit = RetrofitClient.getClient(baseUrl);
         spLowestApiInterface = spRetrofit.create(LowestApiInterface.class);
         spSearchView = searchView;
         spSearchView.setPresenter(this);
         spStrName = saName;
+        spStrKind = saKind;
     }
 
     @Override
@@ -100,6 +101,9 @@ public class SearchPresenter implements SearchContract.Presenter {
                 }
 
             });
+        }
+        if (1001 < startPosition){
+            startSearch(spStrName+spStrKind);
         }
     }
 }
