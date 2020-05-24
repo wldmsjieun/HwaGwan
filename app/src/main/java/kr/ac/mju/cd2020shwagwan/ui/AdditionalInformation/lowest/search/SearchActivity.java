@@ -54,6 +54,7 @@ public class SearchActivity extends AppCompatActivity {
     private String saAddContStr;
     private String saTitle;
 
+
     private EditText saEdOpen, saEdExp; //개봉일, 만료일
     private EditText saEtBrand, saEtName, saEtAddCont, saEtVolume; //브랜드명, 상품명, 추가사항, 용량
     private TextView saTvComment, saTvBarcode;
@@ -92,16 +93,19 @@ public class SearchActivity extends AppCompatActivity {
         SearchFragment saSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.flLowestList);
         // 앱의 검색 활동은 SearchFragment가 포함된 선형 레이아웃을 사용해야한다.
         // 이 프래그먼트는 검색 결과를 표시하기 위해 SearchFragment.SearchResultProvider 인터페이스도 구현해야한다.
-        saSearchFragment = new SearchFragment(saNameStr);
+
+        saSearchFragment = new SearchFragment(saNameStr, saKindStr);
+        Log.d("saKindStr ", saKindStr);
+        Log.d("saNameStr ", saNameStr);
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), saSearchFragment, R.id.flLowestList);
 
         String saBaseUrl = getResources().getString(R.string.baseUrl);
-        saSearchPresenter = new SearchPresenter(saSearchFragment, saBaseUrl);
+        saSearchPresenter = new SearchPresenter(saSearchFragment, saBaseUrl, saNameStr);
     }
 
     public void setId() {
         saTvInfoBrand = findViewById(R.id.aip_tvBrand);
-        saTvInfoKind = findViewById(R.id.aip_tvName);
+        saTvInfoKind = findViewById(R.id.aip_tvKind);
         saTvInfoName = findViewById(R.id.aip_tvName);
         saTvInfoVolume = findViewById(R.id.aip_tvVolume);
         saTvInfoOpen = findViewById(R.id.aip_tvOpen);
@@ -283,6 +287,7 @@ public class SearchActivity extends AppCompatActivity {
 
                         saEdOpen.setText(saSdf.format(saOpenCalendar.getTime()));
 
+
                         //상품별 만료일 자동 계산
                         if (saSpKinds.getSelectedItemPosition() == 1 || saSpKinds.getSelectedItemPosition() == 2
                                 || saSpKinds.getSelectedItemPosition() == 11 || saSpKinds.getSelectedItemPosition() == 12
@@ -391,7 +396,7 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         /* 추가폼에 데이터 입력 */
-        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+        new AlertDialog.Builder(saContext, R.style.MyAlertDialogStyle)
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull DialogInterface dialog, int which) {

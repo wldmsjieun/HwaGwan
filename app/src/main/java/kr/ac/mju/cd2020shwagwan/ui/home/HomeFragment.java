@@ -494,7 +494,7 @@ public class HomeFragment extends Fragment {
                         }
 
                         // 데이터 추가
-                        addData(hfStrbrand, hfStrname, hfEdOpen.getText().toString(), hfEdExp.getText().toString(), hfSpKind.getSelectedItem().toString(),
+                        addData(hfStrbrand, hfStrname, hfEdOpen.getText().toString(), hfEdExp.getText().toString(), hfSpAddKind.getSelectedItem().toString(),
                                 setCheckBox(), hfEtVolume.getText().toString(), hfEtComment.getText().toString());
                     }
                 })

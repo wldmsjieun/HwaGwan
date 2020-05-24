@@ -1,10 +1,14 @@
 package kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.adapter;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +23,7 @@ import kr.ac.mju.cd2020shwagwan.R;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseItem;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+import static kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.util.Constants.LOWEST_DISPLAY_SIZE;
 
 public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -44,7 +49,6 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         lowcosViewHolder.tvLowAdaptName.setText(Html.fromHtml(item.getTitle()));
         lowcosViewHolder.tvLowAdaptPrice.setText(Html.fromHtml(item.getLprice()));
         lowcosViewHolder.tvLowAdaptMall.setText(Html.fromHtml(item.getMallName()));
-
         try {
             Glide.with(MainActivity.getMyContext())
                     .load(item.getImage())
@@ -53,7 +57,6 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } catch (NullPointerException e) {
             Log.d(TAG, "Not Found Image Url");
         }
-
     }
 
     @Override

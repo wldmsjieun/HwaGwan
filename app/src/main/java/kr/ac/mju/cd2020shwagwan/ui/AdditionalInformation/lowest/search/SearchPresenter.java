@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.apiInterface.LowestApiInterface;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseInfo;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseItem;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.util.RetrofitClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,17 +21,22 @@ public class SearchPresenter implements SearchContract.Presenter {
     private Retrofit spRetrofit;
     private LowestApiInterface spLowestApiInterface;
     private Call<ResponseInfo> spCallLowInfoList;
-    private int spPageNo;
+    private int spPageNo, spItemNo;
+    private String spStrName;
+    private ArrayList<ResponseItem> spResultArrList = new ArrayList();
 
-    public SearchPresenter(@NonNull SearchContract.View searchView, String baseUrl) {
+
+    public SearchPresenter(@NonNull SearchContract.View searchView, String baseUrl, String saName) {
         spRetrofit = RetrofitClient.getClient(baseUrl);
         spLowestApiInterface = spRetrofit.create(LowestApiInterface.class);
         spSearchView = searchView;
         spSearchView.setPresenter(this);
+        spStrName = saName;
     }
 
     @Override
-    public void start() {}
+    public void start() {
+    }
 
     @Override
     public void startSearch(String title) {
@@ -38,10 +44,10 @@ public class SearchPresenter implements SearchContract.Presenter {
             spSearchView.showEmptyField();
         } else {
             spPageNo = 1;
+            spItemNo = 1;
             getLowCos(title, 1, "asc");
         }
     }
-
 
 
     @Override
@@ -49,36 +55,54 @@ public class SearchPresenter implements SearchContract.Presenter {
         if ((spPageNo != -1 || startPosition == 1) && startPosition < 1001) {
             spPageNo = startPosition;
             spCallLowInfoList = spLowestApiInterface.getLowestList(title, LOWEST_DISPLAY_SIZE, startPosition, sortWay);
-            spCallLowInfoList.enqueue(spRetrofitCallback);
+            spCallLowInfoList.enqueue(new Callback<ResponseInfo>() {
+
+                @Override
+                public void onResponse(Call<ResponseInfo> call, Response<ResponseInfo> response) {
+                    ResponseInfo spResult = response.body();
+
+                    if (spResult.getItems() == null) {
+                        spPageNo = -1;
+                        spItemNo = -1;
+                        return;
+                    }
+                    if (spResult.getItems().size() == 0) {
+                        spSearchView.showNotFindItem();
+                    } else if (spPageNo <= LOWEST_DISPLAY_SIZE) {
+                        for (int i = 0; i < spResult.getDisplay(); i++) {
+                            if (spResult.getItems().get(i).getCategory1().equals("화장품/미용")) {
+                                spResultArrList.add(spResult.getItems().get(i));
+                            }
+                        }
+
+                        if (spResultArrList.size() == 0) {
+                            getLowCos(spStrName, spPageNo + LOWEST_DISPLAY_SIZE + 1, "asc");
+                        }
+                        spSearchView.showNewLowCos(spResultArrList);
+                    } else {
+                        ArrayList<ResponseItem> spResultArrList = new ArrayList();
+                        for (int i = 0; i < spResult.getDisplay(); i++) {
+                            if (spResult.getItems().get(i).getCategory1().equals("화장품/미용")) {
+                                spResultArrList.add(spResult.getItems().get(i));
+                            }
+                        }
+                        if (spResultArrList.size() == 0) {
+                            getLowCos(spStrName, spPageNo + LOWEST_DISPLAY_SIZE + 1, "asc");
+                        }
+                        spSearchView.showMoreLowCos(spResultArrList);
+                    }
+                    if (spResult.getItems().size() < LOWEST_DISPLAY_SIZE) {
+                        spPageNo = -1;
+                        spItemNo = -1;
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseInfo> call, Throwable t) {
+                    t.printStackTrace();
+                }
+
+            });
         }
     }
-
-    private Callback<ResponseInfo> spRetrofitCallback = new Callback<ResponseInfo>() {
-
-        @Override
-        public void onResponse(Call<ResponseInfo> call, Response<ResponseInfo> response) {
-            ResponseInfo spResult = response.body();
-            if (spResult.getItems() == null) {
-                spPageNo = -1;
-                return;
-            }
-            if (spResult.getItems().size() == 0) {
-                spSearchView.showNotFindItem();
-            } else if (spPageNo <= LOWEST_DISPLAY_SIZE) {
-                spSearchView.showNewLowCos(new ArrayList<>(spResult.getItems()));
-            } else {
-                spSearchView.showMoreLowCos(new ArrayList<>(spResult.getItems()));
-            }
-            if (spResult.getItems().size() < LOWEST_DISPLAY_SIZE) {
-                spPageNo = -1;
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseInfo> call, Throwable t) {
-            t.printStackTrace();
-        }
-
-    };
-
 }

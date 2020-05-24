@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,20 +34,21 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
     private RecyclerView.LayoutManager sfLayoutManager;
     private InputMethodManager sfInputMethodManager;
     private EndlessRecyclerViewScrollListener sfEndlessRecyclerViewScrollListener;
-    private String sfProduct;
+    private String sfProduct, sfKind;
 
     public static SearchFragment newInstance() {
-        return new SearchFragment("");
+        return new SearchFragment("","");
     }
 
-    public SearchFragment(String product) {
+    public SearchFragment(String product, String kind) {
         sfProduct = product;
+        sfKind = kind;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View sfRoot = inflater.inflate(R.layout.lowest_list, container, false);
-        setupRecyclerView(sfRoot, sfProduct);
+        setupRecyclerView(sfRoot);
 
         sfInputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         sfInputMethodManager.hideSoftInputFromWindow(sfRoot.getWindowToken(), 0);
@@ -66,7 +68,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
         sfPresenter = (SearchPresenter) presenter;
     }
 
-    private void setupRecyclerView(View view, String product) {
+    private void setupRecyclerView(View view) {
         sfRecyclerView = view.findViewById(R.id.rvLowest);
         sfRecyclerView.setHasFixedSize(true);
         sfLayoutManager = new LinearLayoutManager(getContext());
@@ -79,6 +81,8 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
             }
         }));
 
+        ArrayList<ResponseItem> LowInfoArrayList = new ArrayList<>();
+
         sfEndlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) sfLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -86,8 +90,6 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
             }
         };
         sfRecyclerView.addOnScrollListener(sfEndlessRecyclerViewScrollListener);
-        ArrayList<ResponseItem> LowInfoArrayList = new ArrayList<>();
-
         sfLowestAdapter = new LowestAdapter(LowInfoArrayList);
         sfRecyclerView.setAdapter(sfLowestAdapter);
     }
@@ -101,7 +103,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
 
     @Override
     public void showEmptyField() {
-       // Toast.makeText(getContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -112,6 +114,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Vie
 
     @Override
     public void showLowCosPage(int position) {
+        //sfLowestAdapter = sfLowestAdapter.getLowestAdapter();
         String sfUrl = sfLowestAdapter.getItem(position).getLink();
         Intent sfIntent = setupCustomTabs(sfUrl);
         startActivity(sfIntent);
