@@ -698,7 +698,7 @@ public class HomeFragment extends Fragment {
             String barcode = params[0];
 
             //HTTP 통신의 아규먼트로 하여 서버에 있는 PHP파일 실행
-            String serverURL = "http://16485ed1.ngrok.io/PHP_connection.php";
+            String serverURL = "http://2d1be335.ngrok.io/PHP_connection.php";
             String postParameters = "bcdId=" + barcode;
 
 

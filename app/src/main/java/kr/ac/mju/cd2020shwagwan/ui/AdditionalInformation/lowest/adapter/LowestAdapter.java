@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import kr.ac.mju.cd2020shwagwan.MainActivity;
@@ -45,9 +47,16 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         LowCosViewHolder lowcosViewHolder = (LowCosViewHolder) holder;
 
         ResponseItem item = LowInfoArrList.get(position);
-        lowcosViewHolder.tvLowAdaptBrand.setText(Html.fromHtml(item.getBrand()));
+
+        String getBrand = Html.fromHtml(item.getBrand()).toString();
+        if (getBrand.equals("")) {
+            lowcosViewHolder.brandLayout.setVisibility(View.INVISIBLE);
+        }
+        lowcosViewHolder.tvLowAdaptBrand.setText(getBrand);
         lowcosViewHolder.tvLowAdaptName.setText(Html.fromHtml(item.getTitle()));
-        lowcosViewHolder.tvLowAdaptPrice.setText(Html.fromHtml(item.getLprice()));
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+        lowcosViewHolder.tvLowAdaptPrice.setText(decimalFormat.format(Integer.parseInt(Html.fromHtml(item.getLprice()).toString())));
         lowcosViewHolder.tvLowAdaptMall.setText(Html.fromHtml(item.getMallName()));
         try {
             Glide.with(MainActivity.getMyContext())
@@ -88,6 +97,7 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         private ImageView ivLowAdaptProductImg;
         private TextView tvLowAdaptBrand;
+        private LinearLayout brandLayout;
         private TextView tvLowAdaptName;
         private TextView tvLowAdaptPrice;
         private TextView tvLowAdaptMall;
@@ -99,6 +109,7 @@ public class LowestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tvLowAdaptName = view.findViewById(R.id.lpi_tvName);
             tvLowAdaptPrice = view.findViewById(R.id.lpi_tvPrice);
             tvLowAdaptMall = view.findViewById(R.id.lpi_tvMall);
+            brandLayout = view.findViewById(R.id.lpi_brand_layout);
         }
 
         public ImageView getImage() {

@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -72,6 +74,12 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
         caaTvOpen.setText(caaCos.getDtOpen());
         caaTvExp.setText(caaCos.getDtExp());
         caaTvKind.setText(caaCos.getKind());
+
+//        TextView ciOpenTextView = convertView.findViewById(R.id.ci_tvOpen_text);
+//        TextView ciExpTextView = convertView.findViewById(R.id.ci_tvExp_text);
+//
+//        ciOpenTextView.setVisibility(View.GONE);
+//        ciExpTextView.setVisibility(View.GONE);
 
         Date caaDtExp = new Date(), caaDtToday = new Date();
 
@@ -180,12 +188,12 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
             moveMypage(caaCos);
         }
 
-        ImageView caaIvDel = convertView.findViewById(R.id.ci_ivDel);
+        ImageButton caaIvDel = convertView.findViewById(R.id.ci_ivDel);
         caaIvDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 삭제
-                new AlertDialog.Builder(caaContext)
+                new AlertDialog.Builder(caaContext,  R.style.MyAlertDialogStyle)
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(@NonNull DialogInterface dialog, int which) {
@@ -195,8 +203,8 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
                         })
                         .setNegativeButton("NO", null)
                         .setCancelable(false)
-                        .setTitle("Do you want to Delete? ")
-                        .setMessage(caaCos.getProductName())
+                        .setTitle("상품을 삭제하시겠습니까? ")
+                        .setMessage("선택된 제품 : " +caaCos.getProductName())
                         .show();
             }
         });
@@ -205,7 +213,7 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
         btComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(caaContext)
+                new AlertDialog.Builder(caaContext, R.style.MyAlertDialogStyle)
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(@NonNull DialogInterface dialog, int which) {
@@ -220,6 +228,8 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
                         .show();
             }
         });
+
+
 
         LinearLayout caaLayout = convertView.findViewById(R.id.ci_layout);
 

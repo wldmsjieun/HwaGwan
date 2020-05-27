@@ -85,6 +85,8 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.additional_information_page);
 
+        saContext = this;
+
         setId();
         setDB();
         setText();
@@ -168,7 +170,14 @@ public class SearchActivity extends AppCompatActivity {
         saTvInfoAddCont.setText(saAddContStr);
 
         if (saCheckStr.equals("completeUse")) {
+            TextView saOpenView = (TextView) findViewById(R.id.aip_tvOpenView);
+            TextView saExpView = (TextView) findViewById(R.id.aip_tvExpView);
+
+            saOpenView.setVisibility(View.GONE);
+            saExpView.setVisibility(View.GONE);
             saPbUsage.setVisibility(View.GONE);
+            saTvInfoOpen.setVisibility(View.GONE);
+            saTvInfoExp.setVisibility(View.GONE);
         }
 
         // 프로그레스바 설정
@@ -419,7 +428,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 })
                 .setCancelable(true)
-                .setTitle("정보 수정")
+                .setTitle("제품 정보 수정")
                 .setView(saLayout)
                 .show();
     }

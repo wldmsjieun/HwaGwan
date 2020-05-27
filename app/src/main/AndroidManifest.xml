@@ -31,7 +31,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.AdditionalInformation.lowest.search.SearchActivity" />
+        <activity android:name=".ui.AdditionalInformation.lowest.search.SearchActivity"
+            android:label="@string/detail_view"/>
 
         <activity
             android:name=".ui.MyPage.UsedPage"

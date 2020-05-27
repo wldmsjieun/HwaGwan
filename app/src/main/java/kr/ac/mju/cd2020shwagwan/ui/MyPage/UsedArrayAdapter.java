@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -61,19 +62,21 @@ public class UsedArrayAdapter extends ArrayAdapter {
 
         Button uaaBtnUsed = convertView.findViewById(R.id.ci_btUsed);
         ProgressBar uaaPbUsage = convertView.findViewById(R.id.ci_pbUsage);
+        LinearLayout usageLayout = convertView.findViewById(R.id.ci_pbUsage_layout);
 
-        uaaPbUsage.setVisibility(View.INVISIBLE);
+        uaaPbUsage.setVisibility(View.GONE);
         uaaBtnUsed.setVisibility(View.GONE);
+        usageLayout.setVisibility(View.GONE);
 
         Log.d("확인", "용량 = " + caaMypage.getVolume());
 
 
         // 삭제
-        ImageView ivDel = convertView.findViewById(R.id.ci_ivDel);
+        ImageButton ivDel = convertView.findViewById(R.id.ci_ivDel);
         ivDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(uaaContext)
+                new AlertDialog.Builder(uaaContext, R.style.MyAlertDialogStyle)
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(@NonNull DialogInterface dialog, int which) {
@@ -83,8 +86,8 @@ public class UsedArrayAdapter extends ArrayAdapter {
                         })
                         .setNegativeButton("NO", null)
                         .setCancelable(false)
-                        .setTitle("Do you want to Delete? ")
-                        .setMessage(caaMypage.getProductName())
+                        .setTitle("상품을 삭제하시겠습니까?")
+                        .setMessage("선택된 제품 : " +caaMypage.getProductName())
                         .show();
             }
         });

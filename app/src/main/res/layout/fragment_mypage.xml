@@ -28,28 +28,4 @@
         android:drawableLeft="@drawable/push_icon"
         android:drawablePadding="15dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:paddingRight="20dp">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:paddingLeft="20dp"
-            android:text="푸시알림 설정"
-            android:gravity="left|center"
-            android:drawableLeft="@drawable/list_icon"
-            android:drawablePadding="15dp"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/my_page_push_alarm_button"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            style="@style/SwitchButtonStyle"
-            android:backgroundTint="#E6B4FA"
-            android:layout_weight="5" />
-    </LinearLayout>
-
 </LinearLayout>

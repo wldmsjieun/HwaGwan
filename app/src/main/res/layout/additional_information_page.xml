@@ -47,32 +47,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/aip_tvOpenView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="개봉일 : "
             android:textColor="@android:color/black"/>
         <TextView
             android:id="@+id/aip_tvOpen"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="개봉일" />
+
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/aip_tvExpView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="만료일 : "
             android:textColor="@android:color/black"/>
         <TextView
             android:id="@+id/aip_tvExp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="만료일" />
@@ -92,7 +92,7 @@
         android:gravity="center_vertical">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:text="추가사항 :      "/>
 
         <TextView
@@ -106,8 +106,9 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="right"
-            android:backgroundTint="#e6b4fa"
-            android:text="수정" />
+            android:backgroundTint="#c3b0eb"
+            android:text="수정"
+            android:textColor="#ffffff"/>
     </LinearLayout>
 
     <FrameLayout
