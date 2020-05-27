@@ -4,6 +4,9 @@ android {
     compileSdkVersion 28
     buildToolsVersion var1
     defaultConfig {
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
         applicationId "kr.ac.mju.cd2020shwagwan"
         minSdkVersion 19
         targetSdkVersion 28

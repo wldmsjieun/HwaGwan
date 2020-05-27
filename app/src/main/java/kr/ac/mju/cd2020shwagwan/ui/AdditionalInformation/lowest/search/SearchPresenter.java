@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.apiInterface.LowestApiInterface;
+import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.listener.EndlessRecyclerViewScrollListener;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseInfo;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.repository.ResponseItem;
 import kr.ac.mju.cd2020shwagwan.ui.AdditionalInformation.lowest.util.RetrofitClient;
@@ -24,7 +25,8 @@ public class SearchPresenter implements SearchContract.Presenter {
     private int spPageNo;
     private String spStrName, spStrKind;
     private ArrayList<ResponseItem> spResultArrList = new ArrayList();
-
+    int addCount = 0;
+    int overThousand = 0;
 
     public SearchPresenter(@NonNull SearchContract.View searchView, String baseUrl, String saName, String saKind) {
         spRetrofit = RetrofitClient.getClient(baseUrl);
@@ -41,6 +43,7 @@ public class SearchPresenter implements SearchContract.Presenter {
 
     @Override
     public void startSearch(String title) {
+        EndlessRecyclerViewScrollListener.ervslCurrentPage = 0;
         if (title.isEmpty()) {
             spSearchView.showEmptyField();
         } else {
@@ -50,60 +53,63 @@ public class SearchPresenter implements SearchContract.Presenter {
     }
 
 
+
     @Override
     public void getLowCos(String title, int startPosition, String sortWay) {
         if ((spPageNo != -1 || startPosition == 1) && startPosition < 1001) {
             spPageNo = startPosition;
             spCallLowInfoList = spLowestApiInterface.getLowestList(title, LOWEST_DISPLAY_SIZE, startPosition, sortWay);
-            spCallLowInfoList.enqueue(new Callback<ResponseInfo>() {
-
-                @Override
-                public void onResponse(Call<ResponseInfo> call, Response<ResponseInfo> response) {
-                    ResponseInfo spResult = response.body();
-
-                    if (spResult.getItems() == null) {
-                        spPageNo = -1;
-                        return;
-                    }
-                    if (spResult.getItems().size() == 0) {
-                        spSearchView.showNotFindItem();
-                    } else if (spPageNo <= LOWEST_DISPLAY_SIZE) {
-                        for (int i = 0; i < spResult.getDisplay(); i++) {
-                            if (spResult.getItems().get(i).getCategory1().equals("화장품/미용")) {
-                                spResultArrList.add(spResult.getItems().get(i));
-                            }
-                        }
-
-                        if (spResultArrList.size() == 0) {
-                            getLowCos(spStrName, spPageNo + LOWEST_DISPLAY_SIZE + 1, "asc");
-                        }
-                        spSearchView.showNewLowCos(spResultArrList);
-                    } else {
-                        ArrayList<ResponseItem> spResultArrList = new ArrayList();
-                        for (int i = 0; i < spResult.getDisplay(); i++) {
-                            if (spResult.getItems().get(i).getCategory1().equals("화장품/미용")) {
-                                spResultArrList.add(spResult.getItems().get(i));
-                            }
-                        }
-                        if (spResultArrList.size() == 0) {
-                            getLowCos(spStrName, spPageNo + LOWEST_DISPLAY_SIZE + 1, "asc");
-                        }
-                        spSearchView.showMoreLowCos(spResultArrList);
-                    }
-                    if (spResult.getItems().size() < LOWEST_DISPLAY_SIZE) {
-                        spPageNo = -1;
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseInfo> call, Throwable t) {
-                    t.printStackTrace();
-                }
-
-            });
+            spCallLowInfoList.enqueue(spRetrofitCallback);
         }
-        if (1001 < startPosition){
+        if (overThousand == 0 && 1000 < startPosition){
             startSearch(spStrName+spStrKind);
+            overThousand++;
         }
     }
+
+    private Callback<ResponseInfo> spRetrofitCallback = new Callback<ResponseInfo>() {
+
+        @Override
+        public void onResponse(Call<ResponseInfo> call, Response<ResponseInfo> response) {
+            ResponseInfo spResult = response.body();
+            if (spResult != null) {
+                if (spResult.getItems() == null) {
+                    spPageNo = -1;
+                    return;
+                }
+               /* if (spResult.getItems().size() == 0) {
+                    spSearchView.showNotFindItem();
+                    return;
+                }*/ else {
+                    for (int i = 0; i < spResult.getDisplay(); i++) {
+                        if (spResult.getItems().get(i).getCategory1().equals("화장품/미용")) {
+                            spResultArrList.add(spResult.getItems().get(i));
+                        }
+                    }
+                    if (spResultArrList.size() == 0) {
+                        EndlessRecyclerViewScrollListener.ervslCurrentPage++;
+                        getLowCos(spStrName, EndlessRecyclerViewScrollListener.ervslCurrentPage * LOWEST_DISPLAY_SIZE + 1, "asc");
+                    } else {
+                        if (addCount == 0) {
+                            spSearchView.showNewLowCos(spResultArrList);
+                            addCount++;
+                        } else {
+                            spSearchView.showMoreLowCos(spResultArrList);
+                        }
+                        spResultArrList.clear();
+                        return;
+                    }
+                }
+                if (spResult.getItems().size() < LOWEST_DISPLAY_SIZE) {
+                    spPageNo = -1;
+                    return;
+                }
+            }
+        }
+        @Override
+        public void onFailure(Call<ResponseInfo> call, Throwable t) {
+            t.printStackTrace();
+        }
+
+    };
 }
