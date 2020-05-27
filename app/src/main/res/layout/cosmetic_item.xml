@@ -9,8 +9,8 @@
 
     <ImageButton
         android:id="@+id/ci_ivDel"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="right"
         android:layout_marginBottom="10dp"
         android:background="@drawable/delete_icon4"

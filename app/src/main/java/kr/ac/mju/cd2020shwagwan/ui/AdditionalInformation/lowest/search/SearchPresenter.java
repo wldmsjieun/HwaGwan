@@ -92,6 +92,7 @@ public class SearchPresenter implements SearchContract.Presenter {
                     } else {
                         if (addCount == 0) {
                             spSearchView.showNewLowCos(spResultArrList);
+                            overThousand++;
                             addCount++;
                         } else {
                             spSearchView.showMoreLowCos(spResultArrList);

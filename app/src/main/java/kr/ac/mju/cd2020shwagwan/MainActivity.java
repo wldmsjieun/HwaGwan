@@ -128,10 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
             if (id != -1) {
                 Log.d("확인", "id = " + id);
-                Intent maInntent = new Intent(this, SearchActivity.class);
-                maInntent.putExtra("id", id);
-                maInntent.putExtra("check","home");
-                startActivity(maInntent);
+                Intent maIntent = new Intent(this, SearchActivity.class);
+                maIntent.putExtra("id", id);
+                maIntent.putExtra("check","home");
+                startActivity(maIntent);
             }
         }
     }
