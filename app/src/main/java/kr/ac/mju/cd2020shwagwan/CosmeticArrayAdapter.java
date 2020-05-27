@@ -209,7 +209,7 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
             }
         });
 
-        Button btComplete = convertView.findViewById(R.id.ci_btUsed);
+        ImageButton btComplete = convertView.findViewById(R.id.ci_btUsed);
         btComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

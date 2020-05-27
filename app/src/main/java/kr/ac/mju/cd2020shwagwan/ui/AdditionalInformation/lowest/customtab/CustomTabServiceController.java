@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
 public class CustomTabServiceController extends CustomTabsServiceConnection {
     // 빨리 웹 들어가게 해주는 거
     private static final String CUSTOM_TABS_EXTRA_SESSION = "android.support.customtabs.extra.SESSION";
-    private static final String CUSTOM_TABS_TOOLBAR_COLOR = "android.support.customtabs.extra.TOOLBAR_COLOR";
+    private static final String CUSTOM_TABS_TOOLBAR_COLOR = "android.support.customtabs.extra.TOOLBAR_COLOR"; //
 
     private WeakReference<Context> ctscContextWeakRef;
     // garbage collector가 다 회수
@@ -65,11 +65,12 @@ public class CustomTabServiceController extends CustomTabsServiceConnection {
         Context ctscContext = ctscContextWeakRef.get();
         Intent ctscIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ctscUrlToLoadStr));
         String ctscPackageName = CustomTabHelper.getPackageNameToUse(ctscContext, this.ctscUrlToLoadStr);
-
+        String ctscHex = "c3b0eb";
+        int ctscHexToint = Integer.parseInt(ctscHex, 16);
         if (ctscPackageName != null) {
             ctscIntent.setPackage(ctscPackageName);
             Bundle ctscExtras = new Bundle();
-            ctscExtras.putInt(CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
+            ctscExtras.putInt(CUSTOM_TABS_TOOLBAR_COLOR, ctscHexToint);
             ctscExtras.putBinder(CUSTOM_TABS_EXTRA_SESSION, session);
             ctscExtras.putParcelable(Intent.EXTRA_REFERRER, Uri.parse(Intent.URI_ANDROID_APP_SCHEME + "//" + ctscContext.getPackageName()));
             ctscIntent.putExtras(ctscExtras);

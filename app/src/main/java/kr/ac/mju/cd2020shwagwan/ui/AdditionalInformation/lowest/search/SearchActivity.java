@@ -170,11 +170,6 @@ public class SearchActivity extends AppCompatActivity {
         saTvInfoAddCont.setText(saAddContStr);
 
         if (saCheckStr.equals("completeUse")) {
-            TextView saOpenView = (TextView) findViewById(R.id.aip_tvOpenView);
-            TextView saExpView = (TextView) findViewById(R.id.aip_tvExpView);
-
-            saOpenView.setVisibility(View.GONE);
-            saExpView.setVisibility(View.GONE);
             saPbUsage.setVisibility(View.GONE);
             saTvInfoOpen.setVisibility(View.GONE);
             saTvInfoExp.setVisibility(View.GONE);
