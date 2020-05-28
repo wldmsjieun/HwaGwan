@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageButton
+        <Button
             android:id="@+id/ci_btUsed"
             android:layout_width="20dp"
             android:layout_height="16dp"
