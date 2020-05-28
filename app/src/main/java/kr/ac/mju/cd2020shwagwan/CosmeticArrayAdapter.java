@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -117,59 +118,66 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
 
         SharedPreferences caaSPAlarm = getContext().getSharedPreferences("alarmTime", MODE_PRIVATE);
         Calendar caaCalToday = Calendar.getInstance();
-        Calendar caaCalAlarm = HomeFragment.hfExpCal;
-        caaCalAlarm.set(Calendar.HOUR_OF_DAY, caaSPAlarm.getInt("hour", 22));
-        caaCalAlarm.set(Calendar.MINUTE, caaSPAlarm.getInt("minute", 00));
-        Log.d(TAG , "alarm set caaCalAlarm : " + caaCalAlarm.getTime());
-        int caaAlarmCheck = caaCos.getAlarm();
+        try{
+            Calendar caaCalAlarm = CalendarFromString(caaCos.getDtExp());
+            Log.d(TAG , " caaCos - getDtExp : " + caaCos.getDtExp());
+            Log.d(TAG , " caaCos - caaCalAlarm : " + caaCalAlarm.getTime());
+            caaCalAlarm.set(Calendar.HOUR_OF_DAY, caaSPAlarm.getInt("hour", 22));
+            caaCalAlarm.set(Calendar.MINUTE, caaSPAlarm.getInt("minute", 00));
+            Log.d(TAG , "alarm set caaCalAlarm : " + caaCalAlarm.getTime());
+            int caaAlarmCheck = caaCos.getAlarm();
 
-        Intent caaIntent = new Intent(getContext(), MyService.class);
-        caaIntent.putExtra("productName", caaCos.getProductName());
-        caaIntent.putExtra("cid", caaCos.getId());
+            Intent caaIntent = new Intent(getContext(), MyService.class);
+            caaIntent.putExtra("productName", caaCos.getProductName());
+            caaIntent.putExtra("cid", caaCos.getId());
 
-        //알림 설정 - 한주전 또는 모든 알림 설정 시
-        if((caaAlarmCheck == 1 || caaAlarmCheck == 3) ){
-            caaCalAlarm.add(Calendar.DATE, -7);
-            setSeconds(caaCalToday, caaCalAlarm);
+            //알림 설정 - 한주전 또는 모든 알림 설정 시
+            if((caaAlarmCheck == 1 || caaAlarmCheck == 3) ){
+                caaCalAlarm.add(Calendar.DATE, -7);
+                setSeconds(caaCalToday, caaCalAlarm);
 
-            if(caaCalAlarm.compareTo(caaCalToday) == 0){
-                caaIntent.putExtra("cbWeekOn", true);
-                caaIntent.putExtra("weekCid", caaCos.getId());
-                getContext().startService(caaIntent);
+                if(caaCalAlarm.compareTo(caaCalToday) == 0){
+                    caaIntent.putExtra("cbWeekOn", true);
+                    caaIntent.putExtra("weekCid", caaCos.getId());
+                    getContext().startService(caaIntent);
 
-                if(caaAlarmCheck == 1) {//알림 아무것도 없이 업데이트
-                    updateAlarm(0, caaCos);
-                    Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
+                    if(caaAlarmCheck == 1) {//알림 아무것도 없이 업데이트
+                        updateAlarm(0, caaCos);
+                        Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
+                    }
+                    else if (caaAlarmCheck == 3) {//알림 한달전만 남도록 업데이트
+                        updateAlarm(2, caaCos);
+                        Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
+                    }
                 }
-                else if (caaAlarmCheck == 3) {//알림 한달전만 남도록 업데이트
-                    updateAlarm(2, caaCos);
-                    Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
-                }
+                caaCalAlarm.add(Calendar.DATE, 7);
             }
-            caaCalAlarm.add(Calendar.DATE, 7);
+
+            //알림 설정 - 한달전 또는 모든 알림 설정 시
+            if((caaAlarmCheck == 2 || caaAlarmCheck == 3)){
+                caaCalAlarm.add(Calendar.DATE, -30);
+                setSeconds(caaCalToday, caaCalAlarm);
+
+                if(caaCalAlarm.compareTo(caaCalToday) == 0){
+                    caaIntent.putExtra("cbMonthOn", true);
+                    caaIntent.putExtra("monthCid", caaCos.getId());
+                    getContext().startService(caaIntent);
+
+                    if(caaAlarmCheck == 2){//알림 아무것도 없이 업데이트
+                        updateAlarm(0, caaCos);
+                        Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
+                    }
+                    else if (caaAlarmCheck == 3) {//알림 한주전만 남도록 업데이트
+                        updateAlarm(1, caaCos);
+                        Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
+                    }
+                }
+                caaCalAlarm.add(Calendar.DATE, 30);
+            }
+        }catch(Exception e){
+            Log.d(TAG, "caaCos  e - "+ e.getMessage());
         }
 
-        //알림 설정 - 한달전 또는 모든 알림 설정 시
-        if((caaAlarmCheck == 2 || caaAlarmCheck == 3)){
-            caaCalAlarm.add(Calendar.DATE, -30);
-            setSeconds(caaCalToday, caaCalAlarm);
-
-            if(caaCalAlarm.compareTo(caaCalToday) == 0){
-                caaIntent.putExtra("cbMonthOn", true);
-                caaIntent.putExtra("monthCid", caaCos.getId());
-                getContext().startService(caaIntent);
-
-                if(caaAlarmCheck == 2){//알림 아무것도 없이 업데이트
-                    updateAlarm(0, caaCos);
-                    Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
-                }
-                else if (caaAlarmCheck == 3) {//알림 한주전만 남도록 업데이트
-                    updateAlarm(1, caaCos);
-                    Log.d(TAG , "notiAlarm : " + caaCos.getAlarm());
-                }
-            }
-            caaCalAlarm.add(Calendar.DATE, 30);
-        }
 
         //사용 기간 만료시 리스트에서 삭제
         Calendar caaCalExp = Calendar.getInstance();
@@ -184,7 +192,9 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
         caaCalExp.set(Calendar.HOUR_OF_DAY, caaSPAlarm.getInt("hour", 22));
         caaCalExp.set(Calendar.MINUTE, caaSPAlarm.getInt("minute", 00));
         setSeconds(caaCalToday, caaCalExp);
-        if (caaCalExp.compareTo(caaCalToday) == 0) {
+        Log.d(TAG , "alarm set today : " + caaCalToday.getTime());
+        if (caaCalExp.compareTo(caaCalToday) <= 0) {
+            Log.d(TAG , "alarm set compareTo in");
             moveMypage(caaCos);
         }
 
@@ -326,5 +336,22 @@ public class CosmeticArrayAdapter extends ArrayAdapter {
                 cos.getDtExp(), cos.getKind(), cos.getVolume(), cos.getAdditionalContent());
         deleteData(cos);
     }
+
+    public static Calendar CalendarFromString(String date)
+    {
+        Calendar cal = Calendar.getInstance();
+
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            cal.setTime(formatter.parse(date));
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return cal;
+    }
+
 
 }
