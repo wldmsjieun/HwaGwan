@@ -7,7 +7,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class ScanBarcode extends AppCompatActivity {
 
-    private IntentIntegrator sbIntentIntegrator;
+    private IntentIntegrator sbIntentIntegrator;//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
