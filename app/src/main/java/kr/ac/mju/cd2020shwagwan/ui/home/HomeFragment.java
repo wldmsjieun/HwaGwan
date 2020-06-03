@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
     public String bcdBrand, bcdProduct; //바코드 상품명, 브랜드명 변수
 
     //static
-    static public Calendar hfExpCal = Calendar.getInstance(); //만료일을 위한 달력
+    public Calendar hfExpCal = Calendar.getInstance(); //만료일을 위한 달력
     static public CheckBox  hfCbWeek, hfCbMonth; //체크박스
     static public Context hfContext;
     String insertCosSql = "INSERT INTO "+DBHelper.TABLE_COSMETIC+"(brandName, productName, dtOpen, dtExp, kind, alarm, volume, additionalContent) VALUES(?,?,?,?,?,?,?,?)";
