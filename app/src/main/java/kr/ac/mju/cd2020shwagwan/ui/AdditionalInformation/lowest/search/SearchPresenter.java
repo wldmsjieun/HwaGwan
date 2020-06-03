@@ -61,6 +61,9 @@ public class SearchPresenter implements SearchContract.Presenter {
             spCallLowInfoList = spLowestApiInterface.getLowestList(title, LOWEST_DISPLAY_SIZE, startPosition, sortWay);
             spCallLowInfoList.enqueue(spRetrofitCallback);
         }
+        if (spStrKind.equals("기타")){
+            overThousand++;
+        }
         if (overThousand == 0 && 1000 < startPosition){
             startSearch(spStrName+spStrKind);
             overThousand++;
