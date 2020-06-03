@@ -51,7 +51,7 @@ public class MyService extends Service {
 
             Thread.sleep(220);
             if(checkedWeek == true){
-                Notification(weekCid, " 만료 일주일전 = " + mCosmeticId, productName);
+                Notification(weekCid, " 만료 일주일전 = " , productName);
             }
             if(checkedMonth == true){
                 Notification(monthCid, " 만료 한달전", productName);

@@ -45,9 +45,6 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" /> <!-- 노티피케이션 설정 -->
-        <activity
-            android:name=".Notification.ResultActivity"
-            android:parentActivityName=".MainActivity"></activity>
 
     </application>
 
